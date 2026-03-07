@@ -1,39 +1,39 @@
-# 📸 截图说明
+# 📸 Screenshot Guide
 
-看板截图用于 README 和文档展示。请启动看板后按以下顺序截图并放置到本目录。
+Kanban screenshots are used for README and documentation display. After starting the kanban, take screenshots in the following order and place them in this directory.
 
-## 截图清单
+## Screenshot List
 
-| 文件名 | 内容 | 对应面板 |
+| Filename | Content | Corresponding Panel |
 |--------|------|---------|
-| `01-kanban-main.png` | 旨意看板总览 | 📋 旨意看板 |
-| `02-monitor.png` | 省部调度 | 🔭 省部调度 |
-| `03-task-detail.png` | 任务流转详情（点击任务卡片展开） | 📋 旨意看板 → 详情 |
-| `04-model-config.png` | 模型配置面板 | ⚙️ 模型配置 |
-| `05-skills-config.png` | 技能配置面板 | 🛠️ 技能配置 |
-| `06-official-overview.png` | 官员总览（12 位 Agent） | 👥 官员总览 |
-| `07-sessions.png` | 小任务 / 会话 | 💬 小任务 |
-| `08-memorials.png` | 奏折阁 | 📜 奏折阁 |
-| `09-templates.png` | 旨库（圣旨模板） | 📜 旨库 |
-| `10-morning-briefing.png` | 天下要闻 | 📰 天下要闻 |
-| `11-ceremony.png` | 上朝仪式动画 | 开场动画 |
+| `01-kanban-main.png` | Edict board overview | 📋 Edict Board |
+| `02-monitor.png` | Department monitor | 🔭 Department Monitor |
+| `03-task-detail.png` | Task flow details (click task card to expand) | 📋 Edict Board → Details |
+| `04-model-config.png` | Model configuration panel | ⚙️ Model Config |
+| `05-skills-config.png` | Skills configuration panel | 🛠️ Skills Config |
+| `06-official-overview.png` | Officials overview (12 Agents) | 👥 Officials Overview |
+| `07-sessions.png` | Sessions / tasks | 💬 Sessions |
+| `08-memorials.png` | Memorials archive | 📜 Memorials |
+| `09-templates.png` | Template library (edict templates) | 📜 Templates |
+| `10-morning-briefing.png` | Morning news brief | 📰 Morning Brief |
+| `11-ceremony.png` | Court ceremony opening animation | Opening animation |
 
-## 自动截图
+## Automated Screenshots
 
 ```bash
-# 确保看板服务器正在运行
+# Make sure the kanban server is running
 python3 dashboard/server.py &
 
-# 自动截取全部 11 张截图
+# Auto-capture all 11 screenshots
 python3 scripts/take_screenshots.py
 
-# 录制 demo GIF（需要 ffmpeg）
+# Record demo GIF (requires ffmpeg)
 python3 scripts/record_demo.py
 ```
 
-## 建议
+## Recommendations
 
-- 使用 **1920×1080** 或 **2560×1440** 分辨率
-- 确保看板有足够的数据（至少 5+ 任务）
-- 深色主题截图效果最佳
-- 截图前刷新数据确保最新状态
+- Use **1920×1080** or **2560×1440** resolution
+- Make sure the kanban has enough data (at least 5+ tasks)
+- Dark theme screenshots look best
+- Refresh data before taking screenshots to ensure latest state

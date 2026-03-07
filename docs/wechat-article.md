@@ -1,259 +1,259 @@
-# 我用三省六部制重新设计了 AI 多 Agent 协作架构
+# I Redesigned AI Multi-Agent Collaboration Architecture Using the Three Departments & Six Ministries System
 
-> 1300 年前的制度设计，比现代 AI 框架更懂分权。
+> A system designed 1300 years ago understands checks and balances better than modern AI frameworks.
 
-![封面：军机处看板全貌](screenshots/01-kanban-main.png)
-
----
-
-## 一、一个奇怪的想法
-
-去年底我开始重度使用 AI Agent 干活——写代码、做分析、生成文档。用的是市面上最火的几个多 Agent 框架。
-
-用了一个月，我发现一个根本性的问题：
-
-**这些框架没有"审核"这个概念。**
-
-CrewAI 的模式是：几个 Agent 各自干活，做完就交。AutoGen 好一点，有个 Human-in-the-loop，但本质上是你自己当 QA。MetaGPT 有角色分工，但审核是可选的。
-
-就像一家公司没有 QA 部门，工程师写完代码直接部署到线上。
-
-然后你拿到最终结果，不知道中间发生了什么，无法复现，无法审计，无法干预。出了问题只能重跑。
-
-我一直在想：有没有一种架构，天然就把审核嵌入到流程里，不是可选的插件，而是必须经过的关卡？
-
-然后有一天，我在翻《资治通鉴》的时候突然想到——
-
-**三省六部制。**
-
-唐太宗在 1300 年前就设计了这个制度：中书省草拟政令，门下省审议封驳，尚书省执行。三个部门互相制衡，任何政令必须经过审议才能下发。
-
-这不就是我要找的架构吗？
-
-![上朝仪式：每日首次打开的彩蛋动画](screenshots/11-ceremony.png)
-*▲ 每天第一次打开看板，会有一个"上朝"开场动画——仪式感拉满*
+![Cover: Grand Council kanban overview](screenshots/01-kanban-main.png)
 
 ---
 
-## 二、古人的架构设计
+## I. A Strange Idea
 
-三省六部制不是一个 metaphor，它是一套经过 1400 年实践检验的分权制衡系统。
+Late last year I started heavily using AI Agents for work — writing code, doing analysis, generating documentation. I used several of the most popular multi-agent frameworks on the market.
 
-简化一下，信息流是这样的：
+After a month, I discovered a fundamental problem:
+
+**These frameworks have no concept of "review."**
+
+CrewAI's model: a few Agents each do their work, hand it in when done. AutoGen is slightly better with Human-in-the-loop, but essentially you yourself are acting as QA. MetaGPT has role division, but review is optional.
+
+It's like a company with no QA department, where engineers push code directly to production.
+
+You get the final result without knowing what happened in between — you can't reproduce it, can't audit it, can't intervene. When something goes wrong you can only re-run.
+
+I kept thinking: is there an architecture that naturally embeds review into the process — not as an optional plugin, but as a mandatory checkpoint?
+
+Then one day, while reading the *Zizhi Tongjian*, it suddenly came to me —
+
+**The Three Departments & Six Ministries system.**
+
+Emperor Taizong designed this system 1300 years ago: Zhongshu drafts edicts, Menxia reviews and can veto, Shangshu executes. Three departments check and balance each other; any edict must pass review before being issued.
+
+Isn't this exactly the architecture I was looking for?
+
+![Court ceremony: the easter egg animation on first daily open](screenshots/11-ceremony.png)
+*▲ The first time you open the kanban each day, a court ceremony opening animation plays — full ceremony vibes*
+
+---
+
+## II. The Ancients' Architecture Design
+
+The Three Departments & Six Ministries system is not a metaphor — it is a system of checks and balances tested by 1400 years of practice.
+
+Simplified, the information flow is:
 
 ```
-皇上（你）
-  ↓ 下旨
-中书省（规划）  ← 把你的一句话拆成可执行的子任务
-  ↓ 提交审核
-门下省（审议）  ← 审查方案质量，不行就封驳打回
-  ↓ 准奏
-尚书省（派发）  ← 分配给六部执行
+Emperor (you)
+  ↓ issue edict
+Zhongshu (Planning)  ← breaks your sentence into executable sub-tasks
+  ↓ submit for review
+Menxia (Review)      ← reviews plan quality, rejects if unacceptable
+  ↓ approved
+Shangshu (Dispatch)  ← assigns to the Six Ministries for execution
   ↓
-六部（执行）    ← 户部管数据、礼部管文档、兵部管开发、刑部管合规、工部管基建
+Six Ministries       ← Hubu handles data, Libu handles docs, Bingbu handles dev, Xingbu handles compliance, Gongbu handles infrastructure
   ↓
-尚书省汇总回奏  ← 结果回报给你
+Shangshu summarizes and reports back  ← results reported to you
 ```
 
-注意这里最关键的一步：**门下省审议**。
+Note the most critical step here: **Menxia review**.
 
-中书省规划完方案后，不是直接扔给执行层——必须先经过门下省审议。门下省会检查：
+After Zhongshu plans a solution, it doesn't go directly to the execution layer — it must first pass through Menxia review. Menxia will check:
 
-- 子任务拆解是否合理？有没有遗漏需求？
-- 部门分配是否准确？该派兵部的是不是错派给了礼部？
-- 方案是否可执行？有没有不切实际的地方？
+- Is the sub-task breakdown reasonable? Are there missed requirements?
+- Is the department assignment accurate? Was something that should go to Bingbu sent to Libu instead?
+- Is the plan executable? Are there any unrealistic parts?
 
-如果不合格，门下省可以**封驳**——直接打回让中书省重新规划。不是一个 warning，是强制返工。
+If it's not up to standard, Menxia can **veto** — send it straight back for Zhongshu to re-plan. Not a warning, but a mandatory rework.
 
-这就是为什么唐朝能运转 289 年。**不受制约的权力必然会出错**，唐太宗想得很清楚。
+This is why the Tang dynasty ran for 289 years. **Unchecked power will inevitably go wrong** — Emperor Taizong understood this clearly.
 
 ---
 
-## 三、我把它做成了开源项目
+## III. I Made It an Open Source Project
 
-我用 OpenClaw 搭了一个真正的三省六部系统。9 个 AI Agent 各司其职，严格按照权限矩阵通信。
+I built a real Three Departments & Six Ministries system using OpenClaw. 9 AI Agents each perform their role, communicating strictly according to the permission matrix.
 
-项目叫 **Edict（三省六部）**，已开源：
+The project is called **Edict (Three Departments & Six Ministries)**, and it's open source:
 
-**GitHub：https://github.com/cft0808/edict**
+**GitHub: https://github.com/cft0808/edict**
 
-核心架构很简单：
+The core architecture is simple:
 
-- **中书省**：接旨（你的指令），规划方案，拆解子任务
-- **门下省**：审议方案，质量把关，不合格直接封驳
-- **尚书省**：准奏后派发给六部，协调执行，汇总结果
-- **六部**：户部（数据分析）、礼部（文档撰写）、兵部（代码开发）、刑部（安全合规）、工部（CI/CD 部署）
-- **早朝官**：每天给你推一份新闻简报
+- **Zhongshu**: Receives edicts (your instructions), plans solutions, breaks down sub-tasks
+- **Menxia**: Reviews plans, ensures quality, vetoes if unacceptable
+- **Shangshu**: Dispatches to the Six Ministries after approval, coordinates execution, summarizes results
+- **Six Ministries**: Hubu (data analysis), Libu (documentation writing), Bingbu (code development), Xingbu (security compliance), Gongbu (CI/CD deployment)
+- **Morning Officer**: Pushes you a daily news briefing
 
-每个 Agent 有独立的 Workspace、独立的 Skills、独立的 LLM 模型。严格的权限矩阵——谁能给谁发消息，白纸黑字：
+Each Agent has an independent Workspace, independent Skills, and an independent LLM model. A strict permission matrix — who can message whom, in writing:
 
-| 谁 ↓ 给谁发 → | 中书 | 门下 | 尚书 | 六部 |
+| Who ↓ messages whom → | Zhongshu | Menxia | Shangshu | Six Ministries |
 |:---:|:---:|:---:|:---:|:---:|
-| **中书省** | — | ✅ | ✅ | ❌ |
-| **门下省** | ✅ | — | ✅ | ❌ |
-| **尚书省** | ✅ | ✅ | — | ✅ |
-| **六部** | ❌ | ❌ | ✅ | ❌ |
+| **Zhongshu** | — | ✅ | ✅ | ❌ |
+| **Menxia** | ✅ | — | ✅ | ❌ |
+| **Shangshu** | ✅ | ✅ | — | ✅ |
+| **Six Ministries** | ❌ | ❌ | ✅ | ❌ |
 
-中书省不能直接指挥六部，六部不能越级上报中书省。所有的跨层通信必须经过尚书省中转。
+Zhongshu cannot directly command the Six Ministries; the Six Ministries cannot bypass to report to Zhongshu. All cross-layer communication must go through Shangshu as an intermediary.
 
-**这不是装饰性的设定，这是架构层面的强制约束。**
+**This is not a decorative setting — this is an architecture-level hard constraint.**
 
-![Demo：30 秒看完整流转](demo.gif)
-*▲ 30 秒 Demo：从上朝仪式到旨意看板、奏折归档、模型配置的完整巡览*
+![Demo: complete flow in 30 seconds](demo.gif)
+*▲ 30-second demo: a full tour from court ceremony to edict board, memorial archive, and model configuration*
 
 ---
 
-## 四、跟现有框架对比
+## IV. Comparison with Existing Frameworks
 
-你可能会问：跟 CrewAI、AutoGen 比，差在哪？
+You might ask: compared to CrewAI and AutoGen, what's the difference?
 
-| | CrewAI | AutoGen | **三省六部** |
+| | CrewAI | AutoGen | **Three Departments & Six Ministries** |
 |---|:---:|:---:|:---:|
-| 审核机制 | ❌ | ⚠️ 可选 | ✅ 门下省强制审核 |
-| 实时看板 | ❌ | ❌ | ✅ 10 个面板 |
-| 任务干预 | ❌ | ❌ | ✅ 叫停 / 取消 / 恢复 |
-| 流转审计 | ⚠️ | ❌ | ✅ 完整奏折存档 |
-| Agent 健康监控 | ❌ | ❌ | ✅ 心跳检测 |
-| 热切换 LLM | ❌ | ❌ | ✅ 看板内一键切换 |
+| Review mechanism | ❌ | ⚠️ Optional | ✅ Menxia mandatory review |
+| Real-time kanban | ❌ | ❌ | ✅ 10 panels |
+| Task intervention | ❌ | ❌ | ✅ Halt / cancel / resume |
+| Flow audit | ⚠️ | ❌ | ✅ Complete memorial archive |
+| Agent health monitoring | ❌ | ❌ | ✅ Heartbeat detection |
+| Hot-swap LLM | ❌ | ❌ | ✅ One-click switch from kanban |
 
-最核心的差异是**门下省审核机制**。
+The core difference is the **Menxia review mechanism**.
 
-这不是 Human-in-the-loop（那是让你自己当 QA），这是一个专职的 AI Agent 负责审核另一个 AI Agent 的产出。制度性的，强制的，架构级别的。
+This is not Human-in-the-loop (that makes you yourself the QA) — this is a dedicated AI Agent responsible for reviewing another AI Agent's output. Institutional, mandatory, at the architecture level.
 
-一个不经审核的 AI 协作系统，就像一个没有代码 review 的团队——跑得快，翻车也快。
-
----
-
-## 五、军机处看板——让一切可观测
-
-光有架构不够，你还得看得见。
-
-所以我做了一个**军机处看板**——一个实时监控所有任务流转的 Web 面板。零依赖，单文件 HTML，Python 标准库后端，打开浏览器就能用。
-
-10 个功能面板：
-
-**📋 旨意看板**：所有任务以卡片形式展示，按状态分列，支持过滤搜索。每张卡片有心跳徽章——🟢 活跃、🟡 停滞、🔴 告警。点开看完整的流转时间线，随时可以叫停或取消。
-
-![旨意看板](screenshots/01-kanban-main.png)
-*▲ 旨意看板：任务卡片按状态分列，心跳徽章一目了然*
-
-**🔭 省部调度**：可视化各状态的任务数量、部门分布、Agent 健康卡片。一眼看清谁在忙、谁在闲、谁宕机了。
-
-![省部调度](screenshots/02-monitor.png)
-*▲ 省部调度：状态分布 + 部门负载 + Agent 健康卡片*
-
-**📜 奏折阁**：所有已完成的旨意自动归档为"奏折"，展示完整的五阶段时间线——圣旨→中书规划→门下审议→六部执行→回奏。一键复制为 Markdown。
-
-![奏折归档](screenshots/08-memorials.png)
-*▲ 奏折阁：完整的五阶段时间线，一键导出 Markdown*
-
-**📜 旨库**：9 个预设圣旨模板。选一个，填参数，预览，一键下旨。覆盖：周报生成、代码审查、API 设计、竞品分析等常见场景。
-
-![圣旨模板库](screenshots/09-templates.png)
-*▲ 旨库：9 个预设模板，填参数一键下旨*
-
-**⚙️ 模型配置**：每个 Agent 可以独立切换 LLM 模型。中书省用 Claude 做规划，兵部用 GPT-4o 写代码，户部用 DeepSeek 算数据——各取所长。
-
-![模型配置](screenshots/04-model-config.png)
-*▲ 模型配置：每个 Agent 独立切换 LLM，各取所长*
-
-还有官员总览（Token 消耗排行榜）、技能管理、天下要闻（自动新闻聚合）、会话监控、上朝仪式（每天首次打开的彩蛋动画）。
-
-**全部零依赖**，没有 React 也没有 Vue，纯 HTML + CSS + JavaScript，2200 行搞定。
-
-![官员总览](screenshots/06-official-overview.png)
-*▲ 官员总览：Token 消耗排行榜 + 活跃度统计*
-
-![天下要闻](screenshots/10-morning-briefing.png)
-*▲ 天下要闻：每日自动聚合科技/财经资讯*
+An AI collaboration system without review is like a team without code review — fast to run, fast to crash.
 
 ---
 
-## 六、跑一个真实案例给你看
+## V. The Grand Council Kanban — Making Everything Observable
 
-光说不练不行。来看一个真实的运行记录——让三省六部分析竞品。
+Good architecture alone is not enough — you also need visibility.
 
-**旨意**：分析 CrewAI、AutoGen 和 LangGraph 这三个框架的差异，输出对比报告。
+So I built a **Grand Council Kanban** — a Web panel for real-time monitoring of all task flows. Zero dependencies, single-file HTML, Python standard library backend, opens in browser.
 
-![任务流转详情](screenshots/03-task-detail.png)
-*▲ 点开任意任务卡片，可以看到完整的流转链和实时状态*
+10 feature panels:
 
-### 中书省规划（45 秒）
+**📋 Edict Board**: All tasks displayed as cards, grouped by state, with filter and search. Each card has a heartbeat badge — 🟢 active, 🟡 stalled, 🔴 alert. Click to see the complete flow timeline; halt or cancel at any time.
 
-中书省接旨后，拆成了 4 个子任务：
-1. 兵部 → 架构与通信机制调研
-2. 户部 → 数据采集与量化对比（GitHub Stars、Contributors 等）
-3. 兵部 → 开发者体验深度评测
-4. 礼部 → 汇总写对比报告
+![Edict board](screenshots/01-kanban-main.png)
+*▲ Edict board: task cards grouped by state, heartbeat badges at a glance*
 
-### 门下省审议（32 秒）—— 封驳了！
+**🔭 Department Monitor**: Visualizes task count per state, department distribution, Agent health cards. See at a glance who is busy, who is idle, who is down.
 
-**门下省第一轮直接打回：**
+![Department monitor](screenshots/02-monitor.png)
+*▲ Department monitor: state distribution + department load + Agent health cards*
 
-> *"方案有三个问题：1）旨意明确要求评测'可观测性'，但规划里没有对应子任务；2）子任务 1 和 3 都是兵部调研，有重叠，建议合并；3）缺少推荐场景的结论性子任务——分析没有结论等于没分析。驳回。"*
+**📜 Memorials**: All completed edicts are automatically archived as "memorials," showing the complete five-phase timeline — Edict→Zhongshu Planning→Menxia Review→Six Ministries Execution→Report Back. One-click copy as Markdown.
 
-中书省修改方案后，门下省第二轮准奏。
+![Memorial archive](screenshots/08-memorials.png)
+*▲ Memorials: complete five-phase timeline, one-click Markdown export*
 
-**这就是门下省的价值。** 如果没有这一步，兵部会做两次调研，最终报告里也不会有推荐场景——因为原始规划里就没要求。
+**📜 Templates**: 9 preset edict templates. Select one, fill in parameters, preview, issue edict with one click. Covers: weekly reports, code review, API design, competitive analysis, and other common scenarios.
 
-### 各部执行（17 分钟）
+![Edict template library](screenshots/09-templates.png)
+*▲ Templates: 9 preset templates, fill parameters and issue edict with one click*
 
-- **兵部**：技术深度对比，覆盖架构、通信、可观测性三维度
-- **户部**：量化数据表——Stars、Contributors、Issue 响应时间、Hello World 搭建时长
-- **礼部**：整合兵部 + 户部数据，撰写最终报告
+**⚙️ Model Config**: Each Agent can independently switch LLM models. Zhongshu uses Claude for planning, Bingbu uses GPT-4o for coding, Hubu uses DeepSeek for data crunching — each to their strength.
 
-### 回奏
+![Model configuration](screenshots/04-model-config.png)
+*▲ Model config: each Agent switches LLM independently, each to their strength*
 
-22 分钟，15800 Token，一份结构化对比报告。结论很有意思：
+Also: Officials overview (Token consumption leaderboard), skill management, Morning Brief (automated news aggregation), session monitoring, and court ceremony (easter egg animation on first daily open).
 
-| 场景 | 推荐 | 理由 |
+**All zero dependencies** — no React, no Vue, pure HTML + CSS + JavaScript, done in 2200 lines.
+
+![Officials overview](screenshots/06-official-overview.png)
+*▲ Officials overview: Token consumption leaderboard + activity stats*
+
+![Morning brief](screenshots/10-morning-briefing.png)
+*▲ Morning brief: auto-aggregates tech/finance news daily*
+
+---
+
+## VI. A Real Case Walk-Through
+
+Showing beats telling. Here's a real run record — having Three Departments & Six Ministries analyze competitors.
+
+**Edict**: Analyze the differences between the CrewAI, AutoGen, and LangGraph frameworks and output a comparison report.
+
+![Task flow details](screenshots/03-task-detail.png)
+*▲ Click any task card to see the complete flow chain and real-time status*
+
+### Zhongshu Planning (45 seconds)
+
+After receiving the edict, Zhongshu broke it into 4 sub-tasks:
+1. Bingbu → Architecture & communication mechanism research
+2. Hubu → Data collection & quantitative comparison (GitHub Stars, contributors, etc.)
+3. Bingbu → Developer experience deep evaluation
+4. Libu → Consolidate and write comparison report
+
+### Menxia Review (32 seconds) — Vetoed!
+
+**Menxia's first round sent it straight back:**
+
+> *"The plan has three problems: 1) The edict explicitly requires evaluating 'observability,' but there's no corresponding sub-task in the plan; 2) Sub-tasks 1 and 3 are both Bingbu research with overlap, suggest merging; 3) Missing a conclusory sub-task for recommended use cases — analysis without conclusions is no analysis. Rejected."*
+
+After Zhongshu revised the plan, Menxia approved on the second round.
+
+**This is the value of Menxia.** Without this step, Bingbu would have done two research tasks, and the final report would have no recommended use cases — because the original plan didn't require it.
+
+### Execution by Departments (17 minutes)
+
+- **Bingbu**: In-depth technical comparison covering architecture, communication, and observability dimensions
+- **Hubu**: Quantitative data table — Stars, contributors, issue response time, Hello World setup time
+- **Libu**: Integrates Bingbu + Hubu data, writes the final report
+
+### Report Back
+
+22 minutes, 15,800 tokens, a structured comparison report. Interesting conclusions:
+
+| Scenario | Recommendation | Reason |
 |------|------|------|
-| 快速原型 | CrewAI | 上手最快 |
-| 对话式协作 | AutoGen | 天然适合多轮讨论 |
-| 复杂工作流 | LangGraph | 状态机最灵活 |
-| **可靠性优先** | **三省六部** | 唯一内置强制审核 |
+| Rapid prototyping | CrewAI | Fastest to learn |
+| Conversational collaboration | AutoGen | Naturally suited for multi-round discussion |
+| Complex workflows | LangGraph | Most flexible state machine |
+| **Reliability first** | **Three Departments & Six Ministries** | Only one with built-in mandatory review |
 
 ---
 
-## 七、技术上的一些选择
+## VII. Some Technical Choices
 
-做这个项目的时候，我做了几个刻意的技术决策：
+When building this project, I made several deliberate technical decisions:
 
-**1. 零依赖**
+**1. Zero dependencies**
 
-看板前端是一个 HTML 文件，2200 行，没有用任何框架。后端是 Python 标准库的 `http.server`，没有 Flask 也没有 FastAPI。
+The kanban frontend is one HTML file, 2200 lines, no frameworks used. The backend is Python's standard library `http.server`, no Flask or FastAPI.
 
-为什么？因为我不想让人跑之前先 `pip install` 一堆东西。这个项目的目标用户可能只是想快速体验一下三省六部的流转效果，不想搭环境。
+Why? Because I didn't want people to `pip install` a pile of things before running it. The target users for this project might just want to quickly experience the Three Departments & Six Ministries flow, without setting up an environment.
 
-**2. 每个 Agent 一个 SOUL.md**
+**2. One SOUL.md per Agent**
 
-每个 Agent 的人格、职责、工作流规则都写在一个 Markdown 文件里。想修改门下省的审核标准？编辑 `agents/menxia/SOUL.md`，下次启动自动生效。
+Each Agent's personality, responsibilities, and workflow rules are written in a single Markdown file. Want to change Menxia's review standards? Edit `agents/menxia/SOUL.md` and it takes effect on the next start.
 
-这意味着你可以定制自己的三省六部——也许你的"兵部"不是负责工程，而是负责市场分析。改个 SOUL.md 就行。
+This means you can customize your own Three Departments & Six Ministries — maybe your "Bingbu" handles market analysis instead of engineering. Just change the SOUL.md.
 
-**3. 权限矩阵是强制的**
+**3. The permission matrix is mandatory**
 
-不是"建议"Agent 之间不要越级通信，是在架构层面强制限制。六部不能给中书省发消息，中书省不能绕过门下省直接让尚书省执行。OpenClaw 的配置文件里白纸黑字写着谁能跟谁说话。
+It's not "suggesting" that Agents avoid cross-level communication — it's enforced at the architecture level. The Six Ministries cannot message Zhongshu; Zhongshu cannot bypass Menxia to have Shangshu execute directly. The OpenClaw config file has in writing exactly who can talk to whom.
 
 ---
 
-## 八、现在你可以试了
+## VIII. Try It Now
 
-项目已经开源，MIT 协议。
+The project is open source under MIT license.
 
-**GitHub：https://github.com/cft0808/edict**
+**GitHub: https://github.com/cft0808/edict**
 
-最快的体验方式：
+Fastest way to experience it:
 
 ```bash
-# Docker 一行启动
+# Start with Docker in one line
 docker run -p 7891:7891 cft0808/edict
 
-# 打开浏览器
+# Open browser
 open http://localhost:7891
 ```
 
-如果你装了 OpenClaw，可以完整安装：
+If you have OpenClaw installed, you can do a full install:
 
 ```bash
 git clone https://github.com/cft0808/edict.git
@@ -261,42 +261,42 @@ cd edict
 chmod +x install.sh && ./install.sh
 ```
 
-安装脚本自动创建 9 个 Agent Workspace、写入人格文件、注册权限矩阵、重启 Gateway。
+The install script automatically creates 9 Agent Workspaces, writes personality files, registers the permission matrix, and restarts Gateway.
 
-![技能配置](screenshots/05-skills-config.png)
-*▲ 技能管理：各省部已安装的 Skills 一览，可查看详情和添加新技能*
-
----
-
-## 九、下一步
-
-Phase 1（核心架构）已经完成了。接下来要做的几件事：
-
-- **御批模式**：让门下省的审议结果可以推送到你的飞书/Telegram，你亲自决定准奏还是封驳
-- **功过簿**：每个 Agent 的绩效评分——完成率、返工率、耗时统计
-- **急递铺**：看板里加一个实时的 Agent 通信流向图——中书省发消息给门下省的时候，连线亮一下
-- **国史馆**：把历史旨意和奏折沉淀成知识库，新旨意可以参考历史经验
-
-完整 Roadmap 在 GitHub 上，Phase 2 和 Phase 3 的每个子项都标了难度，欢迎认领。
+![Skills configuration](screenshots/05-skills-config.png)
+*▲ Skill management: an overview of installed Skills per department, with option to view details and add new skills*
 
 ---
 
-## 最后
+## IX. What's Next
 
-AI Agent 协作的核心问题不是"让 Agent 更聪明"，而是"让 Agent 的协作有规矩"。
+Phase 1 (core architecture) is complete. Next things to build:
 
-CrewAI 解决了"多个 Agent 一起干活"的问题。AutoGen 解决了"Agent 之间能对话"的问题。
+- **Imperial Approval Mode**: Push Menxia's review results to your Feishu/Telegram so you personally decide whether to approve or veto
+- **Merit Record**: Performance scoring for each Agent — completion rate, rework rate, time statistics
+- **Express Courier**: Add a real-time Agent communication flow diagram to the kanban — a connection lights up when Zhongshu messages Menxia
+- **National History Archive**: Accumulate historical edicts and memorials into a knowledge base; new edicts can reference historical experience
 
-但谁来解决"Agent 的产出质量有保障"的问题？
-
-唐太宗在 1300 年前就给出了答案：**分权制衡**。规划的不审核，审核的不执行，执行的不规划。每一个环节都有人盯着，每一个决策都要经过审议。
-
-这可能是我见过的、最优雅的"AI 治理"方案——因为它根本不是为 AI 设计的。
-
-它是为**治理**本身设计的。
+The complete Roadmap is on GitHub; each sub-item in Phase 2 and Phase 3 has a difficulty label — contributions welcome.
 
 ---
 
-**GitHub：https://github.com/cft0808/edict**
+## Finally
 
-开源 · MIT · 欢迎 Star ⚔️
+The core problem of AI Agent collaboration is not "making Agents smarter" — it's "giving Agent collaboration rules."
+
+CrewAI solved the problem of "multiple Agents working together." AutoGen solved the problem of "Agents being able to talk to each other."
+
+But who solves the problem of "ensuring the quality of Agent output"?
+
+Emperor Taizong gave the answer 1300 years ago: **checks and balances**. Planners don't review, reviewers don't execute, executors don't plan. Every step is watched by someone; every decision must go through deliberation.
+
+This may be the most elegant "AI governance" solution I've ever seen — because it wasn't designed for AI at all.
+
+It was designed for **governance** itself.
+
+---
+
+**GitHub: https://github.com/cft0808/edict**
+
+Open source · MIT · Stars welcome ⚔️

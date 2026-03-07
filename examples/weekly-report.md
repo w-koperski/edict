@@ -1,147 +1,147 @@
-# 案例 3：周报生成
+# Case 3: Weekly Report Generation
 
-> **旨意**：生成本周工程团队周报，汇总进度、问题和下周计划
-
----
-
-## 📜 圣旨（原始指令）
-
-```
-生成本周（2/17-2/21）工程团队周报。
-数据来源：GitHub commits、PR 记录、Jira tickets。
-包含：本周完成事项、进行中事项、blocker、下周计划。
-格式：Markdown，适合贴到飞书文档。
-```
-
-**旨意 ID**：`JJC-20260221-012`
-**下旨时间**：2026-02-21 17:00:00
+> **Edict**: Generate this week's engineering team weekly report, summarizing progress, issues, and next week's plans
 
 ---
 
-## 📋 中书省规划
+## 📜 Edict (Original Instruction)
 
-> 接旨后 25 秒内完成规划
+```
+Generate this week's (2/17-2/21) engineering team weekly report.
+Data sources: GitHub commits, PR records, Jira tickets.
+Include: completed this week, in progress, blockers, next week's plans.
+Format: Markdown, suitable for pasting into Feishu documents.
+```
 
-**规划方案：**
+**Edict ID**: `JJC-20260221-012`
+**Issued At**: 2026-02-21 17:00:00
 
-| # | 子任务 | 派发部门 | 说明 |
+---
+
+## 📋 Zhongshu Planning
+
+> Planning completed within 25 seconds of receiving edict
+
+**Plan:**
+
+| # | Sub-task | Assigned Department | Notes |
 |---|--------|----------|------|
-| 1 | 数据采集与聚合 | 💰 户部 | 从 GitHub + Jira 抓取本周数据 |
-| 2 | 周报文档撰写 | 📝 礼部 | 按模板格式整理为 Markdown |
+| 1 | Data collection & aggregation | 💰 Hubu | Fetch this week's data from GitHub + Jira |
+| 2 | Weekly report writing | 📝 Libu | Organize into Markdown following template format |
 
-**预计耗时**：8 分钟
-**预计 Token**：~5,000
-
----
-
-## 🔍 门下省审议
-
-> ⏱️ 审议耗时 15 秒
-
-### 准奏 ✅（首轮通过）
-
-**门下省批语：** *"方案简洁可行。两步走：户部拉数据，礼部写文档。注意礼部输出需严格遵循飞书文档格式要求（标题层级、checkbox 格式）。准奏。"*
+**Estimated time**: 8 minutes
+**Estimated tokens**: ~5,000
 
 ---
 
-## ⚔️ 各部执行结果
+## 🔍 Menxia Review
 
-### 户部 · 数据采集（耗时 3 分钟）
+> ⏱️ Review took 15 seconds
 
-**本周 GitHub 数据汇总：**
+### Approved ✅ (Passed on first round)
 
-| 指标 | 数量 |
+**Menxia comments:** *"Plan is concise and feasible. Two steps: Hubu pulls data, Libu writes document. Note that Libu output must strictly follow Feishu document format requirements (heading levels, checkbox format). Approved."*
+
+---
+
+## ⚔️ Execution Results per Department
+
+### Hubu · Data Collection (took 3 minutes)
+
+**This week's GitHub data summary:**
+
+| Metric | Count |
 |------|------|
 | Commits | 47 |
 | PRs Merged | 12 |
 | PRs Open | 3 |
 | Issues Closed | 8 |
 | Issues Open | 5 |
-| 最活跃贡献者 | @zhangsan (18 commits) |
+| Most active contributor | @zhangsan (18 commits) |
 
-**本周 Jira 数据汇总：**
+**This week's Jira data summary:**
 
-| 状态 | Tickets |
+| Status | Tickets |
 |------|---------|
 | Done | 15 |
 | In Progress | 7 |
 | Blocked | 2 |
-| To Do（下周） | 9 |
+| To Do (next week) | 9 |
 
-**Blockers 识别：**
-1. `PROJ-234`：第三方 API 限流，等待对方提升配额（blocked 3 天）
-2. `PROJ-251`：设计稿未定稿，前端被 block
+**Blockers identified:**
+1. `PROJ-234`: Third-party API rate limiting, waiting for them to increase quota (blocked 3 days)
+2. `PROJ-251`: Design mockups not finalized, frontend blocked
 
-### 礼部 · 周报文档（耗时 4 分钟）
-
----
-
-## 📮 最终奏折（尚书省汇总）
-
-**奏折 ID**：`JJC-20260221-012`
-**总耗时**：8 分钟（规划 0.5 + 审议 0.5 + 执行 7）
-**总 Token**：4,600
-
-### 产出：周报全文
+### Libu · Weekly Report Document (took 4 minutes)
 
 ---
 
-# 📊 工程团队周报 · 2026/02/17 — 02/21
+## 📮 Final Memorial (Shangshu Summary)
 
-## ✅ 本周完成
+**Memorial ID**: `JJC-20260221-012`
+**Total time**: 8 minutes (planning 0.5 + review 0.5 + execution 7)
+**Total tokens**: 4,600
 
-- [x] **用户认证模块重构** — JWT + Refresh Token 方案上线（@zhangsan, PR #142）
-- [x] **数据看板 v2** — 新增 3 个图表面板，性能优化 40%（@lisi, PR #138, #140）
-- [x] **CI/CD 流水线升级** — 构建时间从 8 分钟降至 3 分钟（@wangwu, PR #141）
-- [x] **API 文档自动生成** — OpenAPI 3.0 spec + Redoc 部署（@zhaoliu, PR #139）
-- [x] 其他：Bug 修复 ×4, 依赖升级 ×3, 测试覆盖率提升至 82%
+### Output: Full Weekly Report
 
-**数据概览：** 47 commits · 12 PRs merged · 8 issues closed
+---
 
-## 🔄 进行中
+# 📊 Engineering Team Weekly Report · 2026/02/17 — 02/21
 
-- [ ] **支付系统集成**（60% 完成） — 对接支付宝 + 微信支付，预计下周三完成 (@zhangsan)
-- [ ] **国际化 i18n**（40% 完成） — 英文 + 日文翻译进行中 (@lisi)
-- [ ] **性能监控面板**（30% 完成） — Grafana 模板搭建中 (@wangwu)
+## ✅ Completed This Week
+
+- [x] **User authentication module refactor** — JWT + Refresh Token solution launched (@zhangsan, PR #142)
+- [x] **Data dashboard v2** — Added 3 chart panels, 40% performance improvement (@lisi, PR #138, #140)
+- [x] **CI/CD pipeline upgrade** — Build time reduced from 8 minutes to 3 minutes (@wangwu, PR #141)
+- [x] **API documentation auto-generation** — OpenAPI 3.0 spec + Redoc deployed (@zhaoliu, PR #139)
+- [x] Other: Bug fixes ×4, dependency upgrades ×3, test coverage improved to 82%
+
+**Data overview:** 47 commits · 12 PRs merged · 8 issues closed
+
+## 🔄 In Progress
+
+- [ ] **Payment system integration** (60% complete) — Integrating Alipay + WeChat Pay, expected to complete next Wednesday (@zhangsan)
+- [ ] **Internationalization i18n** (40% complete) — English + Japanese translation in progress (@lisi)
+- [ ] **Performance monitoring dashboard** (30% complete) — Grafana template setup in progress (@wangwu)
 
 ## 🚧 Blockers
 
-| Ticket | 问题 | 已 block | 需要 |
+| Ticket | Issue | Blocked for | Need |
 |--------|------|----------|------|
-| PROJ-234 | 第三方 API 限流 | 3 天 | 对方运维提升配额 |
-| PROJ-251 | 设计稿未定稿 | 2 天 | 设计师 @chenseven 本周内定稿 |
+| PROJ-234 | Third-party API rate limiting | 3 days | Ops team to increase quota |
+| PROJ-251 | Design mockups not finalized | 2 days | Designer @chenseven to finalize this week |
 
-## 📅 下周计划
+## 📅 Next Week's Plans
 
-- [ ] 支付系统集成完成 + 沙箱测试
-- [ ] 国际化覆盖率达到 80%
-- [ ] 性能监控上线 + 告警配置
-- [ ] 开始 v3.0 技术方案设计
-- [ ] Code Review 积压清理（3 个 open PRs）
+- [ ] Complete payment system integration + sandbox testing
+- [ ] Internationalization coverage to reach 80%
+- [ ] Performance monitoring go-live + alert configuration
+- [ ] Begin v3.0 technical design
+- [ ] Clear code review backlog (3 open PRs)
 
-## 📈 团队健康度
+## 📈 Team Health
 
-| 指标 | 本周 | 上周 | 趋势 |
+| Metric | This Week | Last Week | Trend |
 |------|------|------|------|
-| PR 平均 Review 时间 | 4.2h | 6.1h | 📉 好转 |
-| 测试覆盖率 | 82% | 78% | 📈 提升 |
-| Bug 收敛比 | 1.5:1 | 1.2:1 | 📈 提升 |
-| 团队心情 | 😄 | 😐 | 好转 |
+| PR average review time | 4.2h | 6.1h | 📉 Improved |
+| Test coverage | 82% | 78% | 📈 Up |
+| Bug convergence ratio | 1.5:1 | 1.2:1 | 📈 Up |
+| Team mood | 😄 | 😐 | Improved |
 
 ---
 
-*由三省六部自动生成 · 数据源：GitHub + Jira · 生成时间：2026-02-21 17:08*
+*Auto-generated by Three Departments & Six Ministries · Data sources: GitHub + Jira · Generated: 2026-02-21 17:08*
 
 ---
 
-### 三省六部的价值
+### The Value of Three Departments & Six Ministries
 
-这个案例展示了三省六部处理日常事务的效率：
-- **门下省首轮即通过** —— 简单任务不过度审核
-- **户部 + 礼部协作** —— 数据采集和文档撰写分离，各司其职
-- **8 分钟完成** —— 从下旨到拿到完整周报，不到一杯咖啡的时间
-- **格式即用** —— 直接复制到飞书文档，无需手动排版
+This case demonstrates the efficiency of Three Departments & Six Ministries for routine tasks:
+- **Menxia approved on first round** — simple tasks aren't over-reviewed
+- **Hubu + Libu collaboration** — data collection and document writing separated, each performing its role
+- **Completed in 8 minutes** — from edict to full weekly report, less than one cup of coffee
+- **Ready to use format** — paste directly into Feishu documents, no manual formatting needed
 
 ---
 
-*本案例基于真实运行记录整理，人名和项目信息已脱敏。*
+*This case is compiled from real run records; names and project information have been anonymized.*
