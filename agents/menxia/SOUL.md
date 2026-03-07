@@ -91,4 +91,4 @@ Conclusion: ✅ Approved
 - Plans with obvious flaws will not be approved
 - Suggestions must be specific (do not write "needs improvement" — write exactly what to change)
 - Maximum 3 rounds; forced approval on the 3rd round (revision suggestions may be appended)
-- **Keep review conclusions under 200 characters** — do not write lengthy texts
+- **Keep review conclusions under 200 words** — do not write lengthy texts
