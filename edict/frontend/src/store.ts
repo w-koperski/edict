@@ -1,6 +1,6 @@
 /**
- * Zustand Store — 三省六部看板状态管理
- * HTTP 5s 轮询，无 WebSocket
+ * Zustand Store — Three Departments & Six Ministries kanban state management
+ * HTTP 5s polling, no WebSocket
  */
 
 import { create } from 'zustand';
@@ -19,14 +19,14 @@ import {
 // ── Pipeline Definition (PIPE) ──
 
 export const PIPE = [
-  { key: 'Inbox',    dept: '皇上',   icon: '👑', action: '下旨' },
-  { key: 'Taizi',    dept: '太子',   icon: '🤴', action: '分拣' },
-  { key: 'Zhongshu', dept: '中书省', icon: '📜', action: '起草' },
-  { key: 'Menxia',   dept: '门下省', icon: '🔍', action: '审议' },
-  { key: 'Assigned', dept: '尚书省', icon: '📮', action: '派发' },
-  { key: 'Doing',    dept: '六部',   icon: '⚙️', action: '执行' },
-  { key: 'Review',   dept: '尚书省', icon: '🔎', action: '汇总' },
-  { key: 'Done',     dept: '回奏',   icon: '✅', action: '完成' },
+  { key: 'Inbox',    dept: 'Emperor',   icon: '👑', action: 'Issue Edict' },
+  { key: 'Taizi',    dept: 'Taizi',     icon: '🤴', action: 'Triage' },
+  { key: 'Zhongshu', dept: 'Zhongshu',  icon: '📜', action: 'Draft' },
+  { key: 'Menxia',   dept: 'Menxia',    icon: '🔍', action: 'Review' },
+  { key: 'Assigned', dept: 'Shangshu',  icon: '📮', action: 'Dispatch' },
+  { key: 'Doing',    dept: 'Six Ministries', icon: '⚙️', action: 'Execute' },
+  { key: 'Review',   dept: 'Shangshu',  icon: '🔎', action: 'Summarize' },
+  { key: 'Done',     dept: 'Report Back', icon: '✅', action: 'Complete' },
 ] as const;
 
 export const PIPE_STATE_IDX: Record<string, number> = {
@@ -35,15 +35,15 @@ export const PIPE_STATE_IDX: Record<string, number> = {
 };
 
 export const DEPT_COLOR: Record<string, string> = {
-  '太子': '#e8a040', '中书省': '#a07aff', '门下省': '#6a9eff', '尚书省': '#6aef9a',
-  '礼部': '#f5c842', '户部': '#ff9a6a', '兵部': '#ff5270', '刑部': '#cc4444',
-  '工部': '#44aaff', '吏部': '#9b59b6', '皇上': '#ffd700', '回奏': '#2ecc8a',
+  'Taizi': '#e8a040', 'Zhongshu': '#a07aff', 'Menxia': '#6a9eff', 'Shangshu': '#6aef9a',
+  'Libu': '#f5c842', 'Hubu': '#ff9a6a', 'Bingbu': '#ff5270', 'Xingbu': '#cc4444',
+  'Gongbu': '#44aaff', 'Libu_hr': '#9b59b6', 'Emperor': '#ffd700', 'Report Back': '#2ecc8a',
 };
 
 export const STATE_LABEL: Record<string, string> = {
-  Inbox: '收件', Pending: '待处理', Taizi: '太子分拣', Zhongshu: '中书起草',
-  Menxia: '门下审议', Assigned: '已派发', Doing: '执行中', Review: '待审查',
-  Done: '已完成', Blocked: '阻塞', Cancelled: '已取消', Next: '待执行',
+  Inbox: 'Inbox', Pending: 'Pending', Taizi: 'Taizi Triage', Zhongshu: 'Zhongshu Drafting',
+  Menxia: 'Menxia Review', Assigned: 'Dispatched', Doing: 'Executing', Review: 'Awaiting Review',
+  Done: 'Completed', Blocked: 'Blocked', Cancelled: 'Cancelled', Next: 'Pending Execution',
 };
 
 export function deptColor(d: string): string {
@@ -52,8 +52,8 @@ export function deptColor(d: string): string {
 
 export function stateLabel(t: Task): string {
   const r = t.review_round || 0;
-  if (t.state === 'Menxia' && r > 1) return `门下审议（第${r}轮）`;
-  if (t.state === 'Zhongshu' && r > 0) return `中书修订（第${r}轮）`;
+  if (t.state === 'Menxia' && r > 1) return `Menxia Review (Round ${r})`;
+  if (t.state === 'Zhongshu' && r > 0) return `Zhongshu Revision (Round ${r})`;
   return STATE_LABEL[t.state] || t.state;
 }
 
@@ -86,31 +86,31 @@ export type TabKey =
   | 'skills' | 'sessions' | 'memorials' | 'templates' | 'morning';
 
 export const TAB_DEFS: { key: TabKey; label: string; icon: string }[] = [
-  { key: 'edicts',    label: '旨意看板', icon: '📜' },
-  { key: 'monitor',   label: '省部调度', icon: '🏛️' },
-  { key: 'officials', label: '官员总览', icon: '👔' },
-  { key: 'models',    label: '模型配置', icon: '🤖' },
-  { key: 'skills',    label: '技能配置', icon: '🎯' },
-  { key: 'sessions',  label: '小任务',   icon: '💬' },
-  { key: 'memorials', label: '奏折阁',   icon: '📜' },
-  { key: 'templates', label: '旨库',     icon: '📋' },
-  { key: 'morning',   label: '天下要闻', icon: '🌅' },
+  { key: 'edicts',    label: 'Edict Board',        icon: '📜' },
+  { key: 'monitor',   label: 'Department Monitor',  icon: '🏛️' },
+  { key: 'officials', label: 'Officials Overview',  icon: '👔' },
+  { key: 'models',    label: 'Model Config',        icon: '🤖' },
+  { key: 'skills',    label: 'Skills Config',       icon: '🎯' },
+  { key: 'sessions',  label: 'Sessions',            icon: '💬' },
+  { key: 'memorials', label: 'Memorials',           icon: '📜' },
+  { key: 'templates', label: 'Templates',           icon: '📋' },
+  { key: 'morning',   label: 'Morning Brief',       icon: '🌅' },
 ];
 
 // ── DEPTS for monitor ──
 
 export const DEPTS = [
-  { id: 'taizi',    label: '太子',   emoji: '🤴', role: '太子',     rank: '储君' },
-  { id: 'zhongshu', label: '中书省', emoji: '📜', role: '中书令',   rank: '正一品' },
-  { id: 'menxia',   label: '门下省', emoji: '🔍', role: '侍中',     rank: '正一品' },
-  { id: 'shangshu', label: '尚书省', emoji: '📮', role: '尚书令',   rank: '正一品' },
-  { id: 'libu',     label: '礼部',   emoji: '📝', role: '礼部尚书', rank: '正二品' },
-  { id: 'hubu',     label: '户部',   emoji: '💰', role: '户部尚书', rank: '正二品' },
-  { id: 'bingbu',   label: '兵部',   emoji: '⚔️', role: '兵部尚书', rank: '正二品' },
-  { id: 'xingbu',   label: '刑部',   emoji: '⚖️', role: '刑部尚书', rank: '正二品' },
-  { id: 'gongbu',   label: '工部',   emoji: '🔧', role: '工部尚书', rank: '正二品' },
-  { id: 'libu_hr',  label: '吏部',   emoji: '👔', role: '吏部尚书', rank: '正二品' },
-  { id: 'zaochao',  label: '钦天监', emoji: '🌟', role: '朝报官',   rank: '正三品' },
+  { id: 'taizi',    label: 'Taizi',              emoji: '🤴', role: 'Crown Prince',          rank: 'Crown Prince' },
+  { id: 'zhongshu', label: 'Zhongshu',           emoji: '📜', role: 'Chief Secretary',       rank: 'First Rank' },
+  { id: 'menxia',   label: 'Menxia',             emoji: '🔍', role: 'Chamberlain',           rank: 'First Rank' },
+  { id: 'shangshu', label: 'Shangshu',           emoji: '📮', role: 'Grand Secretary',       rank: 'First Rank' },
+  { id: 'libu',     label: 'Libu',               emoji: '📝', role: 'Minister of Rites',     rank: 'Second Rank' },
+  { id: 'hubu',     label: 'Hubu',               emoji: '💰', role: 'Minister of Finance',   rank: 'Second Rank' },
+  { id: 'bingbu',   label: 'Bingbu',             emoji: '⚔️', role: 'Minister of War',       rank: 'Second Rank' },
+  { id: 'xingbu',   label: 'Xingbu',             emoji: '⚖️', role: 'Minister of Justice',   rank: 'Second Rank' },
+  { id: 'gongbu',   label: 'Gongbu',             emoji: '🔧', role: 'Minister of Works',     rank: 'Second Rank' },
+  { id: 'libu_hr',  label: 'Libu_hr',            emoji: '👔', role: 'Minister of Personnel', rank: 'Second Rank' },
+  { id: 'zaochao',  label: 'Imperial Astronomer', emoji: '🌟', role: 'Morning Briefing Officer', rank: 'Third Rank' },
 ];
 
 // ── Templates ──
@@ -139,111 +139,111 @@ export interface Template {
 
 export const TEMPLATES: Template[] = [
   {
-    id: 'tpl-weekly-report', cat: '日常办公', icon: '📝', name: '周报生成',
-    desc: '基于本周看板数据和各部产出，自动生成结构化周报',
-    depts: ['户部', '礼部'], est: '~10分钟', cost: '¥0.5',
+    id: 'tpl-weekly-report', cat: 'Daily Office', icon: '📝', name: 'Weekly Report',
+    desc: 'Automatically generates a structured weekly report based on kanban data and department output',
+    depts: ['Hubu', 'Libu'], est: '~10 min', cost: '¥0.5',
     params: [
-      { key: 'date_range', label: '报告周期', type: 'text', default: '本周', required: true },
-      { key: 'focus', label: '重点关注（逗号分隔）', type: 'text', default: '项目进展,下周计划' },
-      { key: 'format', label: '输出格式', type: 'select', options: ['Markdown', '飞书文档'], default: 'Markdown' },
+      { key: 'date_range', label: 'Report Period', type: 'text', default: 'This Week', required: true },
+      { key: 'focus', label: 'Key Focus (comma-separated)', type: 'text', default: 'Project Progress,Next Week Plan' },
+      { key: 'format', label: 'Output Format', type: 'select', options: ['Markdown', 'Feishu Doc'], default: 'Markdown' },
     ],
-    command: '生成{date_range}的周报，重点覆盖{focus}，输出为{format}格式',
+    command: 'Generate the weekly report for {date_range}, covering {focus}, output as {format} format',
   },
   {
-    id: 'tpl-code-review', cat: '工程开发', icon: '🔍', name: '代码审查',
-    desc: '对指定代码仓库/文件进行质量审查，输出问题清单和改进建议',
-    depts: ['兵部', '刑部'], est: '~20分钟', cost: '¥2',
+    id: 'tpl-code-review', cat: 'Engineering', icon: '🔍', name: 'Code Review',
+    desc: 'Performs quality review of specified code repositories/files, outputs issue list and improvement suggestions',
+    depts: ['Bingbu', 'Xingbu'], est: '~20 min', cost: '¥2',
     params: [
-      { key: 'repo', label: '仓库/文件路径', type: 'text', required: true },
-      { key: 'scope', label: '审查范围', type: 'select', options: ['全量', '增量(最近commit)', '指定文件'], default: '增量(最近commit)' },
-      { key: 'focus', label: '重点关注（可选）', type: 'text', default: '安全漏洞,错误处理,性能' },
+      { key: 'repo', label: 'Repository/File Path', type: 'text', required: true },
+      { key: 'scope', label: 'Review Scope', type: 'select', options: ['Full', 'Incremental (recent commit)', 'Specified files'], default: 'Incremental (recent commit)' },
+      { key: 'focus', label: 'Key Focus (optional)', type: 'text', default: 'Security vulnerabilities,Error handling,Performance' },
     ],
-    command: '对 {repo} 进行代码审查，范围：{scope}，重点关注：{focus}',
+    command: 'Perform code review on {repo}, scope: {scope}, focus: {focus}',
   },
   {
-    id: 'tpl-api-design', cat: '工程开发', icon: '⚡', name: 'API 设计与实现',
-    desc: '从需求描述到 RESTful API 设计、实现、测试一条龙',
-    depts: ['中书省', '兵部'], est: '~45分钟', cost: '¥3',
+    id: 'tpl-api-design', cat: 'Engineering', icon: '⚡', name: 'API Design & Implementation',
+    desc: 'End-to-end from requirements to RESTful API design, implementation, and testing',
+    depts: ['Zhongshu', 'Bingbu'], est: '~45 min', cost: '¥3',
     params: [
-      { key: 'requirement', label: '需求描述', type: 'textarea', required: true },
-      { key: 'tech', label: '技术栈', type: 'select', options: ['Python/FastAPI', 'Node/Express', 'Go/Gin'], default: 'Python/FastAPI' },
-      { key: 'auth', label: '鉴权方式', type: 'select', options: ['JWT', 'API Key', '无'], default: 'JWT' },
+      { key: 'requirement', label: 'Requirements Description', type: 'textarea', required: true },
+      { key: 'tech', label: 'Tech Stack', type: 'select', options: ['Python/FastAPI', 'Node/Express', 'Go/Gin'], default: 'Python/FastAPI' },
+      { key: 'auth', label: 'Auth Method', type: 'select', options: ['JWT', 'API Key', 'None'], default: 'JWT' },
     ],
-    command: '设计并实现一个 {tech} 的 RESTful API：{requirement}。鉴权方式：{auth}',
+    command: 'Design and implement a {tech} RESTful API: {requirement}. Auth method: {auth}',
   },
   {
-    id: 'tpl-competitor', cat: '数据分析', icon: '📊', name: '竞品分析',
-    desc: '爬取竞品网站数据，分析对比，生成结构化报告',
-    depts: ['兵部', '户部', '礼部'], est: '~60分钟', cost: '¥5',
+    id: 'tpl-competitor', cat: 'Data Analysis', icon: '📊', name: 'Competitor Analysis',
+    desc: 'Scrapes competitor website data, analyzes and compares, generates structured report',
+    depts: ['Bingbu', 'Hubu', 'Libu'], est: '~60 min', cost: '¥5',
     params: [
-      { key: 'targets', label: '竞品名称/URL（每行一个）', type: 'textarea', required: true },
-      { key: 'dimensions', label: '分析维度', type: 'text', default: '产品功能,定价策略,用户评价' },
-      { key: 'format', label: '输出格式', type: 'select', options: ['Markdown报告', '表格对比'], default: 'Markdown报告' },
+      { key: 'targets', label: 'Competitor Names/URLs (one per line)', type: 'textarea', required: true },
+      { key: 'dimensions', label: 'Analysis Dimensions', type: 'text', default: 'Product features,Pricing strategy,User reviews' },
+      { key: 'format', label: 'Output Format', type: 'select', options: ['Markdown report', 'Comparison table'], default: 'Markdown report' },
     ],
-    command: '对以下竞品进行分析：\n{targets}\n\n分析维度：{dimensions}，输出格式：{format}',
+    command: 'Analyze the following competitors:\n{targets}\n\nDimensions: {dimensions}, Output format: {format}',
   },
   {
-    id: 'tpl-data-report', cat: '数据分析', icon: '📈', name: '数据报告',
-    desc: '对给定数据集进行清洗、分析、可视化，输出分析报告',
-    depts: ['户部', '礼部'], est: '~30分钟', cost: '¥2',
+    id: 'tpl-data-report', cat: 'Data Analysis', icon: '📈', name: 'Data Report',
+    desc: 'Cleans, analyzes, and visualizes a given dataset, outputs analysis report',
+    depts: ['Hubu', 'Libu'], est: '~30 min', cost: '¥2',
     params: [
-      { key: 'data_source', label: '数据源描述/路径', type: 'text', required: true },
-      { key: 'questions', label: '分析问题（每行一个）', type: 'textarea' },
-      { key: 'viz', label: '是否需要可视化图表', type: 'select', options: ['是', '否'], default: '是' },
+      { key: 'data_source', label: 'Data Source Description/Path', type: 'text', required: true },
+      { key: 'questions', label: 'Analysis Questions (one per line)', type: 'textarea' },
+      { key: 'viz', label: 'Visualization Charts Needed', type: 'select', options: ['Yes', 'No'], default: 'Yes' },
     ],
-    command: '对数据 {data_source} 进行分析。{questions}\n需要可视化：{viz}',
+    command: 'Analyze data {data_source}. {questions}\nVisualization needed: {viz}',
   },
   {
-    id: 'tpl-blog', cat: '内容创作', icon: '✍️', name: '博客文章',
-    desc: '给定主题和要求，生成高质量博客文章',
-    depts: ['礼部'], est: '~15分钟', cost: '¥1',
+    id: 'tpl-blog', cat: 'Content Creation', icon: '✍️', name: 'Blog Article',
+    desc: 'Generates high-quality blog articles given a topic and requirements',
+    depts: ['Libu'], est: '~15 min', cost: '¥1',
     params: [
-      { key: 'topic', label: '文章主题', type: 'text', required: true },
-      { key: 'audience', label: '目标读者', type: 'text', default: '技术人员' },
-      { key: 'length', label: '期望字数', type: 'select', options: ['~1000字', '~2000字', '~3000字'], default: '~2000字' },
-      { key: 'style', label: '风格', type: 'select', options: ['技术教程', '观点评论', '案例分析'], default: '技术教程' },
+      { key: 'topic', label: 'Article Topic', type: 'text', required: true },
+      { key: 'audience', label: 'Target Audience', type: 'text', default: 'Technical professionals' },
+      { key: 'length', label: 'Target Length', type: 'select', options: ['~500 words', '~1000 words', '~1500 words'], default: '~1000 words' },
+      { key: 'style', label: 'Style', type: 'select', options: ['Technical tutorial', 'Opinion piece', 'Case study'], default: 'Technical tutorial' },
     ],
-    command: '写一篇关于「{topic}」的博客文章，面向{audience}，{length}，风格：{style}',
+    command: 'Write a blog article about "{topic}", aimed at {audience}, {length}, style: {style}',
   },
   {
-    id: 'tpl-deploy', cat: '工程开发', icon: '🚀', name: '部署方案',
-    desc: '生成完整的部署检查单、Docker配置、CI/CD流程',
-    depts: ['兵部', '工部'], est: '~25分钟', cost: '¥2',
+    id: 'tpl-deploy', cat: 'Engineering', icon: '🚀', name: 'Deployment Plan',
+    desc: 'Generates complete deployment checklist, Docker config, and CI/CD pipeline',
+    depts: ['Bingbu', 'Gongbu'], est: '~25 min', cost: '¥2',
     params: [
-      { key: 'project', label: '项目名称/描述', type: 'text', required: true },
-      { key: 'env', label: '部署环境', type: 'select', options: ['Docker', 'K8s', 'VPS', 'Serverless'], default: 'Docker' },
-      { key: 'ci', label: 'CI/CD 工具', type: 'select', options: ['GitHub Actions', 'GitLab CI', '无'], default: 'GitHub Actions' },
+      { key: 'project', label: 'Project Name/Description', type: 'text', required: true },
+      { key: 'env', label: 'Deployment Environment', type: 'select', options: ['Docker', 'K8s', 'VPS', 'Serverless'], default: 'Docker' },
+      { key: 'ci', label: 'CI/CD Tool', type: 'select', options: ['GitHub Actions', 'GitLab CI', 'None'], default: 'GitHub Actions' },
     ],
-    command: '为项目「{project}」生成{env}部署方案，CI/CD使用{ci}',
+    command: 'Generate a {env} deployment plan for project "{project}", using {ci} for CI/CD',
   },
   {
-    id: 'tpl-email', cat: '内容创作', icon: '📧', name: '邮件/通知文案',
-    desc: '根据场景和目的，生成专业邮件或通知文案',
-    depts: ['礼部'], est: '~5分钟', cost: '¥0.3',
+    id: 'tpl-email', cat: 'Content Creation', icon: '📧', name: 'Email / Notification Copy',
+    desc: 'Generates professional email or notification copy based on scenario and purpose',
+    depts: ['Libu'], est: '~5 min', cost: '¥0.3',
     params: [
-      { key: 'scenario', label: '使用场景', type: 'select', options: ['商务邮件', '产品发布', '客户通知', '内部公告'], default: '商务邮件' },
-      { key: 'purpose', label: '目的/内容', type: 'textarea', required: true },
-      { key: 'tone', label: '语调', type: 'select', options: ['正式', '友好', '简洁'], default: '正式' },
+      { key: 'scenario', label: 'Use Case', type: 'select', options: ['Business email', 'Product launch', 'Customer notice', 'Internal announcement'], default: 'Business email' },
+      { key: 'purpose', label: 'Purpose/Content', type: 'textarea', required: true },
+      { key: 'tone', label: 'Tone', type: 'select', options: ['Formal', 'Friendly', 'Concise'], default: 'Formal' },
     ],
-    command: '撰写一封{scenario}，{tone}语调。内容：{purpose}',
+    command: 'Write a {scenario} with a {tone} tone. Content: {purpose}',
   },
   {
-    id: 'tpl-standup', cat: '日常办公', icon: '🗓️', name: '每日站会摘要',
-    desc: '汇总各部今日进展和明日计划，生成站会摘要',
-    depts: ['尚书省'], est: '~5分钟', cost: '¥0.3',
+    id: 'tpl-standup', cat: 'Daily Office', icon: '🗓️', name: 'Daily Standup Summary',
+    desc: 'Summarizes today\'s progress and tomorrow\'s plans across departments, generates standup summary',
+    depts: ['Shangshu'], est: '~5 min', cost: '¥0.3',
     params: [
-      { key: 'range', label: '汇总范围', type: 'select', options: ['今天', '最近24小时', '昨天+今天'], default: '今天' },
+      { key: 'range', label: 'Summary Range', type: 'select', options: ['Today', 'Last 24 hours', 'Yesterday + Today'], default: 'Today' },
     ],
-    command: '汇总{range}各部工作进展和待办，生成站会摘要',
+    command: 'Summarize {range} work progress and todos across departments, generate standup summary',
   },
 ];
 
 export const TPL_CATS = [
-  { name: '全部', icon: '📋' },
-  { name: '日常办公', icon: '💼' },
-  { name: '数据分析', icon: '📊' },
-  { name: '工程开发', icon: '⚙️' },
-  { name: '内容创作', icon: '✍️' },
+  { name: 'All', icon: '📋' },
+  { name: 'Daily Office', icon: '💼' },
+  { name: 'Data Analysis', icon: '📊' },
+  { name: 'Engineering', icon: '⚙️' },
+  { name: 'Content Creation', icon: '✍️' },
 ];
 
 // ── Main Store ──
@@ -304,7 +304,7 @@ export const useStore = create<AppStore>((set, get) => ({
   activeTab: 'edicts',
   edictFilter: 'active',
   sessFilter: 'all',
-  tplCatFilter: '全部',
+  tplCatFilter: 'All',
   selectedOfficial: null,
   modalTaskId: null,
   countdown: 5,
@@ -446,11 +446,11 @@ export function timeAgo(iso: string | undefined): string {
     if (isNaN(d.getTime())) return '';
     const diff = Date.now() - d.getTime();
     const mins = Math.floor(diff / 60000);
-    if (mins < 1) return '刚刚';
-    if (mins < 60) return mins + '分钟前';
+    if (mins < 1) return 'just now';
+    if (mins < 60) return `${mins}m ago`;
     const hrs = Math.floor(mins / 60);
-    if (hrs < 24) return hrs + '小时前';
-    return Math.floor(hrs / 24) + '天前';
+    if (hrs < 24) return `${hrs}h ago`;
+    return `${Math.floor(hrs / 24)}d ago`;
   } catch {
     return '';
   }

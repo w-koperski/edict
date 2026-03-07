@@ -14,7 +14,7 @@ export default function TemplatePanel() {
   const [previewCmd, setPreviewCmd] = useState('');
 
   let tpls = TEMPLATES;
-  if (tplCatFilter !== '全部') tpls = tpls.filter((t) => t.cat === tplCatFilter);
+  if (tplCatFilter !== 'All') tpls = tpls.filter((t) => t.cat === tplCatFilter);
 
   const openForm = (tpl: Template) => {
     const vals: Record<string, string> = {};
@@ -44,7 +44,7 @@ export default function TemplatePanel() {
     if (!formTpl) return;
     const cmd = buildCmd(formTpl);
     if (!cmd.trim()) {
-      toast('请填写必填参数', 'err');
+      toast('Please fill in required fields', 'err');
       return;
     }
 
@@ -68,21 +68,21 @@ export default function TemplatePanel() {
       }
       const r = await api.createTask({
         title: cmd.substring(0, 120),
-        org: '中书省',
+        org: 'Zhongshu',
         targetDept: formTpl.depts[0] || '',
         priority: 'normal',
         templateId: formTpl.id,
         params,
       });
       if (r.ok) {
-        toast(`📜 ${r.taskId} 旨意已下达`, 'ok');
+        toast(`📜 ${r.taskId} edict issued`, 'ok');
         setFormTpl(null);
         loadAll();
       } else {
-        toast(r.error || '下旨失败', 'err');
+        toast(r.error || 'Issue edict failed', 'err');
       }
     } catch {
-      toast('⚠️ 服务器连接失败', 'err');
+      toast('⚠️ Server connection failed', 'err');
     }
   };
 
@@ -132,7 +132,7 @@ export default function TemplatePanel() {
             <button className="modal-close" onClick={() => setFormTpl(null)}>✕</button>
             <div className="modal-body">
               <div style={{ fontSize: 11, color: 'var(--acc)', fontWeight: 700, letterSpacing: '.04em', marginBottom: 4 }}>
-                圣旨模板
+                Edict Template
               </div>
               <div style={{ fontSize: 20, fontWeight: 800, marginBottom: 6 }}>
                 {formTpl.icon} {formTpl.name}
@@ -197,7 +197,7 @@ export default function TemplatePanel() {
                     }}
                   >
                     <div style={{ fontSize: 11, fontWeight: 600, color: 'var(--text)', marginBottom: 6 }}>
-                      📜 将发送给中书省的旨意：
+                      📜 Edict to be sent to Zhongshu:
                     </div>
                     <div style={{ whiteSpace: 'pre-wrap', lineHeight: 1.6 }}>{previewCmd}</div>
                   </div>
@@ -205,10 +205,10 @@ export default function TemplatePanel() {
 
                 <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end' }}>
                   <button type="button" className="btn btn-g" onClick={preview} style={{ padding: '8px 16px', fontSize: 12 }}>
-                    👁 预览旨意
+                    👁 Preview
                   </button>
                   <button type="submit" className="tpl-go" style={{ padding: '8px 20px', fontSize: 13 }}>
-                    📜 下旨
+                    📜 Issue Edict
                   </button>
                 </div>
               </form>

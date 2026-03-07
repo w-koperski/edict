@@ -1,11 +1,11 @@
 /**
- * API 层 — 对接 dashboard/server.py
- * 生产环境从同源 (port 7891) 请求，开发环境可通过 VITE_API_URL 指定
+ * API Layer — connects to dashboard/server.py
+ * In production, requests from same origin (port 7891); in development, can specify via VITE_API_URL
  */
 
 const API_BASE = import.meta.env.VITE_API_URL || '';
 
-// ── 通用请求 ──
+// ── Generic Requests ──
 
 async function fetchJ<T>(url: string): Promise<T> {
   const res = await fetch(url, { cache: 'no-store' });
@@ -22,10 +22,10 @@ async function postJ<T>(url: string, data: unknown): Promise<T> {
   return res.json();
 }
 
-// ── API 接口 ──
+// ── API Endpoints ──
 
 export const api = {
-  // 核心数据
+  // Core data
   liveStatus: () => fetchJ<LiveStatus>(`${API_BASE}/api/live-status`),
   agentConfig: () => fetchJ<AgentConfig>(`${API_BASE}/api/agent-config`),
   modelChangeLog: () => fetchJ<ChangeLogEntry[]>(`${API_BASE}/api/model-change-log`).catch(() => []),
@@ -34,19 +34,19 @@ export const api = {
   morningConfig: () => fetchJ<SubConfig>(`${API_BASE}/api/morning-config`),
   agentsStatus: () => fetchJ<AgentsStatusData>(`${API_BASE}/api/agents-status`),
 
-  // 任务实时动态
+  // Task live activity
   taskActivity: (id: string) =>
     fetchJ<TaskActivityData>(`${API_BASE}/api/task-activity/${encodeURIComponent(id)}`),
   schedulerState: (id: string) =>
     fetchJ<SchedulerStateData>(`${API_BASE}/api/scheduler-state/${encodeURIComponent(id)}`),
 
-  // 技能内容
+  // Skill content
   skillContent: (agentId: string, skillName: string) =>
     fetchJ<SkillContentResult>(
       `${API_BASE}/api/skill-content/${encodeURIComponent(agentId)}/${encodeURIComponent(skillName)}`
     ),
 
-  // 操作类
+  // Actions
   setModel: (agentId: string, model: string) =>
     postJ<ActionResult>(`${API_BASE}/api/set-model`, { agentId, model }),
   agentWake: (agentId: string) =>
@@ -79,7 +79,7 @@ export const api = {
   addSkill: (agentId: string, skillName: string, description: string, trigger: string) =>
     postJ<ActionResult>(`${API_BASE}/api/add-skill`, { agentId, skillName, description, trigger }),
 
-  // 远程 Skills 管理
+  // Remote Skills management
   addRemoteSkill: (agentId: string, skillName: string, sourceUrl: string, description?: string) =>
     postJ<ActionResult & { skillName?: string; agentId?: string; source?: string; localPath?: string; size?: number; addedAt?: string }>(
       `${API_BASE}/api/add-remote-skill`, { agentId, skillName, sourceUrl, description: description || '' }
