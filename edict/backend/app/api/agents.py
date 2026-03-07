@@ -1,4 +1,4 @@
-"""Agents API — Agent 配置和状态查询。"""
+"""Agents API — Agent configuration and status queries."""
 
 import json
 import logging
@@ -9,23 +9,23 @@ from fastapi import APIRouter
 log = logging.getLogger("edict.api.agents")
 router = APIRouter()
 
-# Agent 元信息（对应 agents/ 目录下的 SOUL.md）
+# Agent metadata (corresponds to SOUL.md in agents/ directory)
 AGENT_META = {
-    "zaochao": {"name": "早朝（朝会主持）", "role": "朝会召集与议程管理", "icon": "🏛️"},
-    "shangshu": {"name": "尚书令", "role": "总协调与任务监督", "icon": "📜"},
-    "zhongshu": {"name": "中书省", "role": "起草诏令与方案规划", "icon": "✍️"},
-    "menxia": {"name": "门下省", "role": "审核与封驳", "icon": "🔍"},
-    "libu": {"name": "吏部", "role": "人事与组织管理", "icon": "👤"},
-    "hubu": {"name": "户部", "role": "财务与资源管理", "icon": "💰"},
-    "gongbu": {"name": "工部", "role": "工程与技术实施", "icon": "🔧"},
-    "xingbu": {"name": "刑部", "role": "规范与质量审查", "icon": "⚖️"},
-    "bingbu": {"name": "兵部", "role": "安全与应急响应", "icon": "🛡️"},
+    "zaochao": {"name": "Zaochao (Court Convener)", "role": "Court assembly and agenda management", "icon": "🏛️"},
+    "shangshu": {"name": "Grand Secretary", "role": "Overall coordination and task oversight", "icon": "📜"},
+    "zhongshu": {"name": "Zhongshu", "role": "Drafting edicts and planning", "icon": "✍️"},
+    "menxia": {"name": "Menxia", "role": "Review and veto", "icon": "🔍"},
+    "libu": {"name": "Libu_hr (Personnel Ministry)", "role": "Personnel and organizational management", "icon": "👤"},
+    "hubu": {"name": "Hubu (Finance Ministry)", "role": "Finance and resource management", "icon": "💰"},
+    "gongbu": {"name": "Gongbu (Engineering Ministry)", "role": "Engineering and technical implementation", "icon": "🔧"},
+    "xingbu": {"name": "Xingbu (Justice Ministry)", "role": "Compliance and quality review", "icon": "⚖️"},
+    "bingbu": {"name": "Bingbu (Military Ministry)", "role": "Security and emergency response", "icon": "🛡️"},
 }
 
 
 @router.get("")
 async def list_agents():
-    """列出所有可用 Agent。"""
+    """List all available Agents."""
     agents = []
     for agent_id, meta in AGENT_META.items():
         agents.append({
@@ -37,12 +37,12 @@ async def list_agents():
 
 @router.get("/{agent_id}")
 async def get_agent(agent_id: str):
-    """获取 Agent 详情。"""
+    """Get Agent details."""
     meta = AGENT_META.get(agent_id)
     if not meta:
         return {"error": f"Agent '{agent_id}' not found"}, 404
 
-    # 尝试读取 SOUL.md
+    # Try to read SOUL.md
     soul_path = Path(__file__).parents[4] / "agents" / agent_id / "SOUL.md"
     soul_content = ""
     if soul_path.exists():
@@ -57,7 +57,7 @@ async def get_agent(agent_id: str):
 
 @router.get("/{agent_id}/config")
 async def get_agent_config(agent_id: str):
-    """获取 Agent 运行时配置。"""
+    """Get Agent runtime configuration."""
     config_path = Path(__file__).parents[4] / "data" / "agent_config.json"
     if not config_path.exists():
         return {"agent_id": agent_id, "config": {}}

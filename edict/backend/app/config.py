@@ -1,4 +1,4 @@
-"""Edict 配置管理 — 从环境变量加载所有配置。"""
+"""Edict configuration management — loads all settings from environment variables."""
 
 from pydantic_settings import BaseSettings
 from functools import lru_cache
@@ -11,7 +11,7 @@ class Settings(BaseSettings):
     postgres_db: str = "edict"
     postgres_user: str = "edict"
     postgres_password: str = "edict_secret_change_me"
-    database_url_override: str | None = None  # 直接设置 DATABASE_URL 环境变量时用
+    database_url_override: str | None = None  # Used when setting DATABASE_URL environment variable directly
 
     # ── Redis ──
     redis_url: str = "redis://localhost:6379/0"
@@ -28,18 +28,18 @@ class Settings(BaseSettings):
     openclaw_bin: str = "openclaw"
     openclaw_project_dir: str | None = None
 
-    # ── Legacy 兼容 ──
+    # ── Legacy compatibility ──
     legacy_data_dir: str = "../data"
     legacy_tasks_file: str = "../data/tasks_source.json"
 
-    # ── 调度参数 ──
+    # ── Scheduling parameters ──
     stall_threshold_sec: int = 180
     max_dispatch_retry: int = 3
     dispatch_timeout_sec: int = 300
     heartbeat_interval_sec: int = 30
     scheduler_scan_interval_seconds: int = 60
 
-    # ── 飞书 ──
+    # ── Feishu ──
     feishu_deliver: bool = True
     feishu_channel: str = "feishu"
 
@@ -54,7 +54,7 @@ class Settings(BaseSettings):
 
     @property
     def database_url_sync(self) -> str:
-        """同步 URL，供 Alembic 使用。"""
+        """Sync URL for Alembic."""
         return (
             f"postgresql://{self.postgres_user}:{self.postgres_password}"
             f"@{self.postgres_host}:{self.postgres_port}/{self.postgres_db}"

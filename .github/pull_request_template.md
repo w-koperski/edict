@@ -1,18 +1,18 @@
-## 变更描述
-<!-- 简要描述此 PR 的目的和变更内容 -->
+## Change Description
+<!-- Briefly describe the purpose and content of this PR -->
 
-## 变更类型
-- [ ] Bug 修复
-- [ ] 新功能
-- [ ] 重构 / 代码优化
-- [ ] 文档更新
-- [ ] CI / 工程配置
+## Change Type
+- [ ] Bug fix
+- [ ] New feature
+- [ ] Refactor / Code optimization
+- [ ] Documentation update
+- [ ] CI / Engineering configuration
 
-## 检查清单
-- [ ] 代码已通过 `python3 -m py_compile` 检查
-- [ ] 已在本地测试运行 `run_loop.sh`
-- [ ] 涉及看板的变更已在浏览器中验证
-- [ ] 更新了相关文档（如适用）
+## Checklist
+- [ ] Code passes `python3 -m py_compile` check
+- [ ] Tested locally with `run_loop.sh`
+- [ ] Kanban-related changes verified in browser
+- [ ] Updated relevant documentation (if applicable)
 
-## 关联 Issue
-<!-- 如 Fixes #123 -->
+## Related Issue
+<!-- e.g. Fixes #123 -->

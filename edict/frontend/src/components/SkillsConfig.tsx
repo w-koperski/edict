@@ -2,13 +2,13 @@ import { useEffect, useState } from 'react';
 import { useStore } from '../store';
 import { api, RemoteSkillItem } from '../api';
 
-// 社区知名 Skills 源快选列表
+// Community well-known Skills source quick-pick list
 const COMMUNITY_SOURCES = [
   {
     label: 'obra/superpowers',
     emoji: '⚡',
     stars: '66.9k',
-    desc: '完整开发工作流技能集',
+    desc: 'Complete dev workflow skill set',
     skills: [
       { name: 'brainstorming', url: 'https://raw.githubusercontent.com/obra/superpowers/refs/heads/main/skills/brainstorming/SKILL.md' },
       { name: 'test-driven-development', url: 'https://raw.githubusercontent.com/obra/superpowers/refs/heads/main/skills/test-driven-development/SKILL.md' },
@@ -25,8 +25,8 @@ const COMMUNITY_SOURCES = [
   {
     label: 'anthropics/skills',
     emoji: '🏛️',
-    stars: '官方',
-    desc: 'Anthropic 官方技能库',
+    stars: 'Official',
+    desc: 'Anthropic Official Skill Library',
     skills: [
       { name: 'docx', url: 'https://raw.githubusercontent.com/anthropics/skills/main/skills/docx/SKILL.md' },
       { name: 'pdf', url: 'https://raw.githubusercontent.com/anthropics/skills/main/skills/pdf/SKILL.md' },
@@ -44,7 +44,7 @@ const COMMUNITY_SOURCES = [
     label: 'ComposioHQ/awesome-claude-skills',
     emoji: '🌐',
     stars: '39.2k',
-    desc: '100+ 社区精选技能',
+    desc: '100+ community curated skills',
     skills: [
       { name: 'github-integration', url: 'https://raw.githubusercontent.com/ComposioHQ/awesome-claude-skills/master/github-integration/SKILL.md' },
       { name: 'data-analysis', url: 'https://raw.githubusercontent.com/ComposioHQ/awesome-claude-skills/master/data-analysis/SKILL.md' },
@@ -58,16 +58,16 @@ export default function SkillsConfig() {
   const loadAgentConfig = useStore((s) => s.loadAgentConfig);
   const toast = useStore((s) => s.toast);
 
-  // 本地技能状态
+  // Local skills state
   const [skillModal, setSkillModal] = useState<{ agentId: string; name: string; content: string; path: string } | null>(null);
   const [addForm, setAddForm] = useState<{ agentId: string; agentLabel: string } | null>(null);
   const [formData, setFormData] = useState({ name: '', desc: '', trigger: '' });
   const [submitting, setSubmitting] = useState(false);
 
-  // 主 Tab 切换
+  // Main Tab switch
   const [activeTab, setActiveTab] = useState<'local' | 'remote'>('local');
 
-  // 远程技能状态
+  // Remote skills state
   const [remoteSkills, setRemoteSkills] = useState<RemoteSkillItem[]>([]);
   const [remoteLoading, setRemoteLoading] = useState(false);
   const [addRemoteForm, setAddRemoteForm] = useState(false);
@@ -92,22 +92,22 @@ export default function SkillsConfig() {
       const r = await api.remoteSkillsList();
       if (r.ok) setRemoteSkills(r.remoteSkills || []);
     } catch {
-      toast('远程技能列表加载失败', 'err');
+      toast('Failed to load remote skill list', 'err');
     }
     setRemoteLoading(false);
   };
 
   const openSkill = async (agentId: string, skillName: string) => {
-    setSkillModal({ agentId, name: skillName, content: '⟳ 加载中…', path: '' });
+    setSkillModal({ agentId, name: skillName, content: '⟳ Loading…', path: '' });
     try {
       const r = await api.skillContent(agentId, skillName);
       if (r.ok) {
         setSkillModal({ agentId, name: skillName, content: r.content || '', path: r.path || '' });
       } else {
-        setSkillModal({ agentId, name: skillName, content: '❌ ' + (r.error || '无法读取'), path: '' });
+        setSkillModal({ agentId, name: skillName, content: '❌ ' + (r.error || 'Cannot read'), path: '' });
       }
     } catch {
-      setSkillModal({ agentId, name: skillName, content: '❌ 服务器连接失败', path: '' });
+      setSkillModal({ agentId, name: skillName, content: '❌ Server connection failed', path: '' });
     }
   };
 
@@ -123,14 +123,14 @@ export default function SkillsConfig() {
     try {
       const r = await api.addSkill(addForm.agentId, formData.name, formData.desc, formData.trigger);
       if (r.ok) {
-        toast(`✅ 技能 ${formData.name} 已添加到 ${addForm.agentLabel}`, 'ok');
+        toast(`✅ Skill ${formData.name} added to ${addForm.agentLabel}`, 'ok');
         setAddForm(null);
         loadAgentConfig();
       } else {
-        toast(r.error || '添加失败', 'err');
+        toast(r.error || 'Add failed', 'err');
       }
     } catch {
-      toast('服务器连接失败', 'err');
+      toast('Server connection failed', 'err');
     }
     setSubmitting(false);
   };
@@ -143,16 +143,16 @@ export default function SkillsConfig() {
     try {
       const r = await api.addRemoteSkill(agentId, skillName, sourceUrl, description);
       if (r.ok) {
-        toast(`✅ 远程技能 ${skillName} 已添加到 ${agentId}`, 'ok');
+        toast(`✅ Remote skill ${skillName} added to ${agentId}`, 'ok');
         setAddRemoteForm(false);
         setRemoteFormData({ agentId: '', skillName: '', sourceUrl: '', description: '' });
         loadRemoteSkills();
         loadAgentConfig();
       } else {
-        toast(r.error || '添加失败', 'err');
+        toast(r.error || 'Add failed', 'err');
       }
     } catch {
-      toast('服务器连接失败', 'err');
+      toast('Server connection failed', 'err');
     }
     setRemoteSubmitting(false);
   };
@@ -163,13 +163,13 @@ export default function SkillsConfig() {
     try {
       const r = await api.updateRemoteSkill(skill.agentId, skill.skillName);
       if (r.ok) {
-        toast(`✅ 技能 ${skill.skillName} 已更新`, 'ok');
+        toast(`✅ Skill ${skill.skillName} updated`, 'ok');
         loadRemoteSkills();
       } else {
-        toast(r.error || '更新失败', 'err');
+        toast(r.error || 'Update failed', 'err');
       }
     } catch {
-      toast('服务器连接失败', 'err');
+      toast('Server connection failed', 'err');
     }
     setUpdatingSkill(null);
   };
@@ -180,20 +180,20 @@ export default function SkillsConfig() {
     try {
       const r = await api.removeRemoteSkill(skill.agentId, skill.skillName);
       if (r.ok) {
-        toast(`🗑️ 技能 ${skill.skillName} 已移除`, 'ok');
+        toast(`🗑️ Skill ${skill.skillName} removed`, 'ok');
         loadRemoteSkills();
         loadAgentConfig();
       } else {
-        toast(r.error || '移除失败', 'err');
+        toast(r.error || 'Remove failed', 'err');
       }
     } catch {
-      toast('服务器连接失败', 'err');
+      toast('Server connection failed', 'err');
     }
     setRemovingSkill(null);
   };
 
   const handleQuickImport = async (skillUrl: string, skillName: string) => {
-    if (!quickPickAgent) { toast('请先选择目标 Agent', 'err'); return; }
+    if (!quickPickAgent) { toast('Please select a target Agent first', 'err'); return; }
     try {
       const r = await api.addRemoteSkill(quickPickAgent, skillName, skillUrl, '');
       if (r.ok) {
@@ -201,18 +201,18 @@ export default function SkillsConfig() {
         loadRemoteSkills();
         loadAgentConfig();
       } else {
-        toast(r.error || '导入失败', 'err');
+        toast(r.error || 'Import failed', 'err');
       }
     } catch {
-      toast('服务器连接失败', 'err');
+      toast('Server connection failed', 'err');
     }
   };
 
   if (!agentConfig?.agents) {
-    return <div className="empty">无法加载</div>;
+    return <div className="empty">Failed to load</div>;
   }
 
-  // ── 本地技能面板 ──
+  // ── Local Skills Panel ──
   const localPanel = (
     <div>
       <div className="skills-grid">
@@ -221,23 +221,23 @@ export default function SkillsConfig() {
             <div className="sk-hdr">
               <span className="sk-emoji">{ag.emoji || '🏛️'}</span>
               <span className="sk-name">{ag.label}</span>
-              <span className="sk-cnt">{(ag.skills || []).length} 技能</span>
+              <span className="sk-cnt">{(ag.skills || []).length} skills</span>
             </div>
             <div className="sk-list">
               {!(ag.skills || []).length ? (
-                <div className="sk-empty">暂无 Skills</div>
+                <div className="sk-empty">No skills</div>
               ) : (
                 (ag.skills || []).map((sk) => (
                   <div className="sk-item" key={sk.name} onClick={() => openSkill(ag.id, sk.name)}>
                     <span className="si-name">📦 {sk.name}</span>
-                    <span className="si-desc">{sk.description || '无描述'}</span>
+                    <span className="si-desc">{sk.description || 'No description'}</span>
                     <span className="si-arrow">›</span>
                   </div>
                 ))
               )}
             </div>
             <div className="sk-add" onClick={() => openAddForm(ag.id, ag.label)}>
-              ＋ 添加技能
+              ＋ Add Skill
             </div>
           </div>
         ))}
@@ -245,32 +245,32 @@ export default function SkillsConfig() {
     </div>
   );
 
-  // ── 远程技能面板 ──
+  // ── Remote Skills Panel ──
   const remotePanel = (
     <div>
-      {/* 操作栏 */}
+      {/* Action bar */}
       <div style={{ display: 'flex', gap: 10, marginBottom: 20, flexWrap: 'wrap', alignItems: 'center' }}>
         <button
           style={{ padding: '8px 18px', background: 'var(--acc)', color: '#fff', border: 'none', borderRadius: 8, cursor: 'pointer', fontWeight: 600, fontSize: 13 }}
           onClick={() => { setAddRemoteForm(true); setQuickPickSource(null); }}
         >
-          ＋ 添加远程 Skill
+          ＋ Add Remote Skill
         </button>
         <button
           style={{ padding: '8px 14px', background: 'transparent', color: 'var(--acc)', border: '1px solid var(--acc)', borderRadius: 8, cursor: 'pointer', fontSize: 12 }}
           onClick={loadRemoteSkills}
         >
-          ⟳ 刷新列表
+          ⟳ Refresh List
         </button>
         <span style={{ fontSize: 11, color: 'var(--muted)', marginLeft: 4 }}>
-          共 {remoteSkills.length} 个远程技能
+          {remoteSkills.length} remote skills total
         </span>
       </div>
 
-      {/* 社区快选区 */}
+      {/* Community quick-pick */}
       <div style={{ marginBottom: 24 }}>
         <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--muted)', letterSpacing: '.06em', marginBottom: 10 }}>
-          🌐 社区技能源 — 一键导入
+          🌐 Community Skill Sources — One-click Import
         </div>
         <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
           {COMMUNITY_SOURCES.map((src) => (
@@ -298,13 +298,13 @@ export default function SkillsConfig() {
         {quickPickSource && (
           <div style={{ marginTop: 14, background: 'var(--panel)', border: '1px solid var(--line)', borderRadius: 12, padding: 16 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 14 }}>
-              <span style={{ fontSize: 12, fontWeight: 600 }}>目标 Agent：</span>
+              <span style={{ fontSize: 12, fontWeight: 600 }}>Target Agent：</span>
               <select
                 value={quickPickAgent}
                 onChange={(e) => setQuickPickAgent(e.target.value)}
                 style={{ padding: '6px 10px', background: 'var(--bg)', border: '1px solid var(--line)', borderRadius: 6, color: 'var(--text)', fontSize: 12 }}
               >
-                <option value="">— 选择 Agent —</option>
+                <option value="">— Select Agent —</option>
                 {agentConfig.agents.map((ag) => (
                   <option key={ag.id} value={ag.id}>{ag.emoji} {ag.label} ({ag.id})</option>
                 ))}
@@ -327,13 +327,13 @@ export default function SkillsConfig() {
                       <div style={{ fontSize: 10, color: 'var(--muted)', wordBreak: 'break-all', maxWidth: 180 }}>{sk.url.split('/').slice(-2).join('/')}</div>
                     </div>
                     {alreadyAdded ? (
-                      <span style={{ fontSize: 10, color: '#4caf88', fontWeight: 600 }}>✓ 已导入</span>
+                      <span style={{ fontSize: 10, color: '#4caf88', fontWeight: 600 }}>✓ Imported</span>
                     ) : (
                       <button
                         onClick={() => handleQuickImport(sk.url, sk.name)}
                         style={{ padding: '4px 10px', background: 'var(--acc)', color: '#fff', border: 'none', borderRadius: 6, cursor: 'pointer', fontSize: 11, whiteSpace: 'nowrap' }}
                       >
-                        导入
+                        Import
                       </button>
                     )}
                   </div>
@@ -344,14 +344,14 @@ export default function SkillsConfig() {
         )}
       </div>
 
-      {/* 已添加的远程技能列表 */}
+      {/* Added remote skills list */}
       {remoteLoading ? (
-        <div style={{ textAlign: 'center', padding: '40px 0', color: 'var(--muted)', fontSize: 13 }}>⟳ 加载中…</div>
+        <div style={{ textAlign: 'center', padding: '40px 0', color: 'var(--muted)', fontSize: 13 }}>⟳ Loading…</div>
       ) : remoteSkills.length === 0 ? (
         <div style={{ textAlign: 'center', padding: '40px', background: 'var(--panel)', borderRadius: 12, border: '1px dashed var(--line)' }}>
           <div style={{ fontSize: 32, marginBottom: 10 }}>🌐</div>
-          <div style={{ fontSize: 14, color: 'var(--muted)' }}>尚无远程技能</div>
-          <div style={{ fontSize: 12, color: 'var(--muted)', marginTop: 6 }}>从社区技能源快速导入，或手动添加 URL</div>
+          <div style={{ fontSize: 14, color: 'var(--muted)' }}>No remote skills yet</div>
+          <div style={{ fontSize: 12, color: 'var(--muted)', marginTop: 6 }}>Quick-import from community skill sources, or add a URL manually</div>
         </div>
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
@@ -377,7 +377,7 @@ export default function SkillsConfig() {
                       color: sk.status === 'valid' ? '#4caf88' : '#ff5270',
                       fontWeight: 600,
                     }}>
-                      {sk.status === 'valid' ? '✓ 有效' : '✗ 文件丢失'}
+                      {sk.status === 'valid' ? '✓ Valid' : '✗ File missing'}
                     </span>
                     <span style={{ fontSize: 11, color: 'var(--muted)', background: 'var(--panel2)', padding: '2px 8px', borderRadius: 6 }}>
                       {agInfo?.emoji} {agInfo?.label || sk.agentId}
@@ -396,21 +396,21 @@ export default function SkillsConfig() {
                     onClick={() => openSkill(sk.agentId, sk.skillName)}
                     style={{ padding: '6px 12px', background: 'transparent', color: 'var(--muted)', border: '1px solid var(--line)', borderRadius: 6, cursor: 'pointer', fontSize: 11 }}
                   >
-                    查看
+                    View
                   </button>
                   <button
                     onClick={() => handleUpdate(sk)}
                     disabled={isUpdating}
                     style={{ padding: '6px 12px', background: 'transparent', color: 'var(--acc)', border: '1px solid var(--acc)', borderRadius: 6, cursor: 'pointer', fontSize: 11 }}
                   >
-                    {isUpdating ? '⟳' : '更新'}
+                    {isUpdating ? '⟳' : 'Update'}
                   </button>
                   <button
                     onClick={() => handleRemove(sk)}
                     disabled={isRemoving}
                     style={{ padding: '6px 12px', background: 'transparent', color: '#ff5270', border: '1px solid #ff5270', borderRadius: 6, cursor: 'pointer', fontSize: 11 }}
                   >
-                    {isRemoving ? '⟳' : '删除'}
+                    {isRemoving ? '⟳' : 'Delete'}
                   </button>
                 </div>
               </div>
@@ -423,11 +423,11 @@ export default function SkillsConfig() {
 
   return (
     <div>
-      {/* 主 Tab 切换 */}
+      {/* Main Tab switch */}
       <div style={{ display: 'flex', gap: 4, marginBottom: 20, borderBottom: '1px solid var(--line)', paddingBottom: 0 }}>
         {[
-          { key: 'local', label: '🏛️ 本地技能', count: agentConfig.agents.reduce((n, a) => n + (a.skills?.length || 0), 0) },
-          { key: 'remote', label: '🌐 远程技能', count: remoteSkills.length },
+          { key: 'local', label: '🏛️ Local Skills', count: agentConfig.agents.reduce((n, a) => n + (a.skills?.length || 0), 0) },
+          { key: 'remote', label: '🌐 Remote Skills', count: remoteSkills.length },
         ].map((t) => (
           <div
             key={t.key}
@@ -480,16 +480,16 @@ export default function SkillsConfig() {
         </div>
       )}
 
-      {/* 本地 Add Skill Form Modal */}
+      {/* Local Add Skill Form Modal */}
       {addForm && (
         <div className="modal-bg open" onClick={() => setAddForm(null)}>
           <div className="modal" onClick={(e) => e.stopPropagation()}>
             <button className="modal-close" onClick={() => setAddForm(null)}>✕</button>
             <div className="modal-body">
               <div style={{ fontSize: 11, color: 'var(--acc)', fontWeight: 700, letterSpacing: '.04em', marginBottom: 4 }}>
-                为 {addForm.agentLabel} 添加技能
+                Add Skill for {addForm.agentLabel}
               </div>
-              <div style={{ fontSize: 20, fontWeight: 800, marginBottom: 18 }}>＋ 新增 Skill</div>
+              <div style={{ fontSize: 20, fontWeight: 800, marginBottom: 18 }}>＋ New Skill</div>
 
               <div
                 style={{
@@ -503,19 +503,19 @@ export default function SkillsConfig() {
                   color: 'var(--muted)',
                 }}
               >
-                <b style={{ color: 'var(--text)' }}>📋 Skill 规范说明</b>
+                <b style={{ color: 'var(--text)' }}>📋 Skill Specification</b>
                 <br />
-                • 技能名称使用<b style={{ color: 'var(--text)' }}>小写英文 + 连字符</b>
+                • Skill name uses <b style={{ color: 'var(--text)' }}>lowercase letters + hyphens</b>
                 <br />
-                • 创建后会生成模板文件 SKILL.md
+                • A template file SKILL.md will be generated on creation
                 <br />
-                • 技能会在 agent 收到相关任务时<b style={{ color: 'var(--text)' }}>自动激活</b>
+                • Skills are <b style={{ color: 'var(--text)' }}>auto-activated</b> when the agent receives a relevant task
               </div>
 
               <form onSubmit={submitAdd} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
                 <div>
                   <label style={{ fontSize: 12, fontWeight: 600, display: 'block', marginBottom: 6 }}>
-                    技能名称 <span style={{ color: '#ff5270' }}>*</span>
+                    Skill Name <span style={{ color: '#ff5270' }}>*</span>
                   </label>
                   <input
                     type="text"
@@ -529,20 +529,20 @@ export default function SkillsConfig() {
                   />
                 </div>
                 <div>
-                  <label style={{ fontSize: 12, fontWeight: 600, display: 'block', marginBottom: 6 }}>技能描述</label>
+                  <label style={{ fontSize: 12, fontWeight: 600, display: 'block', marginBottom: 6 }}>Skill Description</label>
                   <input
                     type="text"
-                    placeholder="一句话说明用途"
+                    placeholder="One sentence description"
                     value={formData.desc}
                     onChange={(e) => setFormData((p) => ({ ...p, desc: e.target.value }))}
                     style={{ width: '100%', padding: '10px 12px', background: 'var(--bg)', border: '1px solid var(--line)', borderRadius: 8, color: 'var(--text)', fontSize: 13, outline: 'none' }}
                   />
                 </div>
                 <div>
-                  <label style={{ fontSize: 12, fontWeight: 600, display: 'block', marginBottom: 6 }}>触发条件（可选）</label>
+                  <label style={{ fontSize: 12, fontWeight: 600, display: 'block', marginBottom: 6 }}>Trigger Condition (optional)</label>
                   <input
                     type="text"
-                    placeholder="何时激活此技能"
+                    placeholder="When to activate this skill"
                     value={formData.trigger}
                     onChange={(e) => setFormData((p) => ({ ...p, trigger: e.target.value }))}
                     style={{ width: '100%', padding: '10px 12px', background: 'var(--bg)', border: '1px solid var(--line)', borderRadius: 8, color: 'var(--text)', fontSize: 13, outline: 'none' }}
@@ -550,14 +550,14 @@ export default function SkillsConfig() {
                 </div>
                 <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end', marginTop: 4 }}>
                   <button type="button" className="btn btn-g" onClick={() => setAddForm(null)} style={{ padding: '8px 20px' }}>
-                    取消
+                    Cancel
                   </button>
                   <button
                     type="submit"
                     disabled={submitting}
                     style={{ padding: '8px 20px', fontSize: 13, background: 'var(--acc)', color: '#fff', border: 'none', borderRadius: 8, cursor: 'pointer', fontWeight: 600 }}
                   >
-                    {submitting ? '⟳ 创建中…' : '📦 创建技能'}
+                    {submitting ? '⟳ Creating…' : '📦 Create Skill'}
                   </button>
                 </div>
               </form>
@@ -566,50 +566,50 @@ export default function SkillsConfig() {
         </div>
       )}
 
-      {/* 远程 Add Remote Skill Modal */}
+      {/* Remote Add Remote Skill Modal */}
       {addRemoteForm && (
         <div className="modal-bg open" onClick={() => setAddRemoteForm(false)}>
           <div className="modal" style={{ maxWidth: 520 }} onClick={(e) => e.stopPropagation()}>
             <button className="modal-close" onClick={() => setAddRemoteForm(false)}>✕</button>
             <div className="modal-body">
               <div style={{ fontSize: 11, color: '#a07aff', fontWeight: 700, letterSpacing: '.04em', marginBottom: 4 }}>
-                远程技能管理
+                Remote Skill Management
               </div>
-              <div style={{ fontSize: 20, fontWeight: 800, marginBottom: 18 }}>🌐 添加远程 Skill</div>
+              <div style={{ fontSize: 20, fontWeight: 800, marginBottom: 18 }}>🌐 Add Remote Skill</div>
 
               <div style={{ background: 'var(--panel2)', border: '1px solid var(--line)', borderRadius: 10, padding: 12, marginBottom: 18, fontSize: 11, color: 'var(--muted)', lineHeight: 1.7 }}>
-                支持 GitHub Raw URL，如：<br />
+                Supports GitHub Raw URLs, e.g.:<br />
                 <code style={{ color: 'var(--acc)', fontSize: 10 }}>https://raw.githubusercontent.com/obra/superpowers/refs/heads/main/skills/brainstorming/SKILL.md</code>
               </div>
 
               <form onSubmit={submitAddRemote} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
                 <div>
-                  <label style={{ fontSize: 12, fontWeight: 600, display: 'block', marginBottom: 6 }}>目标 Agent <span style={{ color: '#ff5270' }}>*</span></label>
+                  <label style={{ fontSize: 12, fontWeight: 600, display: 'block', marginBottom: 6 }}>Target Agent <span style={{ color: '#ff5270' }}>*</span></label>
                   <select
                     required
                     value={remoteFormData.agentId}
                     onChange={(e) => setRemoteFormData((p) => ({ ...p, agentId: e.target.value }))}
                     style={{ width: '100%', padding: '10px 12px', background: 'var(--bg)', border: '1px solid var(--line)', borderRadius: 8, color: 'var(--text)', fontSize: 13 }}
                   >
-                    <option value="">— 选择 Agent —</option>
+                    <option value="">— Select Agent —</option>
                     {agentConfig.agents.map((ag) => (
                       <option key={ag.id} value={ag.id}>{ag.emoji} {ag.label} ({ag.id})</option>
                     ))}
                   </select>
                 </div>
                 <div>
-                  <label style={{ fontSize: 12, fontWeight: 600, display: 'block', marginBottom: 6 }}>技能名称 <span style={{ color: '#ff5270' }}>*</span></label>
+                  <label style={{ fontSize: 12, fontWeight: 600, display: 'block', marginBottom: 6 }}>Skill Name <span style={{ color: '#ff5270' }}>*</span></label>
                   <input
                     type="text"
                     required
-                    placeholder="如 brainstorming, code-review"
+                    placeholder="e.g. brainstorming, code-review"
                     value={remoteFormData.skillName}
                     onChange={(e) => setRemoteFormData((p) => ({ ...p, skillName: e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, '') }))}
                     style={{ width: '100%', padding: '10px 12px', background: 'var(--bg)', border: '1px solid var(--line)', borderRadius: 8, color: 'var(--text)', fontSize: 13, outline: 'none' }}
                   />
                 </div>
                 <div>
-                  <label style={{ fontSize: 12, fontWeight: 600, display: 'block', marginBottom: 6 }}>源 URL <span style={{ color: '#ff5270' }}>*</span></label>
+                  <label style={{ fontSize: 12, fontWeight: 600, display: 'block', marginBottom: 6 }}>Source URL <span style={{ color: '#ff5270' }}>*</span></label>
                   <input
                     type="url"
                     required
@@ -620,23 +620,23 @@ export default function SkillsConfig() {
                   />
                 </div>
                 <div>
-                  <label style={{ fontSize: 12, fontWeight: 600, display: 'block', marginBottom: 6 }}>描述（可选）</label>
+                  <label style={{ fontSize: 12, fontWeight: 600, display: 'block', marginBottom: 6 }}>Description (optional)</label>
                   <input
                     type="text"
-                    placeholder="一句话说明用途"
+                    placeholder="One sentence description"
                     value={remoteFormData.description}
                     onChange={(e) => setRemoteFormData((p) => ({ ...p, description: e.target.value }))}
                     style={{ width: '100%', padding: '10px 12px', background: 'var(--bg)', border: '1px solid var(--line)', borderRadius: 8, color: 'var(--text)', fontSize: 13, outline: 'none' }}
                   />
                 </div>
                 <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end', marginTop: 4 }}>
-                  <button type="button" className="btn btn-g" onClick={() => setAddRemoteForm(false)} style={{ padding: '8px 20px' }}>取消</button>
+                  <button type="button" className="btn btn-g" onClick={() => setAddRemoteForm(false)} style={{ padding: '8px 20px' }}>Cancel</button>
                   <button
                     type="submit"
                     disabled={remoteSubmitting}
                     style={{ padding: '8px 20px', fontSize: 13, background: '#a07aff', color: '#fff', border: 'none', borderRadius: 8, cursor: 'pointer', fontWeight: 600 }}
                   >
-                    {remoteSubmitting ? '⟳ 下载中…' : '🌐 添加远程技能'}
+                    {remoteSubmitting ? '⟳ Downloading…' : '🌐 Add Remote Skill'}
                   </button>
                 </div>
               </form>

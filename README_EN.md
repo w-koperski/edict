@@ -13,7 +13,7 @@
   <a href="#-quick-start">🚀 Quick Start</a> ·
   <a href="#-architecture">🏛️ Architecture</a> ·
   <a href="#-features">📋 Features</a> ·
-  <a href="README.md">中文</a> ·
+  <a href="README.md">Chinese</a> ·
   <a href="CONTRIBUTING.md">Contributing</a>
 </p>
 
@@ -61,15 +61,15 @@ Most multi-agent frameworks let AI agents talk freely, producing opaque results 
 
 ```
 You (Emperor) → Crown Prince (Triage) → Planning Dept → Review Dept → Dispatch Dept → 6 Ministries → Report Back
-   皇上              太子               中书省          门下省         尚书省           六部          回奏
+   Emperor           Crown Prince       Planning Dept   Review Dept    Dispatch Dept    6 Ministries  Report Back
 ```
 
 This isn't a cute metaphor. It's **real separation of powers** for AI:
 
-- **Crown Prince (太子)** triages messages — casual chat gets auto-replied, real commands become tasks
-- **Planning (中书省)** breaks your command into actionable sub-tasks
-- **Review (门下省)** audits the plan — can reject and force re-planning
-- **Dispatch (尚书省)** assigns approved tasks to specialist ministries
+- **Crown Prince (Taizi)** triages messages — casual chat gets auto-replied, real commands become tasks
+- **Planning (Zhongshu)** breaks your command into actionable sub-tasks
+- **Review (Menxia)** audits the plan — can reject and force re-planning
+- **Dispatch (Shangshu)** assigns approved tasks to specialist ministries
 - **7 Ministries** execute in parallel, each with distinct expertise
 - **Data sanitization** auto-strips file paths, metadata, and junk from task titles
 - Everything flows through a **real-time dashboard** you can monitor and intervene
@@ -101,7 +101,7 @@ This isn't a cute metaphor. It's **real separation of powers** for AI:
 
 CrewAI and AutoGen agents work in a **"done, ship it"** mode — no one checks output quality. It's like a company with no QA department where engineers push code straight to production.
 
-Edict's **Review Department (门下省)** exists specifically for this:
+Edict's **Review Department (Menxia)** exists specifically for this:
 
 - 📋 **Audit plan quality** — Is the Planning Department's decomposition complete and sound?
 - 🚫 **Veto subpar output** — Not a warning. A hard reject that forces re-planning.
@@ -118,7 +118,7 @@ This is why Edict produces reliable results on complex tasks: there's a mandator
 ## ✨ Features
 
 ### 🏛️ Twelve-Department Agent Architecture
-- **Crown Prince** (太子) message triage — auto-reply casual chat, create tasks for real commands
+- **Crown Prince** (Taizi) message triage — auto-reply casual chat, create tasks for real commands
 - **Three Departments** (Planning · Review · Dispatch) for governance
 - **Seven Ministries** (Finance · Docs · Engineering · Compliance · Infrastructure · HR + Briefing) for execution
 - Strict permission matrix — who can message whom is enforced
@@ -236,32 +236,32 @@ open http://127.0.0.1:7891
                            └─────────────────┬─────────────────┘
                                              │ Issue edict
                            ┌─────────────────▼─────────────────┐
-                           │     👑 Crown Prince (太子)          │
+                           │     👑 Crown Prince (Taizi)          │
                            │   Triage: chat → reply / cmd → task │
                            └─────────────────┬─────────────────┘
                                              │ Forward edict
                            ┌─────────────────▼─────────────────┐
-                           │      📜 Planning Dept (中书省)      │
+                           │      📜 Planning Dept (Zhongshu)      │
                            │     Receive → Plan → Decompose      │
                            └─────────────────┬─────────────────┘
                                              │ Submit for review
                            ┌─────────────────▼─────────────────┐
-                           │       🔍 Review Dept (门下省)       │
+                           │       🔍 Review Dept (Menxia)       │
                            │     Audit → Approve / Reject 🚫     │
                            └─────────────────┬─────────────────┘
                                              │ Approved ✅
                            ┌─────────────────▼─────────────────┐
-                           │      📮 Dispatch Dept (尚书省)      │
+                           │      📮 Dispatch Dept (Shangshu)      │
                            │   Assign → Coordinate → Collect     │
                            └───┬──────┬──────┬──────┬──────┬───┘
                                │      │      │      │      │
                          ┌─────▼┐ ┌───▼───┐ ┌▼─────┐ ┌───▼─┐ ┌▼─────┐
                          │💰 Fin.│ │📝 Docs│ │⚔️ Eng.│ │⚖️ Law│ │🔧 Ops│
-                         │ 户部  │ │ 礼部  │ │ 兵部  │ │ 刑部 │ │ 工部  │
+                         │ Hubu │ │ Libu  │ │ Bingbu│ │Xingbu│ │ Gongbu│
                          └──────┘ └──────┘ └──────┘ └─────┘ └──────┘
                                                                ┌──────┐
                                                                │📋 HR  │
-                                                               │ 吏部  │
+                                                               │ Libu_hr│
                                                                └──────┘
 ```
 
@@ -438,6 +438,6 @@ What you’ll find:
 
 <p align="center">
   <strong>⚔️ Governing AI with the wisdom of ancient empires</strong><br>
-  <sub>以古制御新技，以智慧驾驭 AI</sub><br><br>
+  <sub>Governing AI with the wisdom of ancient empires</sub><br><br>
   <a href="#-wechat--behind-the-scenes"><img src="https://img.shields.io/badge/WeChat_cft0808-Follow_for_updates-07C160?style=for-the-badge&logo=wechat&logoColor=white" alt="WeChat"></a>
 </p>

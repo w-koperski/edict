@@ -1,202 +1,202 @@
-∏# 🤝 参与贡献
+# 🤝 Contributing
 
 <p align="center">
-  <strong>三省六部欢迎各路英雄好汉 ⚔️</strong><br>
-  <sub>无论是修一个 typo 还是设计一个新的 Agent 角色，我们都万分感谢</sub>
+  <strong>Three Departments & Six Ministries welcomes all heroes ⚔️</strong><br>
+  <sub>Whether you fix a typo or design a new Agent role, we are deeply grateful</sub>
 </p>
 
 ---
 
-## 📋 贡献方式
+## 📋 How to Contribute
 
-### 🐛 报告 Bug
+### 🐛 Report a Bug
 
-请使用 [Bug Report](.github/ISSUE_TEMPLATE/bug_report.md) 模板提交 Issue，包含：
-- OpenClaw 版本（`openclaw --version`）
-- Python 版本（`python3 --version`）
-- 操作系统
-- 复现步骤（越详细越好）
-- 期望行为 vs 实际行为
-- 截图（如果涉及看板 UI）
+Please use the [Bug Report](.github/ISSUE_TEMPLATE/bug_report.md) template to submit an Issue, including:
+- OpenClaw version (`openclaw --version`)
+- Python version (`python3 --version`)
+- Operating system
+- Steps to reproduce (the more detail the better)
+- Expected behavior vs actual behavior
+- Screenshot (if involving the kanban UI)
 
-### 💡 功能建议
+### 💡 Feature Suggestions
 
-使用 [Feature Request](.github/ISSUE_TEMPLATE/feature_request.md) 模板。
+Use the [Feature Request](.github/ISSUE_TEMPLATE/feature_request.md) template.
 
-我们推荐用"旨意"的格式来描述你的需求 —— 就像给皇上写奏折一样 😄
+We recommend describing your needs in the format of an "edict" — like writing a memorial to the Emperor 😄
 
-### 🔧 提交 Pull Request
+### 🔧 Submit a Pull Request
 
 ```bash
-# 1. Fork 本仓库
-# 2. 克隆你的 Fork
+# 1. Fork this repository
+# 2. Clone your fork
 git clone https://github.com/<your-username>/edict.git
 cd edict
 
-# 3. 创建功能分支
+# 3. Create a feature branch
 git checkout -b feat/my-awesome-feature
 
-# 4. 开发 & 测试
-python3 dashboard/server.py  # 启动看板验证
+# 4. Develop & test
+python3 dashboard/server.py  # start kanban to verify
 
-# 5. 提交
+# 5. Commit
 git add .
-git commit -m "feat: 添加了一个很酷的功能"
+git commit -m "feat: add a really cool feature"
 
-# 6. 推送 & 创建 PR
+# 6. Push & create PR
 git push origin feat/my-awesome-feature
 ```
 
 ---
 
-## 🏗️ 开发环境
+## ��️ Development Environment
 
-### 前置条件
-- [OpenClaw](https://openclaw.ai) 已安装
+### Prerequisites
+- [OpenClaw](https://openclaw.ai) installed
 - Python 3.9+
 - macOS / Linux
 
-### 本地启动
+### Local Start
 
 ```bash
-# 安装
+# Install
 ./install.sh
 
-# 启动数据刷新（后台运行）
+# Start data refresh (run in background)
 bash scripts/run_loop.sh &
 
-# 启动看板服务器
+# Start kanban server
 python3 dashboard/server.py
 
-# 打开浏览器
+# Open browser
 open http://127.0.0.1:7891
 ```
 
-> 💡 **看板开箱即用**：`server.py` 内嵌 `dashboard/dashboard.html`，Docker 镜像包含预构建 React 前端
+> 💡 **Kanban ready out of the box**: `server.py` embeds `dashboard/dashboard.html`; Docker image includes pre-built React frontend
 
-### 项目结构速览
+### Project Structure Overview
 
-| 目录/文件 | 说明 | 改动频率 |
+| Directory/File | Description | Change Frequency |
 |----------|------|--------|
-| `dashboard/dashboard.html` | 看板前端（单文件，零依赖，开箱即用） | 🔥 高 |
-| `dashboard/server.py` | API 服务器（stdlib，~2200 行） | 🔥 高 |
-| `agents/*/SOUL.md` | 12 个 Agent 人格模板 | 🔶 中 |
-| `scripts/kanban_update.py` | 看板 CLI + 数据清洗（~300 行） | 🔶 中 |
-| `scripts/*.py` | 数据同步 / 自动化脚本 | 🔶 中 |
-| `tests/test_e2e_kanban.py` | E2E 看板测试（17 断言） | 🔶 中 |
-| `install.sh` | 安装脚本 | 🟢 低 |
+| `dashboard/dashboard.html` | Kanban frontend (single file, zero dependencies, ready to use) | 🔥 High |
+| `dashboard/server.py` | API server (stdlib, ~2200 lines) | 🔥 High |
+| `agents/*/SOUL.md` | 12 Agent personality templates | 🔶 Medium |
+| `scripts/kanban_update.py` | Kanban CLI + data sanitization (~300 lines) | 🔶 Medium |
+| `scripts/*.py` | Data sync / automation scripts | 🔶 Medium |
+| `tests/test_e2e_kanban.py` | E2E kanban tests (17 assertions) | 🔶 Medium |
+| `install.sh` | Installation script | 🟢 Low |
 
 ---
 
-## 📝 Commit 规范
+## 📝 Commit Convention
 
-我们使用 [Conventional Commits](https://www.conventionalcommits.org/)：
+We use [Conventional Commits](https://www.conventionalcommits.org/):
 
 ```
-feat:     ✨ 新功能
-fix:      🐛 修复 Bug
-docs:     📝 文档更新
-style:    🎨 代码格式（不影响逻辑）
-refactor: ♻️ 代码重构
-perf:     ⚡ 性能优化
-test:     ✅ 测试
-chore:    🔧 杂项维护
-ci:       👷 CI/CD 配置
+feat:     ✨ New feature
+fix:      🐛 Bug fix
+docs:     📝 Documentation update
+style:    🎨 Code formatting (no logic changes)
+refactor: ♻️ Code refactor
+perf:     ⚡ Performance optimization
+test:     ✅ Tests
+chore:    🔧 Miscellaneous maintenance
+ci:       👷 CI/CD configuration
 ```
 
-示例：
+Examples:
 ```
-feat: 添加奏折导出为 PDF 功能
-fix: 修复模型切换后 Gateway 未重启的问题
-docs: 更新 README 截图
+feat: add memorial export to PDF
+fix: fix Gateway not restarting after model switch
+docs: update README screenshots
 ```
 
 ---
 
-## 🎯 特别欢迎的贡献方向
+## 🎯 Especially Welcome Contributions
 
-### 🎨 看板 UI
-- 深色/浅色主题切换
-- 响应式布局优化
-- 动画效果增强
-- 可访问性（a11y）改进
+### 🎨 Kanban UI
+- Dark/light theme toggle
+- Responsive layout optimization
+- Animation enhancements
+- Accessibility (a11y) improvements
 
-### 🤖 新 Agent 角色
-- 适合特定行业/场景的专职 Agent
-- 新的 SOUL.md 人格模板
-- Agent 间协作模式创新
+### 🤖 New Agent Roles
+- Specialized Agents for specific industries/scenarios
+- New SOUL.md personality templates
+- Innovations in Agent collaboration patterns
 
-### 📦 Skills 生态
-- 各部门专用技能包
-- MCP 集成技能
-- 数据处理 / 代码分析 / 文档生成专项技能
+### 📦 Skills Ecosystem
+- Department-specific skill packs
+- MCP integration skills
+- Data processing / code analysis / documentation generation skills
 
-### 🔗 第三方集成
-- Notion / Jira / Linear 同步
-- GitHub Issues / PR 联动
-- Slack / Discord 消息渠道
-- Webhook 扩展
+### 🔗 Third-party Integrations
+- Notion / Jira / Linear sync
+- GitHub Issues / PR integration
+- Slack / Discord messaging channels
+- Webhook extensions
 
-### 🌐 国际化
-- 日文 / 韩文 / 西班牙文翻译
-- 看板 UI 多语言支持
+### 🌐 Internationalization
+- Japanese / Korean / Spanish translations
+- Kanban UI multi-language support
 
-### 📱 移动端
-- 响应式适配
-- PWA 支持
-- 移动端操作优化
+### 📱 Mobile
+- Responsive adaptation
+- PWA support
+- Mobile operation optimization
 
 ---
 
-## 🧪 测试
+## 🧪 Testing
 
 ```bash
-# 编译检查
+# Compilation check
 python3 -m py_compile dashboard/server.py
 python3 -m py_compile scripts/kanban_update.py
 
-# E2E 看板测试（9 场景 17 断言）
+# E2E kanban tests (9 scenarios, 17 assertions)
 python3 tests/test_e2e_kanban.py
 
-# 验证数据同步
+# Verify data sync
 python3 scripts/refresh_live_data.py
 python3 scripts/sync_agent_config.py
 
-# 启动服务器验证 API
+# Start server to verify API
 python3 dashboard/server.py &
 curl -s http://localhost:7891/api/live-status | python3 -m json.tool | head -20
 ```
 
 ---
 
-## 📏 代码风格
+## 📏 Code Style
 
-- **Python**: PEP 8，使用 pathlib 处理路径
-- **TypeScript/React**: 函数组件 + Hooks，CSS 变量命名以 `--` 开头
-- **CSS**: 使用 CSS 变量（`--bg`, `--text`, `--acc` 等），BEM 风格的 class 名
-- **Markdown**: 标题使用 `#`，列表使用 `-`，代码块标注语言
-
----
-
-## 🙏 行为准则
-
-- 保持友善和建设性
-- 尊重不同的观点和经验
-- 接受建设性的批评
-- 专注于对社区最有利的事情
-- 对其他社区成员表示同理心
-
-**我们对骚扰行为零容忍。**
+- **Python**: PEP 8, use pathlib for paths
+- **TypeScript/React**: Function components + Hooks, CSS variable names start with `--`
+- **CSS**: Use CSS variables (`--bg`, `--text`, `--acc`, etc.), BEM-style class names
+- **Markdown**: Use `#` for headings, `-` for lists, annotate language in code blocks
 
 ---
 
-## 📬 联系方式
+## 🙏 Code of Conduct
 
-- GitHub Issues: [提交问题](https://github.com/cft0808/edict/issues)
-- GitHub Discussions: [社区讨论](https://github.com/cft0808/edict/discussions)
+- Be friendly and constructive
+- Respect different viewpoints and experiences
+- Accept constructive criticism
+- Focus on what is best for the community
+- Show empathy toward other community members
+
+**We have zero tolerance for harassment.**
+
+---
+
+## 📬 Contact
+
+- GitHub Issues: [Submit an issue](https://github.com/cft0808/edict/issues)
+- GitHub Discussions: [Community discussion](https://github.com/cft0808/edict/discussions)
 
 ---
 
 <p align="center">
-  <sub>感谢每一位贡献者，你们是三省六部的基石 ⚔️</sub>
+  <sub>Thank you to every contributor — you are the cornerstone of Three Departments & Six Ministries ⚔️</sub>
 </p>

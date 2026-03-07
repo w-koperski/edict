@@ -1,9 +1,9 @@
-"""任务服务层 — CRUD + 状态机逻辑。
+"""Task service layer — CRUD + state machine logic.
 
-所有业务规则集中在此：
-- 创建任务 → 发布 task.created 事件
-- 状态流转 → 校验合法性 + 发布状态事件
-- 查询、过滤、聚合
+All business rules are centralized here:
+- Create task → publish task.created event
+- State transition → validate legality + publish state event
+- Query, filter, aggregate
 """
 
 import logging
@@ -31,20 +31,20 @@ class TaskService:
         self.db = db
         self.bus = event_bus
 
-    # ── 创建 ──
+    # ── Create ──
 
     async def create_task(
         self,
         title: str,
         description: str = "",
-        priority: str = "中",
+        priority: str = "medium",
         assignee_org: str | None = None,
         creator: str = "emperor",
         tags: list[str] | None = None,
         initial_state: TaskState = TaskState.TAIZI,
         meta: dict | None = None,
     ) -> Task:
-        """创建任务并发布 task.created 事件。"""
+        """Create a task and publish the task.created event."""
         now = datetime.now(timezone.utc)
         trace_id = str(uuid.uuid4())
 
@@ -62,7 +62,7 @@ class TaskService:
                     "from": None,
                     "to": initial_state.value,
                     "agent": "system",
-                    "reason": "任务创建",
+                    "reason": "Task created",
                     "ts": now.isoformat(),
                 }
             ],
@@ -74,7 +74,7 @@ class TaskService:
         self.db.add(task)
         await self.db.flush()
 
-        # 发布事件
+        # Publish event
         await self.bus.publish(
             topic=TOPIC_TASK_CREATED,
             trace_id=trace_id,
@@ -93,7 +93,7 @@ class TaskService:
         log.info(f"Created task {task.task_id}: {title} [{initial_state.value}]")
         return task
 
-    # ── 状态流转 ──
+    # ── State transition ──
 
     async def transition_state(
         self,
@@ -102,11 +102,11 @@ class TaskService:
         agent: str = "system",
         reason: str = "",
     ) -> Task:
-        """执行状态流转，校验合法性。"""
+        """Execute a state transition, validating its legality."""
         task = await self._get_task(task_id)
         old_state = task.state
 
-        # 校验合法流转
+        # Validate legal transition
         allowed = STATE_TRANSITIONS.get(old_state, set())
         if new_state not in allowed:
             raise ValueError(
@@ -117,7 +117,7 @@ class TaskService:
         task.state = new_state
         task.updated_at = datetime.now(timezone.utc)
 
-        # 记入 flow_log
+        # Record in flow_log
         flow_entry = {
             "from": old_state.value,
             "to": new_state.value,
@@ -129,7 +129,7 @@ class TaskService:
             task.flow_log = []
         task.flow_log = [*task.flow_log, flow_entry]
 
-        # 发布状态变更事件
+        # Publish state change event
         topic = TOPIC_TASK_COMPLETED if new_state in TERMINAL_STATES else TOPIC_TASK_STATUS
         await self.bus.publish(
             topic=topic,
@@ -148,7 +148,7 @@ class TaskService:
         log.info(f"Task {task_id} state: {old_state.value} → {new_state.value} by {agent}")
         return task
 
-    # ── 派发请求 ──
+    # ── Dispatch request ──
 
     async def request_dispatch(
         self,
@@ -156,7 +156,7 @@ class TaskService:
         target_agent: str,
         message: str = "",
     ):
-        """发布 task.dispatch 事件，由 DispatchWorker 消费执行。"""
+        """Publish a task.dispatch event, consumed and executed by DispatchWorker."""
         task = await self._get_task(task_id)
         await self.bus.publish(
             topic=TOPIC_TASK_DISPATCH,
@@ -172,7 +172,7 @@ class TaskService:
         )
         log.info(f"Dispatch requested: task {task_id} → agent {target_agent}")
 
-    # ── 进度/备注更新 ──
+    # ── Progress/note update ──
 
     async def add_progress(
         self,
@@ -215,7 +215,7 @@ class TaskService:
         await self.db.commit()
         return task
 
-    # ── 查询 ──
+    # ── Queries ──
 
     async def get_task(self, task_id: uuid.UUID) -> Task:
         return await self._get_task(task_id)
@@ -243,7 +243,7 @@ class TaskService:
         return list(result.scalars().all())
 
     async def get_live_status(self) -> dict[str, Any]:
-        """生成兼容旧 live_status.json 格式的全局状态。"""
+        """Generate global status compatible with the legacy live_status.json format."""
         tasks = await self.list_tasks(limit=200)
         active_tasks = {}
         completed_tasks = {}
@@ -266,7 +266,7 @@ class TaskService:
         result = await self.db.execute(stmt)
         return result.scalar_one()
 
-    # ── 内部 ──
+    # ── Internal ──
 
     async def _get_task(self, task_id: uuid.UUID) -> Task:
         task = await self.db.get(Task, task_id)

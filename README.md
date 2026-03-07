@@ -1,21 +1,20 @@
-<h1 align="center">⚔️ 三省六部 · Edict</h1>
+<h1 align="center">⚔️ Edict · Three Departments & Six Ministries</h1>
 
 <p align="center">
-  <strong>我用 1300 年前的帝国制度，重新设计了 AI 多 Agent 协作架构。<br>结果发现，古人比现代 AI 框架更懂分权制衡。</strong>
+  <strong>I redesigned AI multi-agent collaboration architecture using an imperial system from 1300 years ago.<br>And found that the ancients understood checks and balances better than modern AI frameworks.</strong>
 </p>
 
 <p align="center">
-  <sub>12 个 AI Agent（11 个业务角色 + 1 个兼容角色）组成三省六部：太子分拣、中书省规划、门下省审核封驳、尚书省派发、六部+吏部并行执行。<br>比 CrewAI 多一层<b>制度性审核</b>，比 AutoGen 多一个<b>实时看板</b>。</sub>
+  <sub>12 AI Agents (11 business roles + 1 compatibility role) form the Three Departments & Six Ministries: Taizi triages, Zhongshu plans, Menxia reviews and vetoes, Shangshu dispatches, Six Ministries + Libu_hr execute in parallel.<br>One layer of <b>institutional review</b> more than CrewAI; one <b>real-time kanban</b> more than AutoGen.</sub>
 </p>
 
 <p align="center">
-  <a href="#-demo">🎬 看 Demo</a> ·
-  <a href="#-30-秒快速体验">🚀 30 秒体验</a> ·
-  <a href="#-架构">🏛️ 架构</a> ·
-  <a href="#-功能全景">📋 看板功能</a> ·
-  <a href="docs/task-dispatch-architecture.md">📚 架构文档</a> ·
-  <a href="README_EN.md">English</a> ·
-  <a href="CONTRIBUTING.md">参与贡献</a>
+  <a href="#-demo">🎬 See Demo</a> ·
+  <a href="#-30-second-quick-start">🚀 30-second start</a> ·
+  <a href="#-architecture">🏛️ Architecture</a> ·
+  <a href="#-feature-overview">📋 Kanban features</a> ·
+  <a href="docs/task-dispatch-architecture.md">📚 Architecture docs</a> ·
+  <a href="CONTRIBUTING.md">Contributing</a>
 </p>
 
 <p align="center">
@@ -29,7 +28,7 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/公众号-cft0808-07C160?style=for-the-badge&logo=wechat&logoColor=white" alt="WeChat">
+  <img src="https://img.shields.io/badge/WeChat-cft0808-07C160?style=for-the-badge&logo=wechat&logoColor=white" alt="WeChat">
 </p>
 
 ---
@@ -38,244 +37,244 @@
 
 <p align="center">
   <video src="docs/Agent_video_Pippit_20260225121727.mp4" width="100%" autoplay muted loop playsinline controls>
-    您的浏览器不支持视频播放，请查看下方 GIF 或 <a href="docs/Agent_video_Pippit_20260225121727.mp4">下载视频</a>。
+    Your browser does not support video playback. See the GIF below or <a href="docs/Agent_video_Pippit_20260225121727.mp4">download the video</a>.
   </video>
   <br>
-  <sub>🎥 三省六部 AI 多 Agent 协作全流程演示</sub>
+  <sub>🎥 Three Departments & Six Ministries AI multi-agent collaboration full-flow demo</sub>
 </p>
 
 <details>
-<summary>📸 GIF 预览（加载更快）</summary>
+<summary>📸 GIF preview (loads faster)</summary>
 <p align="center">
-  <img src="docs/demo.gif" alt="三省六部 Demo" width="100%">
+  <img src="docs/demo.gif" alt="Three Departments & Six Ministries Demo" width="100%">
   <br>
-  <sub>飞书下旨 → 太子分拣 → 中书省规划 → 门下省审议 → 六部并行执行 → 奏折回报（30 秒）</sub>
+  <sub>Issue edict via Feishu → Taizi triage → Zhongshu planning → Menxia review → Six Ministries parallel execution → Memorial report back (30 seconds)</sub>
 </p>
 </details>
 
-> 🐳 **没有 OpenClaw？** 跑一行 `docker run -p 7891:7891 cft0808/edict` 即可体验完整看板 Demo（预置模拟数据）。
+> 🐳 **No OpenClaw?** Run `docker run -p 7891:7891 cft0808/edict` to experience the full kanban demo (with pre-populated mock data).
 
 ---
 
-## 🤔 为什么是三省六部？
+## 🤔 Why Three Departments & Six Ministries?
 
-大多数 Multi-Agent 框架的套路是：
+Most multi-agent frameworks work like this:
 
-> *"来，你们几个 AI 自己聊，聊完把结果给我。"*
+> *"Here, you AIs, talk among yourselves and give me the result."*
 
-然后你拿到一坨不知道经过了什么处理的结果，无法复现，无法审计，无法干预。
+Then you get a blob of output with no idea what happened in the middle — can't reproduce, can't audit, can't intervene.
 
-**三省六部的思路完全不同** —— 我们用了一个在中国存在 1400 年的制度架构：
+**Three Departments & Six Ministries works completely differently** — we use an institutional architecture that existed in China for 1400 years:
 
 ```
-你 (皇上) → 太子 (分拣) → 中书省 (规划) → 门下省 (审议) → 尚书省 (派发) → 六部 (执行) → 回奏
+You (Emperor) → Taizi (triage) → Zhongshu (plan) → Menxia (review) → Shangshu (dispatch) → Six Ministries (execute) → Report back
 ```
 
-这不是花哨的 metaphor，这是**真正的分权制衡**：
+This is not a fancy metaphor — this is **real checks and balances**:
 
-| | CrewAI | MetaGPT | AutoGen | **三省六部** |
+| | CrewAI | MetaGPT | AutoGen | **Three Dept. & Six Min.** |
 |---|:---:|:---:|:---:|:---:|
-| **审核机制** | ❌ 无 | ⚠️ 可选 | ⚠️ Human-in-loop | **✅ 门下省专职审核 · 可封驳** |
-| **实时看板** | ❌ | ❌ | ❌ | **✅ 军机处 Kanban + 时间线** |
-| **任务干预** | ❌ | ❌ | ❌ | **✅ 叫停 / 取消 / 恢复** |
-| **流转审计** | ⚠️ | ⚠️ | ❌ | **✅ 完整奏折存档** |
-| **Agent 健康监控** | ❌ | ❌ | ❌ | **✅ 心跳 + 活跃度检测** |
-| **热切换模型** | ❌ | ❌ | ❌ | **✅ 看板内一键切换 LLM** |
-| **技能管理** | ❌ | ❌ | ❌ | **✅ 查看 / 添加 Skills** |
-| **新闻聚合推送** | ❌ | ❌ | ❌ | **✅ 天下要闻 + 飞书推送** |
-| **部署难度** | 中 | 高 | 中 | **低 · 一键安装 / Docker** |
+| **Review mechanism** | ❌ None | ⚠️ Optional | ⚠️ Human-in-loop | **✅ Menxia dedicated review · can veto** |
+| **Real-time kanban** | ❌ | ❌ | ❌ | **✅ Grand Council Kanban + timeline** |
+| **Task intervention** | ❌ | ❌ | ❌ | **✅ Halt / cancel / resume** |
+| **Flow audit** | ⚠️ | ⚠️ | ❌ | **✅ Complete memorial archive** |
+| **Agent health monitoring** | ❌ | ❌ | ❌ | **✅ Heartbeat + activity detection** |
+| **Hot-swap model** | ❌ | ❌ | ❌ | **✅ One-click LLM switch in kanban** |
+| **Skills management** | ❌ | ❌ | ❌ | **✅ View / add Skills** |
+| **News aggregation push** | ❌ | ❌ | ❌ | **✅ Morning Brief + Feishu push** |
+| **Deployment difficulty** | Medium | High | Medium | **Low · one-click install / Docker** |
 
-> **核心差异：制度性审核 + 完全可观测 + 实时可干预**
+> **Core difference: institutional review + fully observable + real-time intervable**
 
 <details>
-<summary><b>🔍 为什么「门下省审核」是杀手锏？（点击展开）</b></summary>
+<summary><b>🔍 Why is "Menxia Review" the killer feature? (click to expand)</b></summary>
 
 <br>
 
-CrewAI 和 AutoGen 的 Agent 协作模式是 **"做完就交"**——没有人检查产出质量。就像一个公司没有 QA 部门，工程师写完代码直接上线。
+CrewAI and AutoGen's agent collaboration model is **"hand in when done"** — no one checks output quality. Like a company with no QA department, where engineers push code directly to production.
 
-三省六部的 **门下省** 专门干这件事：
+Three Departments & Six Ministries' **Menxia** specifically does this:
 
-- 📋 **审查方案质量** —— 中书省的规划是否完备？子任务拆解是否合理？
-- 🚫 **封驳不合格的产出** —— 不是 warning，是直接打回重做
-- 🔄 **强制返工循环** —— 直到方案达标才放行
+- 📋 **Reviews plan quality** — is Zhongshu's plan complete? Is the sub-task breakdown reasonable?
+- 🚫 **Vetoes unqualified output** — not a warning, but a mandatory rework
+- 🔄 **Enforces rework loop** — only passes when the plan is up to standard
 
-这不是可选的插件——**它是架构的一部分**。每一个旨意都必须经过门下省，没有例外。
+This is not an optional plugin — **it is part of the architecture**. Every edict must pass through Menxia, no exceptions.
 
-这就是为什么三省六部能处理复杂任务而结果可靠：因为在送到执行层之前，有一个强制的质量关卡。1300 年前唐太宗就想明白了——**不受制约的权力必然会出错**。
+This is why Three Departments & Six Ministries can handle complex tasks with reliable results: because before reaching the execution layer, there is a mandatory quality checkpoint. Emperor Taizong figured this out 1300 years ago — **unchecked power will inevitably go wrong**.
 
 </details>
 
 ---
 
-## ✨ 功能全景
+## ✨ Feature Overview
 
-### 🏛️ 十二部制 Agent 架构
-- **太子** 消息分拣 —— 闲聊自动回复，旨意才建任务
-- **三省**（中书·门下·尚书）负责规划、审议、派发
-- **七部**（户·礼·兵·刑·工·吏 + 早朝官）负责专项执行
-- 严格的权限矩阵 —— 谁能给谁发消息，白纸黑字
-- 每个 Agent 独立 Workspace · 独立 Skills · 独立模型
-- **旨意数据清洗** —— 标题/备注自动剥离文件路径、元数据、无效前缀
+### 🏛️ Twelve-Department Agent Architecture
+- **Taizi** message triage — casual chat auto-replied, only commands create tasks
+- **Three Departments** (Zhongshu · Menxia · Shangshu) handle planning, review, dispatch
+- **Seven Ministries** (Hubu · Libu · Bingbu · Xingbu · Gongbu · Libu_hr + Morning Officer) handle specialized execution
+- Strict permission matrix — who can message whom, in writing
+- Each Agent: independent Workspace · independent Skills · independent model
+- **Edict data sanitization** — titles/notes auto-strip file paths, metadata, invalid prefixes
 
-### 📋 军机处看板（10 个功能面板）
+### 📋 Grand Council Kanban (10 Feature Panels)
 
 <table>
 <tr><td width="50%">
 
-**📋 旨意看板 · Kanban**
-- 按状态列展示全部任务
-- 省部过滤 + 全文搜索
-- 心跳徽章（🟢活跃 🟡停滞 🔴告警）
-- 任务详情 + 完整流转链
-- 叫停 / 取消 / 恢复操作
+**📋 Edict Board · Kanban**
+- Display all tasks in state columns
+- Department filter + full-text search
+- Heartbeat badges (🟢active 🟡stalled 🔴alert)
+- Task details + complete flow chain
+- Halt / cancel / resume operations
 
 </td><td width="50%">
 
-**🔭 省部调度 · Monitor**
-- 可视化各状态任务数量
-- 部门分布横向条形图
-- Agent 健康状态实时卡片
+**🔭 Department Monitor · Monitor**
+- Visualize task counts per state
+- Department distribution horizontal bar chart
+- Agent health status real-time cards
 
 </td></tr>
 <tr><td>
 
-**📜 奏折阁 · Memorials**
-- 已完成旨意自动归档为奏折
-- 五阶段时间线：圣旨→中书→门下→六部→回奏
-- 一键复制为 Markdown
-- 按状态筛选
+**📜 Memorials · Memorials**
+- Completed edicts auto-archived as memorials
+- Five-phase timeline: Edict→Zhongshu→Menxia→Six Ministries→Report Back
+- One-click copy as Markdown
+- Filter by status
 
 </td><td>
 
-**📜 旨库 · Template Library**
-- 9 个预设圣旨模板
-- 分类筛选 · 参数表单 · 预估时间和费用
-- 预览旨意 → 一键下旨
+**📜 Templates · Template Library**
+- 9 preset edict templates
+- Category filter · parameter form · estimated time and cost
+- Preview edict → issue with one click
 
 </td></tr>
 <tr><td>
 
-**👥 官员总览 · Officials**
-- Token 消耗排行榜
-- 活跃度 · 完成数 · 会话统计
+**👥 Officials Overview · Officials**
+- Token consumption leaderboard
+- Activity · completion count · session stats
 
 </td><td>
 
-**📰 天下要闻 · News**
-- 每日自动采集科技/财经资讯
-- 分类订阅管理 + 飞书推送
+**📰 Morning Brief · News**
+- Daily auto-collects tech/finance news
+- Category subscription management + Feishu push
 
 </td></tr>
 <tr><td>
 
-**⚙️ 模型配置 · Models**
-- 每个 Agent 独立切换 LLM
-- 应用后自动重启 Gateway（~5秒生效）
+**⚙️ Model Config · Models**
+- Each Agent independently switches LLM
+- Gateway auto-restarts after apply (~5 seconds)
 
 </td><td>
 
-**🛠️ 技能配置 · Skills**
-- 各省部已安装 Skills 一览
-- 查看详情 + 添加新技能
+**🛠️ Skills Config · Skills**
+- Overview of installed Skills per department
+- View details + add new skills
 
 </td></tr>
 <tr><td>
 
-**💬 小任务 · Sessions**
-- OC-* 会话实时监控
-- 来源渠道 · 心跳 · 消息预览
+**💬 Sessions · Sessions**
+- OC-* session real-time monitoring
+- Source channel · heartbeat · message preview
 
 </td><td>
 
-**🎬 上朝仪式 · Ceremony**
-- 每日首次打开播放开场动画
-- 今日统计 · 3.5秒自动消失
+**🎬 Court Ceremony · Ceremony**
+- Opening animation on first daily open
+- Today's stats · auto-disappears in 3.5 seconds
 
 </td></tr>
 </table>
 
 ---
 
-## 🖼️ 截图
+## 🖼️ Screenshots
 
-### 旨意看板
-![旨意看板](docs/screenshots/01-kanban-main.png)
+### Edict Board
+![Edict Board](docs/screenshots/01-kanban-main.png)
 
 <details>
-<summary>📸 展开查看更多截图</summary>
+<summary>📸 Expand to see more screenshots</summary>
 
-### 省部调度
-![省部调度](docs/screenshots/02-monitor.png)
+### Department Monitor
+![Department Monitor](docs/screenshots/02-monitor.png)
 
-### 任务流转详情
-![任务流转详情](docs/screenshots/03-task-detail.png)
+### Task Flow Details
+![Task Flow Details](docs/screenshots/03-task-detail.png)
 
-### 模型配置
-![模型配置](docs/screenshots/04-model-config.png)
+### Model Configuration
+![Model Configuration](docs/screenshots/04-model-config.png)
 
-### 技能配置
-![技能配置](docs/screenshots/05-skills-config.png)
+### Skills Configuration
+![Skills Configuration](docs/screenshots/05-skills-config.png)
 
-### 官员总览
-![官员总览](docs/screenshots/06-official-overview.png)
+### Officials Overview
+![Officials Overview](docs/screenshots/06-official-overview.png)
 
-### 会话记录
-![会话记录](docs/screenshots/07-sessions.png)
+### Sessions
+![Sessions](docs/screenshots/07-sessions.png)
 
-### 奏折归档
-![奏折归档](docs/screenshots/08-memorials.png)
+### Memorial Archive
+![Memorial Archive](docs/screenshots/08-memorials.png)
 
-### 圣旨模板
-![圣旨模板](docs/screenshots/09-templates.png)
+### Edict Templates
+![Edict Templates](docs/screenshots/09-templates.png)
 
-### 天下要闻
-![天下要闻](docs/screenshots/10-morning-briefing.png)
+### Morning Brief
+![Morning Brief](docs/screenshots/10-morning-briefing.png)
 
-### 上朝仪式
-![上朝仪式](docs/screenshots/11-ceremony.png)
+### Court Ceremony
+![Court Ceremony](docs/screenshots/11-ceremony.png)
 
 </details>
 
 ---
 
-## 🚀 30 秒快速体验
+## 🚀 30-Second Quick Start
 
-### Docker 一键启动
+### One-click Docker Start
 
 ```bash
 docker run -p 7891:7891 cft0808/sansheng-demo
 ```
-打开 http://localhost:7891 即可体验军机处看板。
+Open http://localhost:7891 to experience the Grand Council kanban.
 
 <details>
-<summary><b>⚠️ 遇到 <code>exec format error</code>？（点击展开）</b></summary>
+<summary><b>⚠️ Getting <code>exec format error</code>? (click to expand)</b></summary>
 
-如果你在 **x86/amd64** 机器（如 Ubuntu、WSL2）上看到：
+If on an **x86/amd64** machine (e.g. Ubuntu, WSL2) you see:
 ```
 exec /usr/local/bin/python3: exec format error
 ```
 
-这是因为镜像架构不匹配。请使用 `--platform` 参数：
+This is because of image architecture mismatch. Use the `--platform` flag:
 ```bash
 docker run --platform linux/amd64 -p 7891:7891 cft0808/sansheng-demo
 ```
 
-或使用 docker-compose（已内置 `platform: linux/amd64`）：
+Or use docker-compose (has `platform: linux/amd64` built in):
 ```bash
 docker compose up
 ```
 
 </details>
 
-### 完整安装
+### Full Installation
 
-#### 前置条件
-- [OpenClaw](https://openclaw.ai) 已安装
+#### Prerequisites
+- [OpenClaw](https://openclaw.ai) installed
 - Python 3.9+
 - macOS / Linux
 
-#### 安装
+#### Install
 
 ```bash
 git clone https://github.com/cft0808/edict.git
@@ -283,327 +282,328 @@ cd edict
 chmod +x install.sh && ./install.sh
 ```
 
-安装脚本自动完成：
-- ✅ 创建全量 Agent Workspace（含太子/吏部/早朝，兼容历史 main）
-- ✅ 写入各省部 SOUL.md（角色人格 + 工作流规则 + 数据清洗规范）
-- ✅ 注册 Agent 及权限矩阵到 `openclaw.json`
-- ✅ 构建 React 前端（需 Node.js 18+，如未安装则跳过）
-- ✅ 初始化数据目录 + 首次数据同步
-- ✅ 重启 Gateway 使配置生效
+The installation script automatically:
+- ✅ Creates full Agent Workspaces (including Taizi/Libu_hr/Morning Officer, compatible with legacy main)
+- ✅ Writes each department's SOUL.md (role personality + workflow rules + data sanitization specs)
+- ✅ Registers Agents and permission matrix to `openclaw.json`
+- ✅ Builds React frontend (requires Node.js 18+, skipped if not installed)
+- ✅ Initializes data directory + first data sync
+- ✅ Restarts Gateway for configuration to take effect
 
-#### 启动
+#### Start
 
 ```bash
-# 终端 1：数据刷新循环
+# Terminal 1: Data refresh loop
 bash scripts/run_loop.sh
 
-# 终端 2：看板服务器
+# Terminal 2: Kanban server
 python3 dashboard/server.py
 
-# 打开浏览器
+# Open browser
 open http://127.0.0.1:7891
 ```
 
-> 💡 **看板即开即用**：`server.py` 内嵌 `dashboard/dashboard.html`，Docker 镜像包含预构建的 React 前端
+> 💡 **Kanban ready out of the box**: `server.py` embeds `dashboard/dashboard.html`; Docker image includes pre-built React frontend
 
-> 💡 详细教程请看 [Getting Started 指南](docs/getting-started.md)
+> 💡 For detailed tutorial see the [Getting Started guide](docs/getting-started.md)
 
 ---
 
-## 🏛️ 架构
+## 🏛️ Architecture
 
 ```
                            ┌───────────────────────────────────┐
-                           │          👑 皇上（你）              │
+                           │          👑 Emperor (you)          │
                            │     Feishu · Telegram · Signal     │
                            └─────────────────┬─────────────────┘
-                                             │ 下旨
+                                             │ issue edict
                            ┌─────────────────▼─────────────────┐
-                           │          � 太子 (taizi)            │
-                           │    分拣：闲聊直接回 / 旨意建任务      │
+                           │          🤴 Taizi (taizi)           │
+                           │    Triage: chat replied / edict → task  │
                            └─────────────────┬─────────────────┘
-                                             │ 传旨
+                                             │ relay edict
                            ┌─────────────────▼─────────────────┐
-                           │          📜 中书省 (zhongshu)       │
-                           │       接旨 → 规划 → 拆解子任务       │
+                           │          📜 Zhongshu (zhongshu)    │
+                           │    Receive → Plan → Break into sub-tasks  │
                            └─────────────────┬─────────────────┘
-                                             │ 提交审核
+                                             │ submit for review
                            ┌─────────────────▼─────────────────┐
-                           │          🔍 门下省 (menxia)         │
-                           │       审议方案 → 准奏 / 封驳 🚫      │
+                           │          🔍 Menxia (menxia)        │
+                           │    Review plan → Approve / Veto 🚫  │
                            └─────────────────┬─────────────────┘
-                                             │ 准奏 ✅
+                                             │ approved ✅
                            ┌─────────────────▼─────────────────┐
-                           │          📮 尚书省 (shangshu)       │
-                           │     派发任务 → 协调六部 → 汇总回奏    │
+                           │          📮 Shangshu (shangshu)    │
+                           │  Dispatch → Coordinate → Summarize │
                            └───┬──────┬──────┬──────┬──────┬───┘
                                │      │      │      │      │
                          ┌─────▼┐ ┌───▼───┐ ┌▼─────┐ ┌───▼─┐ ┌▼─────┐
-                         │💰 户部│ │📝 礼部│ │⚔️ 兵部│ │⚖️ 刑部│ │🔧 工部│
-                         │ 数据  │ │ 文档  │ │ 工程  │ │ 合规  │ │ 基建  │
+                         │💰Hubu│ │📝 Libu│ │⚔️Bingbu│ │⚖️Xingbu│ │🔧Gongbu│
+                         │ Data │ │ Docs  │ │ Eng.  │ │Compliance│ │Infra │
                          └──────┘ └──────┘ └──────┘ └─────┘ └──────┘
                                                                ┌──────┐
-                                                               │📋 吏部│
-                                                               │ 人事  │
+                                                               │📋Libu_hr│
+                                                               │  HR  │
                                                                └──────┘
 ```
 
-### 各省部职责
+### Department Responsibilities
 
-| 部门 | Agent ID | 职责 | 擅长领域 |
+| Department | Agent ID | Responsibility | Specialty |
 |------|----------|------|---------|
-| � **太子** | `taizi` | 消息分拣、需求整理 | 闲聊识别、旨意提炼、标题概括 |
-| 📜 **中书省** | `zhongshu` | 接旨、规划、拆解 | 需求理解、任务分解、方案设计 |
-| 🔍 **门下省** | `menxia` | 审议、把关、封驳 | 质量评审、风险识别、标准把控 |
-| 📮 **尚书省** | `shangshu` | 派发、协调、汇总 | 任务调度、进度跟踪、结果整合 |
-| 💰 **户部** | `hubu` | 数据、资源、核算 | 数据处理、报表生成、成本分析 |
-| 📝 **礼部** | `libu` | 文档、规范、报告 | 技术文档、API 文档、规范制定 |
-| ⚔️ **兵部** | `bingbu` | 代码、算法、巡检 | 功能开发、Bug 修复、代码审查 |
-| ⚖️ **刑部** | `xingbu` | 安全、合规、审计 | 安全扫描、合规检查、红线管控 |
-| 🔧 **工部** | `gongbu` | CI/CD、部署、工具 | Docker 配置、流水线、自动化 |
-| 📋 **吏部** | `libu_hr` | 人事、Agent 管理 | Agent 注册、权限维护、培训 |
-| 🌅 **早朝官** | `zaochao` | 每日早朝、新闻聚合 | 定时播报、数据汇总 |
+| 🤴 **Taizi** | `taizi` | Message triage, requirement sorting | Chat recognition, edict extraction, title summarization |
+| 📜 **Zhongshu** | `zhongshu` | Receive edict, plan, break down | Requirement understanding, task decomposition, solution design |
+| 🔍 **Menxia** | `menxia` | Review, gatekeeping, veto | Quality review, risk identification, standard control |
+| 📮 **Shangshu** | `shangshu` | Dispatch, coordinate, summarize | Task scheduling, progress tracking, result integration |
+| 💰 **Hubu** | `hubu` | Data, resources, accounting | Data processing, report generation, cost analysis |
+| 📝 **Libu** | `libu` | Documentation, standards, reports | Technical docs, API docs, standards drafting |
+| ⚔️ **Bingbu** | `bingbu` | Code, algorithms, inspection | Feature dev, bug fixing, code review |
+| ⚖️ **Xingbu** | `xingbu` | Security, compliance, audit | Security scanning, compliance checking, red-line control |
+| 🔧 **Gongbu** | `gongbu` | CI/CD, deployment, tooling | Docker config, pipelines, automation |
+| 📋 **Libu_hr** | `libu_hr` | Personnel, Agent management | Agent registration, permission maintenance, training |
+| 🌅 **Morning Officer** | `zaochao` | Daily morning court, news aggregation | Scheduled broadcasts, data summaries |
 
-### 权限矩阵
+### Permission Matrix
 
-> 不是想发就能发 —— 真正的分权制衡
+> Not anyone can message anyone — real checks and balances
 
-| From ↓ \ To → | 太子 | 中书 | 门下 | 尚书 | 户 | 礼 | 兵 | 刑 | 工 | 吏 |
+| From ↓ \ To → | Taizi | Zhongshu | Menxia | Shangshu | Hubu | Libu | Bingbu | Xingbu | Gongbu | Libu_hr |
 |:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| **太子** | — | ✅ | | | | | | | | |
-| **中书省** | ✅ | — | ✅ | ✅ | | | | | | |
-| **门下省** | | ✅ | — | ✅ | | | | | | |
-| **尚书省** | | ✅ | ✅ | — | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| **六部+吏部** | | | | ✅ | | | | | | |
+| **Taizi** | — | ✅ | | | | | | | | |
+| **Zhongshu** | ✅ | — | ✅ | ✅ | | | | | | |
+| **Menxia** | | ✅ | — | ✅ | | | | | | |
+| **Shangshu** | | ✅ | ✅ | — | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| **Six Ministries+Libu_hr** | | | | ✅ | | | | | | |
 
-### 任务状态流转
+### Task State Flow
 
 ```
-皇上 → 太子分拣 → 中书规划 → 门下审议 → 已派发 → 执行中 → 待审查 → ✅ 已完成
-                      ↑          │                              │
-                      └──── 封驳 ─┘                    阻塞 Blocked
+Emperor → Taizi Triage → Zhongshu Planning → Menxia Review → Dispatched → Executing → Awaiting Review → ✅ Completed
+                              ↑          │                                          │
+                              └── Veto ──┘                              Blocked
 ```
 
 ---
 
-## 📁 项目结构
+## 📁 Project Structure
 
 ```
 edict/
-├── agents/                     # 12 个 Agent 的人格模板
-│   ├── taizi/SOUL.md           # 太子 · 消息分拣（含旨意标题规范）
-│   ├── zhongshu/SOUL.md        # 中书省 · 规划中枢
-│   ├── menxia/SOUL.md          # 门下省 · 审议把关
-│   ├── shangshu/SOUL.md        # 尚书省 · 调度大脑
-│   ├── hubu/SOUL.md            # 户部 · 数据资源
-│   ├── libu/SOUL.md            # 礼部 · 文档规范
-│   ├── bingbu/SOUL.md          # 兵部 · 工程实现
-│   ├── xingbu/SOUL.md          # 刑部 · 合规审计
-│   ├── gongbu/SOUL.md          # 工部 · 基础设施
-│   ├── libu_hr/                # 吏部 · 人事管理
-│   └── zaochao/SOUL.md         # 早朝官 · 情报枢纽
+├── agents/                     # 12 Agent personality templates
+│   ├── taizi/SOUL.md           # Taizi · message triage (including edict title specs)
+│   ├── zhongshu/SOUL.md        # Zhongshu · planning hub
+│   ├── menxia/SOUL.md          # Menxia · review gatekeeping
+│   ├── shangshu/SOUL.md        # Shangshu · dispatch brain
+│   ├── hubu/SOUL.md            # Hubu · data resources
+│   ├── libu/SOUL.md            # Libu · documentation standards
+│   ├── bingbu/SOUL.md          # Bingbu · engineering implementation
+│   ├── xingbu/SOUL.md          # Xingbu · compliance audit
+│   ├── gongbu/SOUL.md          # Gongbu · infrastructure
+│   ├── libu_hr/                # Libu_hr · personnel management
+│   └── zaochao/SOUL.md         # Morning Officer · intelligence hub
 ├── dashboard/
-│   ├── dashboard.html          # 军机处看板（单文件 · 零依赖 · ~2500 行）
-│   ├── dist/                   # React 前端构建产物（Docker 镜像内包含，本地可选）
-│   └── server.py               # API 服务器（Python 标准库 · 零依赖 · ~1200 行）
+│   ├── dashboard.html          # Grand Council kanban (single file · zero dependencies · ~2500 lines)
+│   ├── dist/                   # React frontend build output (included in Docker image, optional locally)
+│   └── server.py               # API server (Python stdlib · zero dependencies · ~1200 lines)
 ├── scripts/
-│   ├── run_loop.sh             # 数据刷新循环（每 15 秒）
-│   ├── kanban_update.py        # 看板 CLI（含旨意数据清洗 + 标题校验）
-│   ├── skill_manager.py        # Skill 管理工具（远程/本地 Skills 添加、更新、移除）
+│   ├── run_loop.sh             # Data refresh loop (every 15 seconds)
+│   ├── kanban_update.py        # Kanban CLI (including edict data sanitization + title validation)
+│   ├── skill_manager.py        # Skill management tool (remote/local Skills add, update, remove)
 │   ├── sync_from_openclaw_runtime.py
 │   ├── sync_agent_config.py
 │   ├── sync_officials_stats.py
 │   ├── fetch_morning_news.py
 │   ├── refresh_live_data.py
 │   ├── apply_model_changes.py
-│   └── file_lock.py            # 文件锁（防多 Agent 并发写入）
+│   └── file_lock.py            # File lock (prevents concurrent multi-agent writes)
 ├── tests/
-│   └── test_e2e_kanban.py      # 端到端测试（17 个断言）
-├── data/                       # 运行时数据（gitignored）
+│   └── test_e2e_kanban.py      # End-to-end tests (17 assertions)
+├── data/                       # Runtime data (gitignored)
 ├── docs/
-│   ├── task-dispatch-architecture.md  # 📚 详细架构文档：任务分发、流转、调度的完整设计（业务+技术）
-│   ├── getting-started.md             # 快速上手指南
-│   ├── wechat-article.md              # 微信文章
-│   └── screenshots/                   # 功能截图（11 张）
-├── install.sh                  # 一键安装脚本
-├── CONTRIBUTING.md             # 贡献指南
+│   ├── task-dispatch-architecture.md  # 📚 Detailed architecture doc: complete design of task dispatch, flow, and scheduling (business+technical)
+│   ├── getting-started.md             # Quick start guide
+│   ├── wechat-article.md              # WeChat article
+│   └── screenshots/                   # Feature screenshots (11 images)
+├── install.sh                  # One-click install script
+├── CONTRIBUTING.md             # Contributing guide
 └── LICENSE                     # MIT License
 ```
 
 ---
 
-## 🎯 使用方法
+## 🎯 Usage
 
-### 向 AI 下旨
+### Issue an Edict to AI
 
-通过 Feishu / Telegram / Signal 给中书省发消息：
-
-```
-给我设计一个用户注册系统，要求：
-1. RESTful API（FastAPI）
-2. PostgreSQL 数据库
-3. JWT 鉴权
-4. 完整测试用例
-5. 部署文档
-```
-
-**然后坐好，看戏：**
-
-1. 📜 中书省接旨，规划子任务分配方案
-2. 🔍 门下省审议，通过 / 封驳打回重规划
-3. 📮 尚书省准奏，派发给兵部 + 工部 + 礼部
-4. ⚔️ 各部并行执行，进度实时可见
-5. 📮 尚书省汇总结果，回奏给你
-
-全程可在**军机处看板**实时监控，随时可以**叫停、取消、恢复**。
-
-### 使用圣旨模板
-
-> 看板 → 📜 旨库 → 选模板 → 填参数 → 下旨
-
-9 个预设模板：周报生成 · 代码审查 · API 设计 · 竞品分析 · 数据报告 · 博客文章 · 部署方案 · 邮件文案 · 站会摘要
-
-### 自定义 Agent
-
-编辑 `agents/<id>/SOUL.md` 即可修改 Agent 的人格、职责和输出规范。
-
-### 增补 Skills（从网上连接）
-
-**三种方式添加 Skills：**
-
-#### 1️⃣ 看板 UI（最简单）
+Send a message to Zhongshu via Feishu / Telegram / Signal:
 
 ```
-看板 → 🔧 技能配置 → ➕ 添加远程 Skill
-→ 输入 Agent + Skill 名称 + GitHub URL
-→ 确认 → ✅ 完成
+Design a user registration system for me, requirements:
+1. RESTful API (FastAPI)
+2. PostgreSQL database
+3. JWT authentication
+4. Complete test cases
+5. Deployment documentation
 ```
 
-#### 2️⃣ CLI 命令（最灵活）
+**Then sit back and watch:**
+
+1. 📜 Zhongshu receives edict, plans sub-task allocation
+2. 🔍 Menxia reviews, passes / vetoes and sends back for re-planning
+3. 📮 Shangshu approves, dispatches to Bingbu + Gongbu + Libu
+4. ⚔️ Departments execute in parallel, progress visible in real time
+5. 📮 Shangshu summarizes results, reports back to you
+
+The whole process can be monitored in real time on the **Grand Council Kanban**; you can **halt, cancel, or resume** at any time.
+
+### Use Edict Templates
+
+> Kanban → 📜 Templates → select template → fill parameters → issue edict
+
+9 preset templates: Weekly report · Code review · API design · Competitive analysis · Data report · Blog post · Deployment plan · Email copy · Standup summary
+
+### Customize Agents
+
+Edit `agents/<id>/SOUL.md` to modify an Agent's personality, responsibilities, and output specifications.
+
+### Add Skills (from the internet)
+
+**Three ways to add Skills:**
+
+#### 1️⃣ Kanban UI (simplest)
+
+```
+Kanban → 🔧 Skills Config → ➕ Add Remote Skill
+→ enter Agent + Skill name + GitHub URL
+→ Confirm → ✅ Done
+```
+
+#### 2️⃣ CLI command (most flexible)
 
 ```bash
-# 从 GitHub 添加 code_review skill 到中书省
+# Add code_review skill to Zhongshu from GitHub
 python3 scripts/skill_manager.py add-remote \
   --agent zhongshu \
   --name code_review \
   --source https://raw.githubusercontent.com/openclaw-ai/skills-hub/main/code_review/SKILL.md \
-  --description "代码审查技能"
+  --description "Code review skill"
 
-# 一键导入官方 skills 库到指定 agents
+# One-click import official skills library to specified agents
 python3 scripts/skill_manager.py import-official-hub \
   --agents zhongshu,menxia,shangshu,bingbu,xingbu
 
-# 列出所有已添加的远程 skills
+# List all added remote skills
 python3 scripts/skill_manager.py list-remote
 
-# 更新某个 skill 到最新版本
+# Update a skill to latest version
 python3 scripts/skill_manager.py update-remote \
   --agent zhongshu \
   --name code_review
 ```
 
-#### 3️⃣ API 请求（自动化集成）
+#### 3️⃣ API request (automation integration)
 
 ```bash
-# 添加远程 skill
+# Add remote skill
 curl -X POST http://localhost:7891/api/add-remote-skill \
   -H "Content-Type: application/json" \
   -d '{
     "agentId": "zhongshu",
     "skillName": "code_review",
     "sourceUrl": "https://raw.githubusercontent.com/...",
-    "description": "代码审查"
+    "description": "Code review"
   }'
 
-# 查看所有远程 skills
+# View all remote skills
 curl http://localhost:7891/api/remote-skills-list
 ```
 
-**官方 Skills Hub：** https://github.com/openclaw-ai/skills-hub
+**Official Skills Hub:** https://github.com/openclaw-ai/skills-hub
 
-支持的 Skills：
-- `code_review` — 代码审查（Python/JS/Go）
-- `api_design` — API 设计审查
-- `security_audit` — 安全审计
-- `data_analysis` — 数据分析
-- `doc_generation` — 文档生成
-- `test_framework` — 测试框架设计
+Available Skills:
+- `code_review` — Code review (Python/JS/Go)
+- `api_design` — API design review
+- `security_audit` — Security audit
+- `data_analysis` — Data analysis
+- `doc_generation` — Documentation generation
+- `test_framework` — Test framework design
 
-详见 [🎓 远程 Skills 资源管理指南](docs/remote-skills-guide.md)
+See [🎓 Remote Skills Resource Management Guide](docs/remote-skills-guide.md)
 
 ---
 
-## 🔧 技术亮点
+## 🔧 Technical Highlights
 
-| 特点 | 说明 |
+| Feature | Description |
 |------|------|
-| **React 18 前端** | TypeScript + Vite + Zustand 状态管理，13 个功能组件 |
-| **纯 stdlib 后端** | `server.py` 基于 `http.server`，零依赖，同时提供 API + 静态文件服务 |
-| **Agent 思考可视** | 实时展示 Agent 的 thinking 过程、工具调用、返回结果 |
-| **一键安装** | `install.sh` 自动完成全部配置 |
-| **15 秒同步** | 数据自动刷新，看板倒计时显示 |
-| **每日仪式** | 首次打开播放上朝开场动画 |
-| **远程 Skills 生态** | 从 GitHub/URL 一键导入能力，支持版本管理 + CLI + API + UI |
+| **React 18 Frontend** | TypeScript + Vite + Zustand state management, 13 feature components |
+| **Pure stdlib backend** | `server.py` based on `http.server`, zero dependencies, serves both API + static files |
+| **Agent thinking visible** | Real-time display of Agent thinking process, tool calls, return results |
+| **One-click install** | `install.sh` completes all configuration automatically |
+| **15-second sync** | Data auto-refreshes, kanban shows countdown |
+| **Daily ceremony** | Opening animation plays on first daily open |
+| **Remote Skills ecosystem** | One-click import capabilities from GitHub/URL, with version management + CLI + API + UI |
 
 ---
 
-## � 深入了解
+## 📚 Deep Dive
 
-### 核心文档
+### Core Documentation
 
-- **[📖 任务分发流转完整架构](docs/task-dispatch-architecture.md)** — **必读文档**
-  - 详细讲解三省六部如何处理复杂任务的业务设计和技术实现
-  - 涵盖：9大任务状态机 / 权限矩阵 / 4阶段调度（重试→升级→回滚）/ Session JSONL数据融合
-  - 包含完整的使用案例、API端点说明、CLI工具文档
-  - 对标 CrewAI/AutoGen：为什么制度化>自由协作
-  - 故障场景与恢复机制
-  - **读这个文档会理解为什么三省六部这么强大**（9500+ 字，30 分钟完整理解）
+- **[📖 Complete Task Dispatch Architecture](docs/task-dispatch-architecture.md)** — **Must-read**
+  - Detailed explanation of the business design and technical implementation of how Three Departments & Six Ministries handles complex tasks
+  - Covers: 9-state task state machine / permission matrix / 4-phase scheduling (retry→escalation→rollback) / Session JSONL data fusion
+  - Includes complete use cases, API endpoint documentation, CLI tool docs
+  - Comparison with CrewAI/AutoGen: why institutional > free collaboration
+  - Failure scenarios and recovery mechanisms
+  - **Reading this document will help you understand why Three Departments & Six Ministries is so powerful** (9500+ words, 30 minutes for full understanding)
 
-- **[🎓 远程 Skills 资源管理指南](docs/remote-skills-guide.md)** — Skills 生态
-  - 从网上连接和增补 skills，支持 GitHub/Gitee/任意 HTTPS URL
-  - 官方 Skills Hub 预设能力库
-  - CLI 工具 + 看板 UI + Restful API
-  - Skills 文件规范与安全防护
-  - 支持版本管理和一键更新
+- **[🎓 Remote Skills Resource Management Guide](docs/remote-skills-guide.md)** — Skills ecosystem
+  - Connect and supplement skills from the internet, supporting GitHub/any HTTPS URL
+  - Official Skills Hub preset capability library
+  - CLI tools + kanban UI + RESTful API
+  - Skill file specification and security protection
+  - Supports version management and one-click update
 
-- **[⚡ Remote Skills 快速入门](docs/remote-skills-quickstart.md)** — 5 分钟上手
-  - 快速体验、CLI 命令、看板操作示例
-  - 创建自己的 Skills 库
-  - API 完整参考 + 常见问题
+- **[⚡ Remote Skills Quick Start](docs/remote-skills-quickstart.md)** — 5-minute start
+  - Quick experience, CLI commands, kanban operation examples
+  - Create your own Skills library
+  - Complete API reference + FAQ
 
-- **[🚀 快速上手指南](docs/getting-started.md)** — 新手入门
-- **[🤝 贡献指南](CONTRIBUTING.md)** — 想参与贡献？从这里开始
+- **[🚀 Getting Started Guide](docs/getting-started.md)** — New user guide
+- **[🤝 Contributing Guide](CONTRIBUTING.md)** — Want to contribute? Start here
 
 ---
-## 🔧 常见问题排查
+
+## 🔧 Common Troubleshooting
 
 <details>
-<summary><b>❌ 任务总超时 / 下属完成了但无法传回太子</b></summary>
+<summary><b>❌ Tasks always timeout / subordinates completed but cannot report back to Taizi</b></summary>
 
-**症状**：六部或尚书省已完成任务，但太子收不到回报，最终超时。
+**Symptom**: Six Ministries or Shangshu completed the task, but Taizi doesn't receive the report and it times out.
 
-**排查步骤**：
+**Troubleshooting steps**:
 
-1. **检查 Agent 注册状态**：
+1. **Check Agent registration status**:
 ```bash
 curl -s http://127.0.0.1:7891/api/agents-status | python3 -m json.tool
 ```
-确认 `taizi` agent 的 `statusLabel` 是 `alive`。
+Confirm that `taizi` agent's `statusLabel` is `alive`.
 
-2. **检查 Gateway 日志**：
+2. **Check Gateway logs**:
 ```bash
-ls /tmp/openclaw/ | tail -5          # 找到最新日志
+ls /tmp/openclaw/ | tail -5          # find latest log
 grep -i "error\|fail\|unknown" /tmp/openclaw/openclaw-*.log | tail -20
 ```
 
-3. **常见原因**：
-   - Agent ID 不匹配（已在 v1.2 修复：`main` → `taizi`）
-   - LLM provider 超时（增加了自动重试）
-   - 僵尸 Agent 进程（运行 `ps aux | grep openclaw` 检查）
+3. **Common causes**:
+   - Agent ID mismatch (fixed in v1.2: `main` → `taizi`)
+   - LLM provider timeout (automatic retry added)
+   - Zombie Agent process (run `ps aux | grep openclaw` to check)
 
-4. **强制重试**：
+4. **Force retry**:
 ```bash
-# 手动触发巡检扫描（自动重试卡住的任务）
+# Manually trigger scheduler scan (auto-retries stuck tasks)
 curl -X POST http://127.0.0.1:7891/api/scheduler-scan \
   -H 'Content-Type: application/json' -d '{"thresholdSec":60}'
 ```
@@ -613,148 +613,149 @@ curl -X POST http://127.0.0.1:7891/api/scheduler-scan \
 <details>
 <summary><b>❌ Docker: exec format error</b></summary>
 
-**症状**：`exec /usr/local/bin/python3: exec format error`
+**Symptom**: `exec /usr/local/bin/python3: exec format error`
 
-**原因**：镜像架构（arm64）与主机架构（amd64）不匹配。
+**Cause**: Image architecture (arm64) doesn't match host architecture (amd64).
 
-**解决**：
+**Fix**:
 ```bash
-# 方法 1：指定平台
+# Option 1: specify platform
 docker run --platform linux/amd64 -p 7891:7891 cft0808/sansheng-demo
 
-# 方法 2：使用 docker-compose（已内置 platform）
+# Option 2: use docker-compose (has platform built in)
 docker compose up
 ```
 
 </details>
 
 <details>
-<summary><b>❌ Skill 下载失败</b></summary>
+<summary><b>❌ Skill download failed</b></summary>
 
-**症状**：`python3 scripts/skill_manager.py import-official-hub` 报错。
+**Symptom**: `python3 scripts/skill_manager.py import-official-hub` errors.
 
-**排查**：
+**Diagnose**:
 ```bash
-# 测试网络连通性
+# Test network connectivity
 curl -I https://raw.githubusercontent.com/openclaw-ai/skills-hub/main/code_review/SKILL.md
 
-# 如果超时，使用代理
+# If timeout, use a proxy
 export https_proxy=http://your-proxy:port
 python3 scripts/skill_manager.py import-official-hub --agents zhongshu
 ```
 
-**常见原因**：
-- 中国大陆访问 GitHub raw 资源需要代理
-- 网络超时（已增加到 30 秒 + 自动重试 3 次）
-- 官方 Skills Hub 仓库维护中
+**Common causes**:
+- Accessing GitHub raw resources from mainland China may require a proxy
+- Network timeout (increased to 30 seconds + automatic retry 3 times)
+- Official Skills Hub repository under maintenance
 
 </details>
 
 ---
-## �🗺️ Roadmap
 
-> 完整路线图及参与方式：[ROADMAP.md](ROADMAP.md)
+## 🗺️ Roadmap
 
-### Phase 1 — 核心架构 ✅
-- [x] 十二部制 Agent 架构（太子 + 三省 + 七部 + 早朝官）+ 权限矩阵
-- [x] 军机处实时看板（10 个功能面板 + 实时活动面板）
-- [x] 任务叫停 / 取消 / 恢复
-- [x] 奏折系统（自动归档 + 五阶段时间线）
-- [x] 圣旨模板库（9 个预设 + 参数表单）
-- [x] 上朝仪式感动画
-- [x] 天下要闻 + 飞书推送 + 订阅管理
-- [x] 模型热切换 + 技能管理 + 技能添加
-- [x] 官员总览 + Token 消耗统计
-- [x] 小任务 / 会话监控
-- [x] 太子消息分拣（闲聊自动回复 / 旨意建任务）
-- [x] 旨意数据清洗（路径/元数据/前缀自动剥离）
-- [x] 重复任务防护 + 已完成任务保护
-- [x] 端到端测试覆盖（17 个断言）
-- [x] React 18 前端重构（TypeScript + Vite + Zustand · 13 组件）
-- [x] Agent 思考过程可视化（实时 thinking / 工具调用 / 返回结果）
-- [x] 前后端一体化部署（server.py 同时提供 API + 静态文件服务）
+> Full roadmap and how to participate: [ROADMAP.md](ROADMAP.md)
 
-### Phase 2 — 制度深化 🚧
-- [ ] 御批模式（人工审批 + 一键准奏/封驳）
-- [ ] 功过簿（Agent 绩效评分体系）
-- [ ] 急递铺（Agent 间实时消息流可视化）
-- [ ] 国史馆（知识库检索 + 引用溯源）
+### Phase 1 — Core Architecture ✅
+- [x] Twelve-department Agent architecture (Taizi + Three Departments + Seven Ministries + Morning Officer) + permission matrix
+- [x] Grand Council real-time kanban (10 feature panels + real-time activity panel)
+- [x] Task halt / cancel / resume
+- [x] Memorial system (auto-archive + five-phase timeline)
+- [x] Edict template library (9 presets + parameter forms)
+- [x] Court ceremony animation
+- [x] Morning Brief + Feishu push + subscription management
+- [x] Hot-swap models + skill management + skill addition
+- [x] Officials overview + Token consumption stats
+- [x] Sessions / session monitoring
+- [x] Taizi message triage (casual chat auto-reply / commands create tasks)
+- [x] Edict data sanitization (auto-strip paths/metadata/prefixes)
+- [x] Duplicate task protection + completed task protection
+- [x] End-to-end test coverage (17 assertions)
+- [x] React 18 frontend refactor (TypeScript + Vite + Zustand · 13 components)
+- [x] Agent thinking process visualization (real-time thinking / tool calls / return results)
+- [x] Integrated frontend+backend deployment (server.py serves both API + static files)
 
-### Phase 3 — 生态扩展
-- [ ] Docker Compose + Demo 镜像
-- [ ] Notion / Linear 适配器
-- [ ] 年度大考（Agent 年度绩效报告）
-- [ ] 移动端适配 + PWA
-- [ ] ClawHub 上架
+### Phase 2 — System Deepening 🚧
+- [ ] Imperial approval mode (human approval + one-click approve/veto)
+- [ ] Merit record (Agent performance scoring system)
+- [ ] Express courier (real-time Agent message flow visualization)
+- [ ] National History Archive (knowledge base retrieval + citation tracing)
 
----
-
-## 🤝 参与贡献
-
-欢迎任何形式的贡献！详见 [CONTRIBUTING.md](CONTRIBUTING.md)
-
-特别欢迎的方向：
-- 🎨 **UI 增强**：深色/浅色主题、响应式、动画优化
-- 🤖 **新 Agent**：适合特定场景的专职 Agent 角色
-- 📦 **Skills 生态**：各部门专用技能包
-- 🔗 **集成扩展**：Notion · Jira · Linear · GitHub Issues
-- 🌐 **国际化**：日文 · 韩文 · 西班牙文
-- 📱 **移动端**：响应式适配、PWA
+### Phase 3 — Ecosystem Expansion
+- [ ] Docker Compose + Demo image
+- [ ] Notion / Linear adapters
+- [ ] Annual review (Agent annual performance report)
+- [ ] Mobile adaptation + PWA
+- [ ] ClawHub listing
 
 ---
 
-## 📂 案例
+## 🤝 Contributing
 
-`examples/` 目录收录了真实的端到端使用案例：
+All forms of contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md)
 
-| 案例 | 旨意 | 涉及部门 |
+Especially welcome directions:
+- 🎨 **UI enhancements**: dark/light theme, responsive, animation optimization
+- 🤖 **New Agents**: specialized Agent roles for specific scenarios
+- 📦 **Skills ecosystem**: department-specific skill packs
+- 🔗 **Integration extensions**: Notion · Jira · Linear · GitHub Issues
+- 🌐 **Internationalization**: Japanese · Korean · Spanish
+- 📱 **Mobile**: responsive adaptation, PWA
+
+---
+
+## 📂 Examples
+
+The `examples/` directory contains real end-to-end use cases:
+
+| Case | Edict | Departments Involved |
 |------|------|----------|
-| [竞品分析](examples/competitive-analysis.md) | "分析 CrewAI vs AutoGen vs LangGraph" | 中书→门下→户部+兵部+礼部 |
-| [代码审查](examples/code-review.md) | "审查这段 FastAPI 代码的安全性" | 中书→门下→兵部+刑部 |
-| [周报生成](examples/weekly-report.md) | "生成本周工程团队周报" | 中书→门下→户部+礼部 |
+| [Competitive Analysis](examples/competitive-analysis.md) | "Analyze CrewAI vs AutoGen vs LangGraph" | Zhongshu→Menxia→Hubu+Bingbu+Libu |
+| [Code Review](examples/code-review.md) | "Review this FastAPI code for security" | Zhongshu→Menxia→Bingbu+Xingbu |
+| [Weekly Report](examples/weekly-report.md) | "Generate this week's engineering team report" | Zhongshu→Menxia→Hubu+Libu |
 
-每个案例包含：完整旨意 → 中书省规划 → 门下省审核意见 → 各部执行结果 → 最终奏折。
+Each case includes: complete edict → Zhongshu planning → Menxia review comments → department execution results → final memorial.
 
 ---
 
 ## ⭐ Star History
 
-如果这个项目让你会心一笑，请给个 Star ⚔️
+If this project made you smile, please give it a Star ⚔️
 
 [![Star History Chart](https://api.star-history.com/svg?repos=cft0808/edict&type=Date)](https://star-history.com/#cft0808/edict&Date)
 
 ---
 
-## 📮 朕的邸报——公众号
+## 📮 The Imperial Gazette — WeChat Account
 
-> 古有邸报传天下政令，今有公众号聊 AI 架构。
+> In ancient times, the imperial gazette spread edicts across the realm. Today, the WeChat account talks about AI architecture.
 
 <p align="center">
-  <img src="docs/assets/wechat-qrcode.jpg" width="220" alt="公众号二维码 · cft0808">
+  <img src="docs/assets/wechat-qrcode.jpg" width="220" alt="WeChat QR Code · cft0808">
   <br><br>
-  <b>👆 扫码关注「cft0808」—— 朕的技术邸报</b>
+  <b>👆 Scan to follow "cft0808" — the Emperor's tech gazette</b>
 </p>
 
-你会看到：
+You'll see:
 
-- 🏛️ **架构拆解** —— 三省六部到底怎么分权制衡的？12 个 Agent 各司何职？
-- 🔥 **踩坑复盘** —— Agent 吵架了怎么办？Token 烧光了怎么省？门下省为什么总封驳？
-- 🛠️ **Issue 修复实录** —— 每个 bug 都是一道奏折，看朕如何批红
-- 💡 **Token 省钱术** —— 用 1/10 的 token 跑出门下省审核效果的秘密
-- 🎭 **Agent 人设彩蛋** —— 六部的 SOUL.md 是怎么写出来的？
+- 🏛️ **Architecture breakdowns** — How exactly does Three Departments & Six Ministries divide power? What does each of the 12 Agents do?
+- 🔥 **Lessons learned** — What to do when Agents argue? How to save tokens? Why does Menxia always veto?
+- 🛠️ **Bug fix records** — Every bug is a memorial, watch how the Emperor handles it
+- 💡 **Token cost-saving tips** — The secret to running Menxia review with 1/10 the tokens
+- 🎭 **Agent persona easter eggs** — How were the Six Ministries' SOUL.md files written?
 
-> *"朕让 AI 上朝，结果 AI 比朕还卷。"* —— 关注后你会懂的。
+> *"I made AI attend court, and AI turned out to be more diligent than me."* — You'll understand after following.
 
 ---
 
 ## 📄 License
 
-[MIT](LICENSE) · 由 [OpenClaw](https://openclaw.ai) 社区构建
+[MIT](LICENSE) · Built by the [OpenClaw](https://openclaw.ai) community
 
 ---
 
 <p align="center">
-  <strong>⚔️ 以古制御新技，以智慧驾驭 AI</strong><br>
+  <strong>⚔️ Govern new technology with ancient wisdom, command AI with institutional design</strong><br>
   <sub>Governing AI with the wisdom of ancient empires</sub><br><br>
-  <a href="#-朕的邸报公众号"><img src="https://img.shields.io/badge/公众号_cft0808-关注获取更新-07C160?style=for-the-badge&logo=wechat&logoColor=white" alt="WeChat"></a>
+  <a href="#-the-imperial-gazette--wechat-account"><img src="https://img.shields.io/badge/WeChat_cft0808-Follow_for_updates-07C160?style=for-the-badge&logo=wechat&logoColor=white" alt="WeChat"></a>
 </p>

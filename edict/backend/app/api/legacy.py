@@ -1,7 +1,7 @@
-"""Legacy 兼容路由 — 通过旧版 task_id (JJC-xxx) 操作任务。
+"""Legacy compatibility routes — operate on tasks via old task_id (JJC-xxx).
 
-旧版 kanban_update.py 使用自定义 ID (JJC-20260301-007)，
-Edict 使用 UUID。此路由通过 tags 或 meta.legacy_id 映射。
+The old kanban_update.py uses custom IDs (JJC-20260301-007),
+while Edict uses UUIDs. This router maps via tags or meta.legacy_id.
 """
 
 import logging
@@ -20,15 +20,15 @@ router = APIRouter()
 
 
 async def _find_by_legacy_id(db: AsyncSession, legacy_id: str) -> Task | None:
-    """通过旧版 ID 查找任务（在 tags 或 meta.legacy_id 中搜索）。"""
-    # 方式1: tags 包含 legacy_id
+    """Find a task by its legacy ID (searched in tags or meta.legacy_id)."""
+    # Method 1: tags contains legacy_id
     stmt = select(Task).where(Task.tags.contains([legacy_id]))
     result = await db.execute(stmt)
     task = result.scalars().first()
     if task:
         return task
 
-    # 方式2: meta->legacy_id
+    # Method 2: meta->legacy_id
     stmt2 = select(Task).where(Task.meta["legacy_id"].astext == legacy_id)
     result2 = await db.execute(stmt2)
     return result2.scalars().first()

@@ -1,4 +1,4 @@
-"""SQLAlchemy async 引擎与 session 管理。"""
+"""SQLAlchemy async engine and session management."""
 
 from sqlalchemy.ext.asyncio import (
     AsyncSession,
@@ -23,12 +23,12 @@ async_session = async_sessionmaker(engine, class_=AsyncSession, expire_on_commit
 
 
 class Base(DeclarativeBase):
-    """所有 ORM 模型的基类。"""
+    """Base class for all ORM models."""
     pass
 
 
 async def get_db() -> AsyncSession:
-    """FastAPI 依赖注入 — 获取异步数据库 session。"""
+    """FastAPI dependency injection — get an async database session."""
     async with async_session() as session:
         try:
             yield session
@@ -39,6 +39,6 @@ async def get_db() -> AsyncSession:
 
 
 async def init_db():
-    """开发用 — 创建所有表（生产用 Alembic）。"""
+    """Development use — create all tables (use Alembic in production)."""
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)

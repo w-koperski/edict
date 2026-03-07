@@ -1,4 +1,4 @@
-"""Events API — 事件查询与审计。"""
+"""Events API — event queries and audit."""
 
 import logging
 from datetime import datetime
@@ -24,7 +24,7 @@ async def list_events(
     limit: int = Query(default=50, le=500),
     db: AsyncSession = Depends(get_db),
 ):
-    """查询持久化事件（从 Postgres event 表）。"""
+    """Query persisted events (from Postgres event table)."""
     stmt = select(Event)
     if trace_id:
         stmt = stmt.where(Event.trace_id == trace_id)
@@ -55,7 +55,7 @@ async def list_events(
 
 @router.get("/stream-info")
 async def stream_info(topic: str = Query(description="Stream topic")):
-    """查询 Redis Stream 实时信息。"""
+    """Query Redis Stream real-time info."""
     bus = await get_event_bus()
     info = await bus.stream_info(topic)
     return {"topic": topic, "info": info}
@@ -63,7 +63,7 @@ async def stream_info(topic: str = Query(description="Stream topic")):
 
 @router.get("/topics")
 async def list_topics():
-    """列出所有可用事件 topic。"""
+    """List all available event topics."""
     from ..services.event_bus import (
         TOPIC_TASK_CREATED,
         TOPIC_TASK_STATUS,
@@ -75,12 +75,12 @@ async def list_topics():
     )
     return {
         "topics": [
-            {"name": TOPIC_TASK_CREATED, "description": "任务创建"},
-            {"name": TOPIC_TASK_STATUS, "description": "状态变更"},
-            {"name": TOPIC_TASK_DISPATCH, "description": "Agent 派发"},
-            {"name": TOPIC_TASK_COMPLETED, "description": "任务完成"},
-            {"name": TOPIC_TASK_STALLED, "description": "任务停滞"},
-            {"name": TOPIC_AGENT_THOUGHTS, "description": "Agent 思考流"},
-            {"name": TOPIC_AGENT_HEARTBEAT, "description": "Agent 心跳"},
+            {"name": TOPIC_TASK_CREATED, "description": "Task created"},
+            {"name": TOPIC_TASK_STATUS, "description": "State changed"},
+            {"name": TOPIC_TASK_DISPATCH, "description": "Agent dispatch"},
+            {"name": TOPIC_TASK_COMPLETED, "description": "Task completed"},
+            {"name": TOPIC_TASK_STALLED, "description": "Task stalled"},
+            {"name": TOPIC_AGENT_THOUGHTS, "description": "Agent thought stream"},
+            {"name": TOPIC_AGENT_HEARTBEAT, "description": "Agent heartbeat"},
         ]
     }

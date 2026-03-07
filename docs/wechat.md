@@ -1,77 +1,77 @@
-# 📮 朕的邸报——公众号「cft0808」
+# 📮 The Imperial Gazette — WeChat Official Account "cft0808"
 
-> *古有邸报传天下政令，今有公众号聊 AI 架构。*
+> *In ancient times, the imperial gazette spread edicts across the realm. Today, the WeChat account talks about AI architecture.*
 
 <p align="center">
-  <img src="assets/wechat-qrcode.jpg" width="260" alt="公众号二维码 · cft0808">
+  <img src="assets/wechat-qrcode.jpg" width="260" alt="WeChat QR Code · cft0808">
   <br><br>
-  <b>👆 微信扫码，即刻入朝</b>
+  <b>👆 Scan with WeChat to join the court</b>
 </p>
 
 ---
 
-## 🤔 关注了能看到什么？
+## 🤔 What Can You See After Following?
 
-### 🏛️ 架构拆解系列
+### 🏛️ Architecture Breakdown Series
 
-三省六部不是 metaphor，是真的分权制衡。公众号里你能看到：
+Three Departments & Six Ministries is not a metaphor — it's a real system of checks and balances. On the account you'll find:
 
-- **为什么门下省是杀手锏** —— 以及它封驳了多少次中书省的方案
-- **太子凭什么当分拣员** —— Intent Detection 的古今之辩
-- **六部并行为啥不打架** —— 从唐代到 goroutine 的并发智慧
-- **SOUL.md 人设怎么写** —— 让 AI 入戏的 prompt 炼丹术
+- **Why Menxia is the killer feature** — and how many times it has vetoed Zhongshu's plans
+- **Why Taizi is the triage officer** — the ancient vs. modern debate on intent detection
+- **Why the Six Ministries work in parallel without conflicts** — concurrent wisdom from the Tang dynasty to goroutines
+- **How to write a SOUL.md persona** — the alchemy of prompts that make AI stay in character
 
-### 🔥 踩坑复盘
+### 🔥 Lessons Learned from Mistakes
 
-做 12 个 Agent 协作，每天都有惊喜（惊吓）：
+Building 12 Agent collaboration brings surprises (and scares) every day:
 
-- ✍️ *Agent A 给 Agent B 发消息，B 说"朕不认识你"*
-- 🔥 *Token 烧了 $50，结果门下省把方案驳回了三次*
-- 🐛 *尚书省派发任务，六部全体罢工——原来 agent ID 写错了*
-- 💀 *install.sh 把用户自定义的龙虾官角色覆盖了……*
+- ✍️ *Agent A sends a message to Agent B, B says "I don't know you"*
+- 🔥 *Burned $50 in tokens, and Menxia rejected the plan three times*
+- 🐛 *Shangshu dispatches tasks, all Six Ministries go on strike — turns out the agent ID was wrong*
+- 💀 *install.sh overwrote the user's custom lobster official role...*
 
-这些都是真实 Issue，文章里逐条复盘怎么修的。
+These are all real issues, with step-by-step retrospectives on how they were fixed.
 
-### 💡 Token 省钱术
+### 💡 Token Cost-Saving Tips
 
-大家最关心的问题：**这玩意儿 token 不得烧穿？**
+The question everyone asks most: **Doesn't this thing burn through tokens?**
 
-公众号里会分享：
-- 用 Claude 内置 cache 砍掉 80% SOUL.md 重复读取
-- 「快速通道」机制：简单任务跳过门下省审核
-- 按需启动 Agent，不轮询不烧钱
-- 精简 SOUL.md：1000 字以内搞定一个高质量角色
+The account will share:
+- Using Claude's built-in cache to cut 80% of redundant SOUL.md reads
+- "Fast path" mechanism: simple tasks skip Menxia review
+- Start agents on demand, no polling, no unnecessary spending
+- Streamline SOUL.md: high-quality role in under 1000 words
 
-### 🎭 彩蛋 & 幕后
+### 🎭 Easter Eggs & Behind the Scenes
 
-- 六部的 SOUL.md 人设是怎么设计的？
-- "锦衣卫监察百官" 功能会做吗？（会的）
-- 为什么叫"三省六部"而不是"六扇门"？
-- 朕（作者）日常怎么跟 12 个 AI 斗智斗勇
+- How were the SOUL.md personas for the Six Ministries designed?
+- Will a "Jinyiwei inspecting officials" feature be built? (Yes, it will)
+- Why is it called "Three Departments & Six Ministries" and not something else?
+- How the author (the Emperor) outwits 12 AIs on a daily basis
 
 ---
 
-## 📝 已发表文章
+## 📝 Published Articles
 
-| 日期 | 标题 | 亮点 |
+| Date | Title | Highlights |
 |------|------|------|
-| 2026.03 | 三省六部 · 250 Star 里程碑复盘 | 5 个 Issue + 20 条评论逐一回应，Token 优化方案 |
+| 2026.03 | Three Departments & Six Ministries · 250 Stars Milestone Retrospective | 5 Issues + 20 comments addressed one by one, token optimization plan |
 
-> 持续更新中，欢迎催更 ⚔️
+> Continuously updated — feel free to request more ⚔️
 
 ---
 
-## 💬 你也可以在公众号里
+## 💬 You Can Also on the Account
 
-- 🗣️ **提问** —— 安装踩坑、架构疑惑、Token 焦虑，有问必答
-- 🐛 **报 Bug** —— 不想开 Issue？直接留言也行，朕都会看
-- 💡 **提建议** —— "能不能加个后宫系统？" 可以，但先排队
-- 🤝 **交朋友** —— 一起研究怎么让 AI 上朝更高效
+- 🗣️ **Ask questions** — installation issues, architecture questions, token anxiety — all answered
+- 🐛 **Report bugs** — don't want to open an Issue? Leave a comment, the Emperor will read it
+- 💡 **Suggest features** — "Can you add a harem system?" Sure, but queue up first
+- 🤝 **Make friends** — let's figure out together how to make AI attend court more efficiently
 
 ---
 
 <p align="center">
-  <b>⚔️ 朕让 AI 上朝，结果 AI 比朕还卷</b><br>
-  <sub>关注公众号，看朕如何驾驭 12 个 AI 大臣</sub><br><br>
-  <img src="assets/wechat-qrcode.jpg" width="180" alt="扫码关注">
+  <b>⚔️ I made AI attend court, and AI turned out to be more diligent than me</b><br>
+  <sub>Follow the account to watch how I command 12 AI ministers</sub><br><br>
+  <img src="assets/wechat-qrcode.jpg" width="180" alt="Scan to follow">
 </p>

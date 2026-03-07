@@ -1,26 +1,26 @@
-# Edict Agent 架构重设计文档
+# Edict Agent Architecture Redesign Document
 
-## 1. 设计目标
-- **可观测性**：Dashboard 能实时显示每个 agent 的思考流（thoughts）和 todo 变更。
-- **可重放 & 审计**：所有事件和状态变更持久化，可回溯。
-- **可控流程**：保留三省六部逻辑，事件驱动，支持人工干预。
-- **实时与可扩展**：低延迟交互，支持水平扩展。
-- **结构化任务与可插拔 skill**：todo 与思考结构化，便于 UI 渲染和再利用。
+## 1. Design Goals
+- **Observability**: Dashboard can display each agent's thought stream (thoughts) and todo changes in real time.
+- **Replayability & Audit**: All events and state changes are persisted and traceable.
+- **Controllable Flow**: Retains Three Departments & Six Ministries logic, event-driven, supports human intervention.
+- **Real-time & Scalable**: Low-latency interactions, supports horizontal scaling.
+- **Structured Tasks & Pluggable Skills**: Todos and thoughts are structured, easy to render in UI and reuse.
 
-## 2. 总体组件
-1. **API Gateway / Control Plane**（REST + WebSocket）
-2. **Orchestrator（调度核心）**
-3. **Event Bus / Stream Layer**（Redis Streams / NATS / Kafka）
+## 2. Overall Components
+1. **API Gateway / Control Plane** (REST + WebSocket)
+2. **Orchestrator (Scheduling Core)**
+3. **Event Bus / Stream Layer** (Redis Streams / NATS / Kafka)
 4. **Agent Runtime Pool**
 5. **Model / LLM Pool**
-6. **Task Store / Audit DB**（Postgres + JSONB）
-7. **Realtime Dashboard**（WebSocket 客户端）
-8. **Observability / Tracing**（Prometheus + Grafana + OpenTelemetry）
+6. **Task Store / Audit DB** (Postgres + JSONB)
+7. **Realtime Dashboard** (WebSocket client)
+8. **Observability / Tracing** (Prometheus + Grafana + OpenTelemetry)
 
-## 3. 通信模式
-- **Event-Driven**: 所有 agent 间通信通过 Event Bus
-- **主题示例**: `task.created`, `task.planning`, `task.review.request`, `task.review.result`, `task.dispatch`, `agent.thoughts`, `agent.todo.update`, `task.status`, `heartbeat`
-- **事件结构**:
+## 3. Communication Patterns
+- **Event-Driven**: All inter-agent communication goes through the Event Bus
+- **Topic examples**: `task.created`, `task.planning`, `task.review.request`, `task.review.result`, `task.dispatch`, `agent.thoughts`, `agent.todo.update`, `task.status`, `heartbeat`
+- **Event structure**:
 ```json
 {
   "event_id": "uuid",
@@ -34,7 +34,7 @@
 }
 ```
 
-## 4. Thoughts 与 Todo JSON Schema
+## 4. Thoughts & Todo JSON Schema
 **Thought**:
 ```json
 {
@@ -58,7 +58,7 @@
   "trace_id": "task-uuid",
   "parent_id": null,
   "title": "Verify data source X",
-  "description": "拉取 X 表的最近 30 天记录，检查缺失值",
+  "description": "Fetch last 30 days of records from table X, check for missing values",
   "owner": "exec-dpt-1",
   "assignee_agent": "data-agent",
   "status": "open",
@@ -71,7 +71,7 @@
 }
 ```
 
-## 5. 时序图（Mermaid）
+## 5. Sequence Diagram (Mermaid)
 ```mermaid
 sequenceDiagram
     participant U as User
@@ -119,15 +119,15 @@ sequenceDiagram
     O->>E: task.closed
 ```
 
-## 6. WebSocket 订阅与消息示例
-**订阅消息**:
+## 6. WebSocket Subscription & Message Examples
+**Subscribe message**:
 ```json
 {
   "type": "subscribe",
   "channels": ["task:task-123", "agent:planning-agent", "global"]
 }
 ```
-**Thought 追加（partial）**:
+**Thought append (partial)**:
 ```json
 {
   "event": "agent.thought.append",
@@ -141,7 +141,7 @@ sequenceDiagram
   }
 }
 ```
-**Todo 更新**:
+**Todo update**:
 ```json
 {
   "event": "agent.todo.update",
@@ -153,7 +153,7 @@ sequenceDiagram
 }
 ```
 
-## 7. 人工干预示例
+## 7. Human Intervention Example
 ```json
 {
   "type": "command",
@@ -161,7 +161,7 @@ sequenceDiagram
   "trace_id": "task-123"
 }
 ```
-发布事件：
+Publishes event:
 ```json
 {
   "event": "task.status",
@@ -169,12 +169,12 @@ sequenceDiagram
 }
 ```
 
-## 8. Replay / 回放
-- 请求：`GET /tasks/task-123/events`
-- 返回事件数组，可在 Dashboard 时间轴逐条回放
+## 8. Replay
+- Request: `GET /tasks/task-123/events`
+- Returns an array of events that can be replayed step-by-step on the Dashboard timeline
 
-## 9. 技术栈建议
-| 层 | 技术 |
+## 9. Recommended Tech Stack
+| Layer | Technology |
 |----|------|
 | Event Bus | Redis Streams |
 | API | FastAPI |
@@ -184,5 +184,4 @@ sequenceDiagram
 | Frontend | React + Zustand |
 
 ---
-**备注**：此文档为可直接下载参考的架构设计，包含事件规范、WebSocket 协议、时序图和 JSON Schema，可用于实现实时 agent 可观测系统。
-
+**Note**: This document is a downloadable reference architecture design, containing event specifications, WebSocket protocol, sequence diagrams, and JSON Schema, suitable for implementing real-time agent observability systems.
