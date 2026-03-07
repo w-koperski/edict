@@ -9,6 +9,7 @@ import SessionsPanel from './components/SessionsPanel';
 import MemorialPanel from './components/MemorialPanel';
 import TemplatePanel from './components/TemplatePanel';
 import MorningPanel from './components/MorningPanel';
+import ApprovalPanel from './components/ApprovalPanel';
 import TaskModal from './components/TaskModal';
 // ConfirmDialog is used inside TaskModal as needed
 import Toaster from './components/Toaster';
@@ -41,6 +42,10 @@ export default function App() {
     if (key === 'monitor') {
       const activeDepts = tasks.filter((t) => isEdict(t) && t.state === 'Doing').length;
       return activeDepts + ' active';
+    }
+    if (key === 'approval') {
+      const awaitingCount = edicts.filter((t) => t.state === 'AwaitingApproval').length;
+      return awaitingCount > 0 ? String(awaitingCount) : '';
     }
     return '';
   };
@@ -82,6 +87,7 @@ export default function App() {
       {/* ── Panels ── */}
       {activeTab === 'edicts' && <EdictBoard />}
       {activeTab === 'monitor' && <MonitorPanel />}
+      {activeTab === 'approval' && <ApprovalPanel />}
       {activeTab === 'officials' && <OfficialPanel />}
       {activeTab === 'models' && <ModelConfig />}
       {activeTab === 'skills' && <SkillsConfig />}

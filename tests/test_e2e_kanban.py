@@ -121,6 +121,17 @@ def test_done_not_overwritable():
     assert t['state'] == 'Done', f"仍应为Done: {t['state']}"
 
 
+# ── TEST 10: 御批模式 — AwaitingApproval 状态流转
+def test_awaiting_approval_state():
+    cmd_create('JJC-TEST-E2E-10', '测试御批模式待御批状态流转', 'Zhongshu', '中书省', '中书令')
+    cmd_state('JJC-TEST-E2E-10', 'Menxia', '方案提交门下省审议')
+    cmd_state('JJC-TEST-E2E-10', 'AwaitingApproval', '门下省审议通过，提交御批')
+    t = _get_task('JJC-TEST-E2E-10')
+    assert t is not None
+    assert t['state'] == 'AwaitingApproval', f"state应为AwaitingApproval: {t['state']}"
+    assert t['org'] == '待御批', f"org应为待御批: {t['org']}"
+
+
 # ── 支持直接运行 python3 tests/test_e2e_kanban.py
 if __name__ == '__main__':
     sys.exit(pytest.main([__file__, '-v']))

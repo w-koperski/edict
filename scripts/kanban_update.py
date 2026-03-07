@@ -37,6 +37,7 @@ from file_lock import atomic_json_read, atomic_json_update, atomic_json_write  #
 STATE_ORG_MAP = {
     'Taizi': '太子', 'Zhongshu': '中书省', 'Menxia': '门下省', 'Assigned': '尚书省',
     'Doing': '执行中', 'Review': '尚书省', 'Done': '完成', 'Blocked': '阻塞',
+    'AwaitingApproval': '待御批',
 }
 
 _STATE_AGENT_MAP = {

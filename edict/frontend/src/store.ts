@@ -31,6 +31,7 @@ export const PIPE = [
 
 export const PIPE_STATE_IDX: Record<string, number> = {
   Inbox: 0, Pending: 0, Taizi: 1, Zhongshu: 2, Menxia: 3,
+  AwaitingApproval: 3,
   Assigned: 4, Doing: 5, Review: 6, Done: 7, Blocked: 5, Cancelled: 5, Next: 4,
 };
 
@@ -42,7 +43,8 @@ export const DEPT_COLOR: Record<string, string> = {
 
 export const STATE_LABEL: Record<string, string> = {
   Inbox: 'Inbox', Pending: 'Pending', Taizi: 'Taizi Triage', Zhongshu: 'Zhongshu Drafting',
-  Menxia: 'Menxia Review', Assigned: 'Dispatched', Doing: 'Executing', Review: 'Awaiting Review',
+  Menxia: 'Menxia Review', AwaitingApproval: 'Awaiting Imperial Approval',
+  Assigned: 'Dispatched', Doing: 'Executing', Review: 'Awaiting Review',
   Done: 'Completed', Blocked: 'Blocked', Cancelled: 'Cancelled', Next: 'Pending Execution',
 };
 
@@ -83,18 +85,19 @@ export function getPipeStatus(t: Task): PipeStatus[] {
 
 export type TabKey =
   | 'edicts' | 'monitor' | 'officials' | 'models'
-  | 'skills' | 'sessions' | 'memorials' | 'templates' | 'morning';
+  | 'skills' | 'sessions' | 'memorials' | 'templates' | 'morning' | 'approval';
 
 export const TAB_DEFS: { key: TabKey; label: string; icon: string }[] = [
-  { key: 'edicts',    label: 'Edict Board',        icon: '📜' },
-  { key: 'monitor',   label: 'Department Monitor',  icon: '🏛️' },
-  { key: 'officials', label: 'Officials Overview',  icon: '👔' },
-  { key: 'models',    label: 'Model Config',        icon: '🤖' },
-  { key: 'skills',    label: 'Skills Config',       icon: '🎯' },
-  { key: 'sessions',  label: 'Sessions',            icon: '💬' },
-  { key: 'memorials', label: 'Memorials',           icon: '📜' },
-  { key: 'templates', label: 'Templates',           icon: '📋' },
-  { key: 'morning',   label: 'Morning Brief',       icon: '🌅' },
+  { key: 'edicts',    label: 'Edict Board',              icon: '📜' },
+  { key: 'monitor',   label: 'Department Monitor',        icon: '🏛️' },
+  { key: 'approval',  label: 'Imperial Approval',         icon: '🏅' },
+  { key: 'officials', label: 'Officials Overview',        icon: '👔' },
+  { key: 'models',    label: 'Model Config',              icon: '🤖' },
+  { key: 'skills',    label: 'Skills Config',             icon: '🎯' },
+  { key: 'sessions',  label: 'Sessions',                  icon: '💬' },
+  { key: 'memorials', label: 'Memorials',                 icon: '📜' },
+  { key: 'templates', label: 'Templates',                 icon: '📋' },
+  { key: 'morning',   label: 'Morning Brief',             icon: '🌅' },
 ];
 
 // ── DEPTS for monitor ──
