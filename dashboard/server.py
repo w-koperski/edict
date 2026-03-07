@@ -652,6 +652,108 @@ def handle_review_action(task_id, action, comment=''):
     return {'ok': True, 'message': f'{task_id} {label}{dispatched}'}
 
 
+def handle_imperial_approval(task_id, action, comment=''):
+    """御批：皇上对待御批任务进行准奏/封驳。"""
+    tasks = load_tasks()
+    task = next((t for t in tasks if t.get('id') == task_id), None)
+    if not task:
+        return {'ok': False, 'error': f'任务 {task_id} 不存在'}
+    if task.get('state') != 'AwaitingApproval':
+        return {'ok': False, 'error': f'任务 {task_id} 当前状态为 {task.get("state")}，不在御批队列中'}
+
+    _ensure_scheduler(task)
+    _scheduler_snapshot(task, f'imperial-approval-before-{action}')
+
+    if action == 'approve':
+        task['state'] = 'Assigned'
+        task['org'] = '尚书省'
+        task['now'] = f'御批准奏，移交尚书省派发'
+        remark = f'🏅 御批准奏：{comment or "皇上批准，交尚书省派发执行"}'
+        to_dept = '尚书省'
+    elif action == 'veto':
+        round_num = (task.get('review_round') or 0) + 1
+        task['review_round'] = round_num
+        task['state'] = 'Zhongshu'
+        task['org'] = '中书省'
+        task['now'] = f'御批封驳，退回中书省修订（第{round_num}轮）'
+        remark = f'🚫 御批封驳：{comment or "皇上封驳，退回修订"}'
+        to_dept = '中书省'
+    else:
+        return {'ok': False, 'error': f'未知操作: {action}，请使用 approve 或 veto'}
+
+    # 记录御批决定
+    approval_record = {
+        'at': now_iso(),
+        'taskId': task_id,
+        'title': task.get('title', ''),
+        'action': action,
+        'comment': comment or '',
+        'prevState': 'AwaitingApproval',
+        'newState': task['state'],
+    }
+
+    task.setdefault('flow_log', []).append({
+        'at': now_iso(),
+        'from': '皇上',
+        'to': to_dept,
+        'remark': remark,
+    })
+    task.setdefault('approval_log', []).append(approval_record)
+    _scheduler_mark_progress(task, f'御批 {action} -> {task.get("state")}')
+    task['updatedAt'] = now_iso()
+    save_tasks(tasks)
+
+    # 保存御批历史到独立文件（便于快速查询）
+    history_path = DATA / 'approval_history.json'
+    def update_history(hist):
+        if not isinstance(hist, list):
+            hist = []
+        hist.insert(0, approval_record)
+        return hist[:200]  # 最多保留200条历史
+    atomic_json_update(history_path, update_history, [])
+
+    # 御批准奏后自动派发尚书省
+    if action == 'approve':
+        dispatch_for_state(task_id, task, 'Assigned', trigger='imperial-approval')
+
+    label = '已御批准奏' if action == 'approve' else '已御批封驳'
+    dispatched = ' (已自动派发尚书省)' if action == 'approve' else ''
+    return {'ok': True, 'message': f'{task_id} {label}{dispatched}'}
+
+
+def get_approval_pending():
+    """获取待御批任务列表。"""
+    tasks = load_tasks()
+    pending = []
+    for t in tasks:
+        if t.get('state') == 'AwaitingApproval' and not t.get('archived'):
+            menxia_opinion = ''
+            for fl in reversed(t.get('flow_log', [])):
+                if fl.get('from') in ('门下省', 'Menxia') and '御批' not in fl.get('remark', ''):
+                    menxia_opinion = fl.get('remark', '')
+                    break
+            pending.append({
+                'id': t['id'],
+                'title': t.get('title', ''),
+                'now': t.get('now', ''),
+                'updatedAt': t.get('updatedAt', ''),
+                'reviewRound': t.get('review_round', 0),
+                'menxiaOpinion': menxia_opinion,
+                'priority': t.get('priority', 'normal'),
+            })
+    pending.sort(key=lambda x: x.get('updatedAt', ''))
+    return {'ok': True, 'pending': pending, 'count': len(pending), 'checkedAt': now_iso()}
+
+
+def get_approval_history(limit=50):
+    """获取御批历史记录。"""
+    history_path = DATA / 'approval_history.json'
+    hist = atomic_json_read(history_path, [])
+    if not isinstance(hist, list):
+        hist = []
+    return {'ok': True, 'history': hist[:limit], 'total': len(hist), 'checkedAt': now_iso()}
+
+
 # ══ Agent 在线状态检测 ══
 
 _AGENT_DEPTS = [
@@ -1868,18 +1970,20 @@ def get_task_activity(task_id):
 
 # 状态推进顺序（手动推进用）
 _STATE_FLOW = {
-    'Pending':  ('Taizi', '皇上', '太子', '待处理旨意转交太子分拣'),
-    'Taizi':    ('Zhongshu', '太子', '中书省', '太子分拣完毕，转中书省起草'),
-    'Zhongshu': ('Menxia', '中书省', '门下省', '中书省方案提交门下省审议'),
-    'Menxia':   ('Assigned', '门下省', '尚书省', '门下省准奏，转尚书省派发'),
-    'Assigned': ('Doing', '尚书省', '六部', '尚书省开始派发执行'),
-    'Next':     ('Doing', '尚书省', '六部', '待执行任务开始执行'),
-    'Doing':    ('Review', '六部', '尚书省', '各部完成，进入汇总'),
-    'Review':   ('Done', '尚书省', '太子', '全流程完成，回奏太子转报皇上'),
+    'Pending':          ('Taizi', '皇上', '太子', '待处理旨意转交太子分拣'),
+    'Taizi':            ('Zhongshu', '太子', '中书省', '太子分拣完毕，转中书省起草'),
+    'Zhongshu':         ('Menxia', '中书省', '门下省', '中书省方案提交门下省审议'),
+    'Menxia':           ('AwaitingApproval', '门下省', '待御批', '门下省审议完成，提交御批'),
+    'AwaitingApproval': ('Assigned', '皇上', '尚书省', '御批准奏，转尚书省派发'),
+    'Assigned':         ('Doing', '尚书省', '六部', '尚书省开始派发执行'),
+    'Next':             ('Doing', '尚书省', '六部', '待执行任务开始执行'),
+    'Doing':            ('Review', '六部', '尚书省', '各部完成，进入汇总'),
+    'Review':           ('Done', '尚书省', '太子', '全流程完成，回奏太子转报皇上'),
 }
 _STATE_LABELS = {
     'Pending': '待处理', 'Taizi': '太子', 'Zhongshu': '中书省', 'Menxia': '门下省',
     'Assigned': '尚书省', 'Next': '待执行', 'Doing': '执行中', 'Review': '审查', 'Done': '完成',
+    'AwaitingApproval': '待御批',
 }
 
 
@@ -2181,6 +2285,10 @@ class Handler(BaseHTTPRequestHandler):
                 self.send_json(get_scheduler_state(task_id))
         elif p == '/api/agents-status':
             self.send_json(get_agents_status())
+        elif p == '/api/approval-pending':
+            self.send_json(get_approval_pending())
+        elif p == '/api/approval-history':
+            self.send_json(get_approval_history())
         elif p.startswith('/api/agent-activity/'):
             agent_id = p.replace('/api/agent-activity/', '')
             if not agent_id or not _SAFE_NAME_RE.match(agent_id):
@@ -2410,6 +2518,17 @@ class Handler(BaseHTTPRequestHandler):
                 self.send_json({'ok': False, 'error': 'taskId and action(approve/reject) required'}, 400)
                 return
             result = handle_review_action(task_id, action, comment)
+            self.send_json(result)
+            return
+
+        if p == '/api/imperial-approval':
+            task_id = body.get('taskId', '').strip()
+            action = body.get('action', '').strip()  # approve, veto
+            comment = body.get('comment', '').strip()
+            if not task_id or action not in ('approve', 'veto'):
+                self.send_json({'ok': False, 'error': 'taskId and action(approve/veto) required'}, 400)
+                return
+            result = handle_imperial_approval(task_id, action, comment)
             self.send_json(result)
             return
 

@@ -27,7 +27,8 @@ const AGENT_LABELS: Record<string, string> = {
 const NEXT_LABELS: Record<string, string> = {
   Taizi: 'Zhongshu Drafting',
   Zhongshu: 'Menxia Review',
-  Menxia: 'Shangshu Dispatch',
+  Menxia: 'Awaiting Imperial Approval',
+  AwaitingApproval: 'Shangshu Dispatch',
   Assigned: 'Start Execution',
   Doing: 'Enter Review',
   Review: 'Complete',
@@ -149,6 +150,24 @@ export default function TaskModal() {
       const r = await api.reviewAction(task.id, action, comment || '');
       if (r.ok) {
         toast(`✅ ${task.id} ${labels[action]}d`, 'ok');
+        loadAll();
+        close();
+      } else {
+        toast(r.error || 'Action failed', 'err');
+      }
+    } catch {
+      toast('Server connection failed', 'err');
+    }
+  };
+
+  const doImperialApproval = async (action: string) => {
+    const labels: Record<string, string> = { approve: 'Imperial Approve', veto: 'Imperial Veto' };
+    const comment = prompt(`🏅 ${labels[action]} ${task.id}\n\nEnter comment (optional):`);
+    if (comment === null) return;
+    try {
+      const r = await api.imperialApproval(task.id, action, comment || '');
+      if (r.ok) {
+        toast(`🏅 ${task.id} ${action === 'approve' ? 'Approved' : 'Vetoed'}`, 'ok');
         loadAll();
         close();
       } else {
@@ -281,7 +300,13 @@ export default function TaskModal() {
                 <button className="btn-action" style={{ background: '#ff527022', color: '#ff5270', border: '1px solid #ff527044' }} onClick={() => doReview('reject')}>🚫 Reject</button>
               </>
             )}
-            {['Pending', 'Taizi', 'Zhongshu', 'Menxia', 'Assigned', 'Doing', 'Review', 'Next'].includes(task.state) && (
+            {task.state === 'AwaitingApproval' && (
+              <>
+                <button className="btn-action" style={{ background: '#ffd70022', color: '#ffd700', border: '1px solid #ffd70044', fontWeight: 700 }} onClick={() => doImperialApproval('approve')}>🏅 Imperial Approve</button>
+                <button className="btn-action" style={{ background: '#ff527022', color: '#ff5270', border: '1px solid #ff527044' }} onClick={() => doImperialApproval('veto')}>🚫 Imperial Veto</button>
+              </>
+            )}
+            {['Pending', 'Taizi', 'Zhongshu', 'Menxia', 'AwaitingApproval', 'Assigned', 'Doing', 'Review', 'Next'].includes(task.state) && (
               <button className="btn-action" style={{ background: '#7c5cfc18', color: '#7c5cfc', border: '1px solid #7c5cfc44' }} onClick={doAdvance}>⏩ Advance to Next Step</button>
             )}
           </div>

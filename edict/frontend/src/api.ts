@@ -93,6 +93,14 @@ export const api = {
 
   createTask: (data: CreateTaskPayload) =>
     postJ<ActionResult & { taskId?: string }>(`${API_BASE}/api/create-task`, data),
+
+  // Imperial Approval Mode
+  approvalPending: () =>
+    fetchJ<ApprovalPendingData>(`${API_BASE}/api/approval-pending`),
+  approvalHistory: (limit = 50) =>
+    fetchJ<ApprovalHistoryData>(`${API_BASE}/api/approval-history?limit=${limit}`),
+  imperialApproval: (taskId: string, action: string, comment: string) =>
+    postJ<ActionResult>(`${API_BASE}/api/imperial-approval`, { taskId, action, comment }),
 };
 
 // ── Types ──
@@ -394,5 +402,43 @@ export interface RemoteSkillsListResult {
   remoteSkills?: RemoteSkillItem[];
   count?: number;
   listedAt?: string;
+  error?: string;
+}
+
+// ── Imperial Approval Mode Types ──
+
+export interface ApprovalPendingItem {
+  id: string;
+  title: string;
+  now: string;
+  updatedAt: string;
+  reviewRound: number;
+  menxiaOpinion: string;
+  priority: string;
+}
+
+export interface ApprovalPendingData {
+  ok: boolean;
+  pending: ApprovalPendingItem[];
+  count: number;
+  checkedAt: string;
+  error?: string;
+}
+
+export interface ApprovalHistoryItem {
+  at: string;
+  taskId: string;
+  title: string;
+  action: 'approve' | 'veto';
+  comment: string;
+  prevState: string;
+  newState: string;
+}
+
+export interface ApprovalHistoryData {
+  ok: boolean;
+  history: ApprovalHistoryItem[];
+  total: number;
+  checkedAt: string;
   error?: string;
 }

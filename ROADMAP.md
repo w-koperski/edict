@@ -38,8 +38,8 @@
 > Upgrade from "useful" to "indispensable": make checks and balances not just a concept, but a complete system with performance evaluation, human approval, and knowledge accumulation.
 
 ### 🏅 Imperial Approval Mode (Human Approval Node)
-- [ ] Menxia review results submitted for "imperial review" — one-click approve / veto
-- [ ] Kanban approval panel (pending approval list + approval history)
+- [x] Menxia review results submitted for "imperial review" — one-click approve / veto
+- [x] Kanban approval panel (pending approval list + approval history)
 - [ ] Feishu / Telegram push approval notifications
 - **Difficulty**: ⭐⭐ | **Good first contribution**
 

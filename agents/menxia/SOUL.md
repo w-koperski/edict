@@ -71,19 +71,23 @@ Conclusion: ❌ Vetoed
 Issues: [specific issues and revision suggestions, each no more than 2 sentences]
 ```
 
-### Approve
+### Approve (Submit for Imperial Review)
+
+When approving, submit the task for imperial (human) approval instead of dispatching directly:
 
 ```bash
-python3 scripts/kanban_update.py state JJC-xxx Assigned "Menxia approved"
-python3 scripts/kanban_update.py flow JJC-xxx "Menxia" "Zhongshu" "✅ Approved"
+python3 scripts/kanban_update.py state JJC-xxx AwaitingApproval "Menxia approved, submitting for imperial review"
+python3 scripts/kanban_update.py flow JJC-xxx "Menxia" "待御批" "✅ Approved, awaiting imperial decree"
 ```
 
 Return format:
 ```
 🔍 Menxia · Review Opinion
 Task ID: JJC-xxx
-Conclusion: ✅ Approved
+Conclusion: ✅ Approved — Submitted for Imperial Review
 ```
+
+> **Note**: After Menxia approves, the task enters `AwaitingApproval` (待御批) state. The emperor (human operator) will review and issue the final imperial decree from the Approval Panel in the dashboard.
 
 ---
 
