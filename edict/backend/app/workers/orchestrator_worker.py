@@ -1,15 +1,15 @@
-"""Orchestrator Worker — 消费事件总线，驱动任务状态机。
+"""Orchestrator Worker — consumes the event bus and drives the task state machine.
 
-监听 topic:
-- task.created → 自动派发给太子 agent
-- task.planning.complete → 中书审议完成 → 流转门下
-- task.review.result → 门下审核 → 通过则 Assigned，退回则 Replan
-- task.status → 处理各种状态变更
-- task.stalled → 处理停滞任务
+Listens on topics:
+- task.created → automatically dispatches to Taizi agent
+- task.planning.complete → Zhongshu deliberation complete → transitions to Menxia
+- task.review.result → Menxia review → Assigned if approved, Replan if rejected
+- task.status → handles various state changes
+- task.stalled → handles stalled tasks
 
-这是系统的核心编排器，取代旧架构中 daemon 线程 + 定时扫描的角色。
-得益于 Redis Streams ACK 机制：即使 worker 崩溃，未 ACK 的事件
-会被其他消费者自动认领，永不丢失。
+This is the core orchestrator of the system, replacing the daemon thread + periodic scan role in the old architecture.
+Thanks to Redis Streams ACK mechanism: even if a worker crashes, unACKed events
+are automatically claimed by other consumers and never lost.
 """
 
 import asyncio
@@ -35,7 +35,7 @@ log = logging.getLogger("edict.orchestrator")
 GROUP = "orchestrator"
 CONSUMER = "orch-1"
 
-# 需要监听的 topics
+# Topics to monitor
 WATCHED_TOPICS = [
     TOPIC_TASK_CREATED,
     TOPIC_TASK_STATUS,
@@ -45,24 +45,24 @@ WATCHED_TOPICS = [
 
 
 class OrchestratorWorker:
-    """事件驱动的编排器 Worker。"""
+    """Event-driven orchestrator Worker."""
 
     def __init__(self):
         self.bus = EventBus()
         self._running = False
 
     async def start(self):
-        """启动 worker 主循环。"""
+        """Start the worker main loop."""
         await self.bus.connect()
 
-        # 确保所有消费者组
+        # Ensure all consumer groups
         for topic in WATCHED_TOPICS:
             await self.bus.ensure_consumer_group(topic, GROUP)
 
         self._running = True
         log.info("🏛️ Orchestrator worker started")
 
-        # 先处理崩溃遗留的 pending 事件
+        # First process any pending events left over from a crash
         await self._recover_pending()
 
         while self._running:
@@ -78,7 +78,7 @@ class OrchestratorWorker:
         log.info("Orchestrator worker stopped")
 
     async def _recover_pending(self):
-        """恢复崩溃前未 ACK 的事件。"""
+        """Recover unACKed events from before a crash."""
         for topic in WATCHED_TOPICS:
             events = await self.bus.claim_stale(
                 topic, GROUP, CONSUMER, min_idle_ms=30000, count=50
@@ -89,7 +89,7 @@ class OrchestratorWorker:
                     await self._handle_event(topic, entry_id, event)
 
     async def _poll_cycle(self):
-        """一次轮询周期：从所有 topic 消费事件。"""
+        """One polling cycle: consume events from all topics."""
         for topic in WATCHED_TOPICS:
             events = await self.bus.consume(
                 topic, GROUP, CONSUMER, count=5, block_ms=1000
@@ -103,10 +103,10 @@ class OrchestratorWorker:
                         f"Error handling event {entry_id} from {topic}: {e}",
                         exc_info=True,
                     )
-                    # 不 ACK → 事件会被重新投递
+                    # Do not ACK → event will be redelivered
 
     async def _handle_event(self, topic: str, entry_id: str, event: dict):
-        """根据 topic 和 event_type 分发处理。"""
+        """Dispatch handling based on topic and event_type."""
         event_type = event.get("event_type", "")
         trace_id = event.get("trace_id", "")
         payload = event.get("payload", {})
@@ -123,7 +123,7 @@ class OrchestratorWorker:
             await self._on_task_stalled(payload, trace_id)
 
     async def _on_task_created(self, payload: dict, trace_id: str):
-        """任务创建 → 派发给太子 agent 起草。"""
+        """Task created → dispatch to Taizi agent for drafting."""
         task_id = payload.get("task_id")
         state = payload.get("state", "taizi")
         agent = STATE_AGENT_MAP.get(TaskState(state), "taizi")
@@ -137,12 +137,12 @@ class OrchestratorWorker:
                 "task_id": task_id,
                 "agent": agent,
                 "state": state,
-                "message": f"新任务已创建: {payload.get('title', '')}",
+                "message": f"New task created: {payload.get('title', '')}",
             },
         )
 
     async def _on_task_status(self, event_type: str, payload: dict, trace_id: str):
-        """状态变更 → 自动派发下一个 agent。"""
+        """State change → automatically dispatch to the next agent."""
         task_id = payload.get("task_id")
         new_state_str = payload.get("to", "")
 
@@ -152,12 +152,12 @@ class OrchestratorWorker:
             log.warning(f"Unknown state: {new_state_str}")
             return
 
-        # 如果新状态有对应 agent，自动派发
+        # If the new state has a corresponding agent, auto-dispatch
         agent = STATE_AGENT_MAP.get(new_state)
 
-        # 如果进入 assigned 状态，需要查找六部对应 agent
+        # If entering assigned state, look up the Six Ministries agent
         if new_state == TaskState.ASSIGNED:
-            # 从 payload 获取 assignee_org
+    # Get assignee_org from payload
             org = payload.get("assignee_org", "")
             agent = ORG_AGENT_MAP.get(org, agent)
 
@@ -171,24 +171,24 @@ class OrchestratorWorker:
                     "task_id": task_id,
                     "agent": agent,
                     "state": new_state_str,
-                    "message": f"任务已流转到 {new_state_str}",
+                    "message": f"Task transitioned to {new_state_str}",
                 },
             )
 
     async def _on_task_completed(self, payload: dict, trace_id: str):
-        """任务完成 → 记录日志。"""
+        """Task completed → log it."""
         task_id = payload.get("task_id")
         log.info(f"🎉 Task {task_id} completed. trace={trace_id}")
 
     async def _on_task_stalled(self, payload: dict, trace_id: str):
-        """任务停滞 → 通知尚书或重新派发。"""
+        """Task stalled → notify Shangshu or re-dispatch."""
         task_id = payload.get("task_id")
         log.warning(f"⏸️ Task {task_id} stalled! Requesting intervention. trace={trace_id}")
-        # TODO: 实现停滞任务的自动恢复策略
+        # TODO: implement automatic recovery strategy for stalled tasks
 
 
 async def run_orchestrator():
-    """入口函数 — 用于直接运行 worker。"""
+    """Entry function — for running the worker directly."""
     logging.basicConfig(
         level=logging.INFO,
         format="%(asctime)s [%(name)s] %(levelname)s: %(message)s",

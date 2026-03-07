@@ -1,7 +1,7 @@
-"""Thought 模型 — Agent 思考流持久化。
+"""Thought model — Agent thought stream persistence.
 
-遵循 Edict Architecture §4 Thought JSON Schema。
-支持 streaming partial thoughts 和 dashboard 实时展示。
+Follows Edict Architecture §4 Thought JSON Schema.
+Supports streaming partial thoughts and real-time dashboard display.
 """
 
 import uuid
@@ -14,24 +14,24 @@ from ..db import Base
 
 
 class Thought(Base):
-    """Agent 思考记录。"""
+    """Agent thought record."""
     __tablename__ = "thoughts"
 
     thought_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    trace_id = Column(String(32), nullable=False, index=True, comment="关联任务ID")
-    agent = Column(String(32), nullable=False, index=True, comment="Agent 标识")
-    step = Column(Integer, nullable=False, default=0, comment="思考步骤序号")
+    trace_id = Column(String(32), nullable=False, index=True, comment="Associated task ID")
+    agent = Column(String(32), nullable=False, index=True, comment="Agent identifier")
+    step = Column(Integer, nullable=False, default=0, comment="Thought step index")
     type = Column(
         String(32),
         nullable=False,
         default="reasoning",
-        comment="思考类型: reasoning|query|action_intent|summary",
+        comment="Thought type: reasoning|query|action_intent|summary",
     )
-    source = Column(String(16), default="llm", comment="来源: llm|tool|human")
-    content = Column(Text, nullable=False, default="", comment="思考内容")
-    tokens = Column(Integer, default=0, comment="消耗 token 数")
-    confidence = Column(Float, default=0.0, comment="置信度 0-1")
-    sensitive = Column(Boolean, default=False, comment="是否敏感内容")
+    source = Column(String(16), default="llm", comment="Source: llm|tool|human")
+    content = Column(Text, nullable=False, default="", comment="Thought content")
+    tokens = Column(Integer, default=0, comment="Token count consumed")
+    confidence = Column(Float, default=0.0, comment="Confidence score 0-1")
+    sensitive = Column(Boolean, default=False, comment="Whether content is sensitive")
     timestamp = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), nullable=False)
 
     __table_args__ = (

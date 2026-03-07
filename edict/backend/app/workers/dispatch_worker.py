@@ -1,14 +1,14 @@
-"""Dispatch Worker — 消费 task.dispatch 事件，执行 OpenClaw agent 调用。
+"""Dispatch Worker — consumes task.dispatch events and executes OpenClaw agent calls.
 
-核心解决旧架构痛点：
-- 旧: daemon 线程 + subprocess.run → kill -9 丢失一切
-- 新: Redis Streams ACK 保证 → 崩溃后自动重新投递
+Core fix for old architecture pain points:
+- Old: daemon thread + subprocess.run → kill -9 loses everything
+- New: Redis Streams ACK guarantee → automatic redelivery after crash
 
-流程:
-1. 从 task.dispatch stream 消费事件
-2. 调用 OpenClaw CLI: `openclaw agent --agent xxx -m "..."`
-3. 解析 agent 输出（kanban_update.py 调用结果）
-4. ACK 事件
+Flow:
+1. Consume events from task.dispatch stream
+2. Call OpenClaw CLI: `openclaw agent --agent xxx -m "..."`
+3. Parse agent output (kanban_update.py call result)
+4. ACK event
 """
 
 import asyncio
@@ -35,7 +35,7 @@ CONSUMER = "disp-1"
 
 
 class DispatchWorker:
-    """Agent 派发 Worker — 调用 OpenClaw CLI 执行 agent 任务。"""
+    """Agent dispatch Worker — calls OpenClaw CLI to execute agent tasks."""
 
     def __init__(self, max_concurrent: int = 3):
         self.bus = EventBus()
@@ -49,7 +49,7 @@ class DispatchWorker:
         self._running = True
         log.info("🚀 Dispatch worker started")
 
-        # 恢复崩溃遗留
+        # Recover any crash leftovers
         await self._recover_pending()
 
         while self._running:
@@ -61,7 +61,7 @@ class DispatchWorker:
 
     async def stop(self):
         self._running = False
-        # 等待进行中的 agent 调用完成
+        # Wait for in-progress agent calls to complete
         if self._active_tasks:
             log.info(f"Waiting for {len(self._active_tasks)} active dispatches...")
             await asyncio.gather(*self._active_tasks.values(), return_exceptions=True)
@@ -82,14 +82,14 @@ class DispatchWorker:
             TOPIC_TASK_DISPATCH, GROUP, CONSUMER, count=3, block_ms=2000
         )
         for entry_id, event in events:
-            # 每个派发在独立任务中执行，带并发控制
+            # Each dispatch runs in an independent task with concurrency control
             task = asyncio.create_task(self._dispatch(entry_id, event))
             task_id = event.get("payload", {}).get("task_id", entry_id)
             self._active_tasks[task_id] = task
             task.add_done_callback(lambda t, tid=task_id: self._active_tasks.pop(tid, None))
 
     async def _dispatch(self, entry_id: str, event: dict):
-        """执行一次 agent 派发。"""
+        """Execute one agent dispatch."""
         async with self._semaphore:
             payload = event.get("payload", {})
             task_id = payload.get("task_id", "")
@@ -100,7 +100,7 @@ class DispatchWorker:
 
             log.info(f"🔄 Dispatching task {task_id} → agent '{agent}' state={state}")
 
-            # 发布心跳
+            # Publish heartbeat
             await self.bus.publish(
                 topic=TOPIC_AGENT_HEARTBEAT,
                 trace_id=trace_id,
@@ -112,7 +112,7 @@ class DispatchWorker:
             try:
                 result = await self._call_openclaw(agent, message, task_id, trace_id)
 
-                # 发布 agent 输出
+                # Publish agent output
                 await self.bus.publish(
                     topic=TOPIC_AGENT_THOUGHTS,
                     trace_id=trace_id,
@@ -134,12 +134,12 @@ class DispatchWorker:
                         f"rc={result.get('returncode')}"
                     )
 
-                # ACK — 事件处理完毕
+                # ACK — event processing complete
                 await self.bus.ack(TOPIC_TASK_DISPATCH, GROUP, entry_id)
 
             except Exception as e:
                 log.error(f"❌ Dispatch failed: task {task_id} → {agent}: {e}", exc_info=True)
-                # 不 ACK → Redis 会重新投递给其他消费者
+                # Do not ACK → Redis will redeliver to another consumer
 
     async def _call_openclaw(
         self,
@@ -148,7 +148,7 @@ class DispatchWorker:
         task_id: str,
         trace_id: str,
     ) -> dict:
-        """异步调用 OpenClaw CLI — 在线程池中执行。"""
+        """Asynchronously call the OpenClaw CLI — executed in a thread pool."""
         settings = get_settings()
         cmd = [
             "openclaw", "agent",
@@ -188,7 +188,7 @@ class DispatchWorker:
 
 
 async def run_dispatcher():
-    """入口函数 — 用于直接运行 worker。"""
+    """Entry function — for running the worker directly."""
     logging.basicConfig(
         level=logging.INFO,
         format="%(asctime)s [%(name)s] %(levelname)s: %(message)s",

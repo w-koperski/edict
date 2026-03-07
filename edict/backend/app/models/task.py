@@ -1,7 +1,7 @@
-"""Task 模型 — 三省六部任务核心表。
+"""Task model — core task table for the Three Departments & Six Ministries.
 
-对应当前 tasks_source.json 中的每一条任务记录。
-state 对应三省六部流转状态机：
+Corresponds to each task record in tasks_source.json.
+state maps to the Three Departments & Six Ministries state machine:
   Taizi → Zhongshu → Menxia → Assigned → Doing → Review → Done
 """
 
@@ -26,36 +26,36 @@ from ..db import Base
 
 
 class TaskState(str, enum.Enum):
-    """任务状态枚举 — 映射三省六部流程。"""
-    Taizi = "Taizi"           # 太子分拣
-    Zhongshu = "Zhongshu"     # 中书省起草
-    Menxia = "Menxia"         # 门下省审议
-    Assigned = "Assigned"     # 尚书省已将任务派发
-    Next = "Next"             # 待执行
-    Doing = "Doing"           # 六部执行中
-    Review = "Review"         # 审查汇总
-    Done = "Done"             # 完成
-    Blocked = "Blocked"       # 阻塞
-    Cancelled = "Cancelled"   # 取消
-    Pending = "Pending"       # 待处理
+    """Task state enum — maps to the Three Departments & Six Ministries workflow."""
+    Taizi = "Taizi"           # Taizi triage
+    Zhongshu = "Zhongshu"     # Zhongshu drafting
+    Menxia = "Menxia"         # Menxia review
+    Assigned = "Assigned"     # Shangshu has dispatched the task
+    Next = "Next"             # Pending execution
+    Doing = "Doing"           # Six Ministries executing
+    Review = "Review"         # Review & summary
+    Done = "Done"             # Completed
+    Blocked = "Blocked"       # Blocked
+    Cancelled = "Cancelled"   # Cancelled
+    Pending = "Pending"       # Pending
 
 
-# 终态集合
+# Terminal state set
 TERMINAL_STATES = {TaskState.Done, TaskState.Cancelled}
 
-# 状态流转合法路径
+# Valid state transition paths
 STATE_TRANSITIONS = {
     TaskState.Taizi: {TaskState.Zhongshu, TaskState.Cancelled},
     TaskState.Zhongshu: {TaskState.Menxia, TaskState.Cancelled, TaskState.Blocked},
-    TaskState.Menxia: {TaskState.Assigned, TaskState.Zhongshu, TaskState.Cancelled},  # 封驳退回中书
+    TaskState.Menxia: {TaskState.Assigned, TaskState.Zhongshu, TaskState.Cancelled},  # rejected/vetoed back to Zhongshu
     TaskState.Assigned: {TaskState.Doing, TaskState.Next, TaskState.Cancelled, TaskState.Blocked},
     TaskState.Next: {TaskState.Doing, TaskState.Cancelled},
     TaskState.Doing: {TaskState.Review, TaskState.Done, TaskState.Blocked, TaskState.Cancelled},
-    TaskState.Review: {TaskState.Done, TaskState.Doing, TaskState.Cancelled},  # 审查不通过退回
+    TaskState.Review: {TaskState.Done, TaskState.Doing, TaskState.Cancelled},  # failed review returns to Doing
     TaskState.Blocked: {TaskState.Taizi, TaskState.Zhongshu, TaskState.Menxia, TaskState.Assigned, TaskState.Doing},
 }
 
-# 状态 → Agent 映射
+# State → Agent mapping
 STATE_AGENT_MAP = {
     TaskState.Taizi: "taizi",
     TaskState.Zhongshu: "zhongshu",
@@ -64,7 +64,7 @@ STATE_AGENT_MAP = {
     TaskState.Review: "shangshu",
 }
 
-# 组织 → Agent 映射（六部）
+# Organization → Agent mapping (Six Ministries)
 ORG_AGENT_MAP = {
     "户部": "hubu",
     "礼部": "libu",
@@ -76,32 +76,32 @@ ORG_AGENT_MAP = {
 
 
 class Task(Base):
-    """三省六部任务表。"""
+    """Three Departments & Six Ministries task table."""
     __tablename__ = "tasks"
 
-    id = Column(String(32), primary_key=True, comment="任务ID, e.g. JJC-20260301-001")
-    title = Column(Text, nullable=False, comment="任务标题")
+    id = Column(String(32), primary_key=True, comment="Task ID, e.g. JJC-20260301-001")
+    title = Column(Text, nullable=False, comment="Task title")
     state = Column(Enum(TaskState, name="task_state"), nullable=False, default=TaskState.Taizi, index=True)
-    org = Column(String(32), nullable=False, default="太子", comment="当前执行部门")
-    official = Column(String(32), default="", comment="责任官员")
-    now = Column(Text, default="", comment="当前进展描述")
-    eta = Column(String(64), default="-", comment="预计完成时间")
-    block = Column(Text, default="无", comment="阻塞原因")
-    output = Column(Text, default="", comment="最终产出")
-    priority = Column(String(16), default="normal", comment="优先级")
+    org = Column(String(32), nullable=False, default="太子", comment="Current executing department")
+    official = Column(String(32), default="", comment="Responsible official")
+    now = Column(Text, default="", comment="Current progress description")
+    eta = Column(String(64), default="-", comment="Estimated completion time")
+    block = Column(Text, default="none", comment="Blocking reason")
+    output = Column(Text, default="", comment="Final output")
+    priority = Column(String(16), default="normal", comment="Priority")
     archived = Column(Boolean, default=False, index=True)
 
-    # JSONB 灵活字段
-    flow_log = Column(JSONB, default=list, comment="流转日志 [{at, from, to, remark}]")
-    progress_log = Column(JSONB, default=list, comment="进展日志 [{at, agent, text, todos}]")
-    todos = Column(JSONB, default=list, comment="子任务 [{id, title, status, detail}]")
-    scheduler = Column(JSONB, default=dict, comment="调度器元数据")
-    template_id = Column(String(64), default="", comment="模板ID")
-    template_params = Column(JSONB, default=dict, comment="模板参数")
-    ac = Column(Text, default="", comment="验收标准")
-    target_dept = Column(String(64), default="", comment="目标部门")
+    # JSONB flexible fields
+    flow_log = Column(JSONB, default=list, comment="Flow log [{at, from, to, remark}]")
+    progress_log = Column(JSONB, default=list, comment="Progress log [{at, agent, text, todos}]")
+    todos = Column(JSONB, default=list, comment="Sub-tasks [{id, title, status, detail}]")
+    scheduler = Column(JSONB, default=dict, comment="Scheduler metadata")
+    template_id = Column(String(64), default="", comment="Template ID")
+    template_params = Column(JSONB, default=dict, comment="Template parameters")
+    ac = Column(Text, default="", comment="Acceptance criteria")
+    target_dept = Column(String(64), default="", comment="Target department")
 
-    # 时间戳
+    # Timestamps
     created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), nullable=False)
     updated_at = Column(
         DateTime(timezone=True),
@@ -116,7 +116,7 @@ class Task(Base):
     )
 
     def to_dict(self) -> dict:
-        """序列化为 API 响应格式（兼容旧 live_status 格式）。"""
+        """Serialize to API response format (compatible with legacy live_status format)."""
         return {
             "id": self.id,
             "title": self.title,

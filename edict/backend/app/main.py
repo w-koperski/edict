@@ -1,15 +1,15 @@
-"""Edict Backend — FastAPI 应用入口。
+"""Edict Backend — FastAPI application entry point.
 
-Lifespan 管理：
-- startup: 连接 Redis Event Bus, 初始化数据库
-- shutdown: 关闭连接
+Lifespan management:
+- startup: connect to Redis Event Bus, initialize database
+- shutdown: close connections
 
-路由：
-- /api/tasks — 任务 CRUD
-- /api/agents — Agent 信息
-- /api/events — 事件查询
-- /api/admin — 管理操作
-- /ws — WebSocket 实时推送
+Routes:
+- /api/tasks — task CRUD
+- /api/agents — Agent info
+- /api/events — event queries
+- /api/admin — admin operations
+- /ws — WebSocket real-time push
 """
 
 import logging
@@ -32,29 +32,29 @@ log = logging.getLogger("edict")
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """应用生命周期管理。"""
+    """Application lifecycle management."""
     settings = get_settings()
     log.info(f"🏛️ Edict Backend starting on port {settings.port}...")
 
-    # 连接 Event Bus
+    # Connect to Event Bus
     bus = await get_event_bus()
     log.info("✅ Event Bus connected")
 
     yield
 
-    # 清理
+    # Cleanup
     await bus.close()
     log.info("Edict Backend shutdown complete")
 
 
 app = FastAPI(
-    title="Edict 三省六部",
-    description="事件驱动的 AI Agent 协作平台",
+    title="Edict Three Departments & Six Ministries",
+    description="Event-driven AI Agent collaboration platform",
     version="2.0.0",
     lifespan=lifespan,
 )
 
-# CORS — 开发环境允许所有来源
+# CORS — allow all origins in development
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -63,7 +63,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# 注册路由
+# Register routes
 app.include_router(tasks.router, prefix="/api/tasks", tags=["tasks"])
 app.include_router(agents.router, prefix="/api/agents", tags=["agents"])
 app.include_router(events.router, prefix="/api/events", tags=["events"])
@@ -80,7 +80,7 @@ async def health():
 @app.get("/api")
 async def api_root():
     return {
-        "name": "Edict 三省六部 API",
+        "name": "Edict Three Departments & Six Ministries API",
         "version": "2.0.0",
         "endpoints": {
             "tasks": "/api/tasks",
