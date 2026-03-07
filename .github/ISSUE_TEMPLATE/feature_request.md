@@ -1,13 +1,13 @@
 ---
 name: Feature Request
-about: 提交功能建议
+about: Submit a feature suggestion
 labels: enhancement
 ---
 
-## 功能描述
+## Feature Description
 
-## 使用场景
+## Use Case
 
-## 期望效果
+## Expected Outcome
 
-## 其他信息
+## Additional Information

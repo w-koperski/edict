@@ -1,26 +1,26 @@
 ---
 name: Bug Report
-about: 报告一个 Bug
+about: Report a Bug
 labels: bug
 ---
 
-## 环境
-- OpenClaw 版本：
-- 操作系统：
-- Python 版本：
+## Environment
+- OpenClaw version:
+- Operating system:
+- Python version:
 
-## 问题描述
+## Problem Description
 
-## 复现步骤
+## Steps to Reproduce
 1. 
 2. 
 3. 
 
-## 期望行为
+## Expected Behavior
 
-## 实际行为
+## Actual Behavior
 
-## 错误日志
+## Error Log
 ```
-粘贴日志
+paste log here
 ```

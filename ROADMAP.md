@@ -1,106 +1,106 @@
-# 🗺️ 三省六部 · Roadmap
+# 🗺️ Three Departments & Six Ministries · Roadmap
 
-> 这份路线图是公开的。欢迎认领未完成的项目，提 PR 参与建设。
+> This roadmap is public. Feel free to claim unfinished items and submit a PR to contribute.
 >
-> 认领方式：在对应 Issue 下回复 "I'll take this"，或直接提 PR 并在描述中注明。
+> To claim: reply "I'll take this" on the corresponding Issue, or submit a PR directly mentioning it in the description.
 
 ---
 
-## Phase 1 — 核心架构 ✅
+## Phase 1 — Core Architecture ✅
 
-> 三省六部的骨架：十二部制 + 太子分拣 + 实时看板 + 完整工作流。
+> The skeleton of Three Departments & Six Ministries: twelve-department system + Taizi triage + real-time kanban + complete workflow.
 
-- [x] 十二部制 Agent 架构（太子 + 中书·门下·尚书 + 户礼兵刑工 + 吏部 + 早朝官）
-- [x] 太子分拣层 —— 自动识别闲聊/指令，闲聊直接回复，指令提炼标题后转中书省
-- [x] 严格权限矩阵 —— 谁能给谁发消息，白纸黑字
-- [x] 军机处实时看板（10 个功能面板）
-- [x] 任务全生命周期管理（创建 → 分拣 → 规划 → 审议 → 派发 → 执行 → 回奏）
-- [x] 任务叫停 / 取消 / 恢复
-- [x] 奏折系统（已完成旨意自动归档 + 五阶段时间线）
-- [x] 圣旨模板库（9 个预设模板 + 参数表单 + 预估时间/费用）
-- [x] 上朝仪式感（每日首次打开播放开场动画 + 今日统计）
-- [x] 天下要闻（每日自动采集科技/财经资讯 + 飞书推送 + 订阅管理）
-- [x] 模型热切换（看板内一键切换每个 Agent 的 LLM）
-- [x] 技能管理（查看各省部已装 Skills + 添加新技能）
-- [x] 官员总览（Token 消耗排行 + 活跃度 + 完成数统计）
-- [x] 小任务 / 会话监控（OC-* 会话实时跟踪）
-- [x] 旨意数据清洗 —— 标题/备注自动净化，脏数据拒绝入库
-- [x] 重复任务防护 —— 已完成/已取消旨意不可覆盖
-- [x] E2E 看板测试（9 场景 17 断言全通过）
-- [x] React 18 前端重构 —— TypeScript + Vite + Zustand，13 个功能组件
-- [x] Agent 思考过程可视化 —— 实时展示 thinking / tool_result / user 消息
-- [x] 前后端一体化部署 —— server.py 同时提供 API + 静态文件服务
-
----
-
-## Phase 2 — 制度深化 🚧
-
-> 把"好用"升级为"不可替代"：让分权制衡不只是概念，而是有绩效评估、有人工审批、有知识沉淀的完整制度。
-
-### 🏅 御批模式（人工审批节点）
-- [ ] 门下省审议结果呈送"御览"，人工一键准奏 / 封驳
-- [ ] 看板内审批面板（待批列表 + 历史批示）
-- [ ] 飞书 / Telegram 推送审批通知
-- **难度**：⭐⭐ | **适合第一次贡献**
-
-### 📊 功过簿（Agent 绩效评分体系）
-- [ ] 每个 Agent 的完成率、返工率、耗时统计
-- [ ] 看板面板展示排行榜 + 趋势图
-- [ ] 自动标记"能臣"和"需要训练的 Agent"
-- **难度**：⭐⭐
-
-### 🚀 急递铺（Agent 间实时消息流可视化）
-- [ ] 看板内实时连线动画：中书→门下→尚书→六部
-- [ ] 消息类型着色（派发 / 审议 / 回奏 / 封驳）
-- [ ] 时间线回放模式
-- **难度**：⭐⭐⭐
-
-### 📚 国史馆（知识库 + 引用溯源）
-- [ ] 历史旨意经验自动沉淀
-- [ ] 相似旨意检索 + 推荐
-- [ ] 奏折引用溯源链
-- **难度**：⭐⭐⭐
+- [x] Twelve-department Agent architecture (Taizi + Zhongshu/Menxia/Shangshu + Hubu/Libu/Bingbu/Xingbu/Gongbu + Libu_hr + Morning Officer)
+- [x] Taizi triage layer — automatically identifies casual chat vs. commands; casual chat replied directly, commands summarized and forwarded to Zhongshu
+- [x] Strict permission matrix — who can message whom, in writing
+- [x] Grand Council real-time kanban (10 feature panels)
+- [x] Full task lifecycle management (create → triage → plan → review → dispatch → execute → report back)
+- [x] Task halt / cancel / resume
+- [x] Memorial system (completed edicts auto-archived + five-phase timeline)
+- [x] Edict template library (9 preset templates + parameter forms + estimated time/cost)
+- [x] Court ceremony (opening animation on first daily visit + today's stats)
+- [x] Daily News Brief (auto-collects tech/finance news + Feishu push + subscription management)
+- [x] Hot model switching (one-click switch of each Agent's LLM from the kanban)
+- [x] Skills management (view installed Skills per department + add new skills)
+- [x] Officials overview (Token consumption ranking + activity + completion stats)
+- [x] Sessions / session monitoring (OC-* session real-time tracking)
+- [x] Edict data sanitization — title/notes auto-cleaned, dirty data rejected
+- [x] Duplicate task protection — completed/cancelled edicts cannot be overwritten
+- [x] E2E kanban tests (9 scenarios, 17 assertions all passing)
+- [x] React 18 frontend refactor — TypeScript + Vite + Zustand, 13 feature components
+- [x] Agent thinking process visualization — real-time display of thinking / tool_result / user messages
+- [x] Integrated frontend+backend deployment — server.py serves both API + static files
 
 ---
 
-## Phase 3 — 生态扩展
+## Phase 2 — System Deepening 🚧
 
-> 从单机工具走向生态：更多集成、更多用户、更多场景。
+> Upgrade from "useful" to "indispensable": make checks and balances not just a concept, but a complete system with performance evaluation, human approval, and knowledge accumulation.
 
-### 🐳 Docker Compose + Demo 镜像
-- [ ] `docker run` 一行命令体验完整看板（预置模拟数据）
-- [ ] Docker Compose 编排（看板 + 数据同步 + OpenClaw Gateway）
-- [ ] CI/CD 自动构建推送镜像
-- **难度**：⭐⭐ | **适合第一次贡献**
+### 🏅 Imperial Approval Mode (Human Approval Node)
+- [ ] Menxia review results submitted for "imperial review" — one-click approve / veto
+- [ ] Kanban approval panel (pending approval list + approval history)
+- [ ] Feishu / Telegram push approval notifications
+- **Difficulty**: ⭐⭐ | **Good first contribution**
 
-### 🔗 看板适配器
-- [ ] Notion 适配器 —— 把 Notion database 变成军机处看板
-- [ ] Linear 适配器 —— Linear 项目同步到三省六部
-- [ ] GitHub Issues 双向同步
-- **难度**：⭐⭐⭐
+### 📊 Merit Record (Agent Performance Scoring)
+- [ ] Completion rate, rework rate, time stats per Agent
+- [ ] Kanban panel showing leaderboard + trend charts
+- [ ] Auto-tag "top performers" and "Agents needing training"
+- **Difficulty**: ⭐⭐
 
-### 📱 移动端 + PWA
-- [ ] 响应式布局适配手机/平板
-- [ ] PWA 离线支持 + 推送通知
-- **难度**：⭐⭐
+### 🚀 Express Courier (Real-time Agent Message Flow Visualization)
+- [ ] Real-time connection animations in kanban: Zhongshu→Menxia→Shangshu→Six Ministries
+- [ ] Message type coloring (dispatch / review / report back / veto)
+- [ ] Timeline replay mode
+- **Difficulty**: ⭐⭐⭐
 
-### 🏪 ClawHub 上架
-- [ ] 核心 Skills 提交到 OpenClaw 官方 Skill 市场
-- [ ] 一键安装三省六部 Skill Pack
-- **难度**：⭐
-
-### 📈 年度大考
-- [ ] Agent 年度绩效报告（Token 总消耗、完成率、最复杂旨意）
-- [ ] 可视化年度复盘大屏
-- **难度**：⭐⭐
+### 📚 National History Archive (Knowledge Base + Citation Tracing)
+- [ ] Historical edict experience auto-accumulated
+- [ ] Similar edict search + recommendations
+- [ ] Memorial citation tracing chain
+- **Difficulty**: ⭐⭐⭐
 
 ---
 
-## 如何参与
+## Phase 3 — Ecosystem Expansion
 
-1. **看看 Phase 2** —— 这些是当前最需要帮助的方向
-2. **找标有 ⭐⭐ 或"适合第一次贡献"的项目** 入手
-3. **开一个 Issue** 说你想做什么，避免重复劳动
-4. **提 PR** —— 详见 [CONTRIBUTING.md](CONTRIBUTING.md)
+> From standalone tool to ecosystem: more integrations, more users, more scenarios.
 
-> 💡 没找到想做的方向？欢迎开 Issue 提议新功能，好的想法会被加入 Roadmap。
+### 🐳 Docker Compose + Demo Image
+- [ ] `docker run` one-liner to experience full kanban (pre-populated mock data)
+- [ ] Docker Compose orchestration (kanban + data sync + OpenClaw Gateway)
+- [ ] CI/CD auto-build and push image
+- **Difficulty**: ⭐⭐ | **Good first contribution**
+
+### 🔗 Kanban Adapters
+- [ ] Notion adapter — turn Notion database into Grand Council kanban
+- [ ] Linear adapter — sync Linear projects to Three Departments & Six Ministries
+- [ ] GitHub Issues bidirectional sync
+- **Difficulty**: ⭐⭐⭐
+
+### 📱 Mobile + PWA
+- [ ] Responsive layout for phones/tablets
+- [ ] PWA offline support + push notifications
+- **Difficulty**: ⭐⭐
+
+### 🏪 ClawHub Listing
+- [ ] Submit core Skills to the OpenClaw official Skill marketplace
+- [ ] One-click install Three Departments & Six Ministries Skill Pack
+- **Difficulty**: ⭐
+
+### 📈 Annual Review
+- [ ] Agent annual performance report (total token consumption, completion rate, most complex edict)
+- [ ] Visual annual review dashboard
+- **Difficulty**: ⭐⭐
+
+---
+
+## How to Contribute
+
+1. **Check Phase 2** — these are the areas most in need of help right now
+2. **Find items marked ⭐⭐ or "Good first contribution"** to get started
+3. **Open an Issue** to say what you want to do, to avoid duplication
+4. **Submit a PR** — see [CONTRIBUTING.md](CONTRIBUTING.md) for details
+
+> 💡 Don't see what you want to work on? Open an Issue to suggest new features — good ideas will be added to the Roadmap.
