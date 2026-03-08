@@ -11,7 +11,7 @@ Endpoints:
   GET  /api/model-change-log   → data/model_change_log.json
   GET  /api/last-result        → data/last_model_change_result.json
 """
-import json, pathlib, subprocess, sys, threading, argparse, datetime, logging, re, os
+import json, pathlib, subprocess, sys, threading, argparse, datetime, logging, re, os, shutil
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from urllib.parse import urlparse
 from urllib.request import Request, urlopen
@@ -34,9 +34,13 @@ _DEFAULT_ORIGINS = {
 }
 _SAFE_NAME_RE = re.compile(r'^[a-zA-Z0-9_\-\u4e00-\u9fff]+$')
 
-BASE = pathlib.Path(__file__).parent
-DIST = BASE / 'dist'          # React build output (npm run build)
-DATA = BASE.parent / "data"
+BASE = pathlib.Path(__file__).resolve().parent
+# Allow overrides via environment variables so the server works correctly when
+# run as a systemd service from a different working directory or user account.
+_dist_env = os.environ.get('EDICT_DIST_DIR')
+_data_env = os.environ.get('EDICT_DATA_DIR')
+DIST = pathlib.Path(_dist_env) if _dist_env else BASE / 'dist'
+DATA = pathlib.Path(_data_env) if _data_env else BASE.parent / 'data'
 SCRIPTS = BASE.parent / 'scripts'
 
 # Static asset MIME types
@@ -730,6 +734,21 @@ def _check_agent_workspace(agent_id):
     return ws.is_dir()
 
 
+def _get_openclaw_bin():
+    """Return the openclaw binary path, respecting OPENCLAW_BIN env var override.
+
+    Returns the resolved path string if found, or None if the binary cannot be located.
+    """
+    bin_name = os.environ.get('OPENCLAW_BIN', 'openclaw')
+    resolved = shutil.which(bin_name)
+    if resolved:
+        return resolved
+    # If an absolute path was given, check it exists directly
+    if os.path.isabs(bin_name) and os.path.isfile(bin_name):
+        return bin_name
+    return None
+
+
 def get_agents_status():
     """Get online status for all Agents.
     Returns for each Agent:
@@ -831,7 +850,11 @@ def wake_agent(agent_id, message=''):
 
     def do_wake():
         try:
-            cmd = ['openclaw', 'agent', '--agent', runtime_id, '-m', msg, '--timeout', '120']
+            oclaw_bin = _get_openclaw_bin()
+            if not oclaw_bin:
+                log.error(f'❌ {agent_id} wake failed: openclaw binary not found — set OPENCLAW_BIN or add it to PATH')
+                return
+            cmd = [oclaw_bin, 'agent', '--agent', runtime_id, '-m', msg, '--timeout', '120']
             log.info(f'🔔 Waking {agent_id}...')
             # with retry (up to 2 attempts)
             for attempt in range(1, 3):
@@ -1951,7 +1974,18 @@ def dispatch_for_state(task_id, task, new_state, trigger='state-transition'):
                     'lastDispatchTrigger': trigger,
                 }))
                 return
-            cmd = ['openclaw', 'agent', '--agent', agent_id, '-m', msg,
+            oclaw_bin = _get_openclaw_bin()
+            if not oclaw_bin:
+                log.error(f'❌ {task_id} auto-dispatch failed: openclaw binary not found — set OPENCLAW_BIN or add it to PATH')
+                _update_task_scheduler(task_id, lambda t, s: s.update({
+                    'lastDispatchAt': now_iso(),
+                    'lastDispatchStatus': 'error',
+                    'lastDispatchAgent': agent_id,
+                    'lastDispatchTrigger': trigger,
+                    'lastDispatchError': 'openclaw binary not found',
+                }))
+                return
+            cmd = [oclaw_bin, 'agent', '--agent', agent_id, '-m', msg,
                    '--deliver', '--channel', 'feishu', '--timeout', '300']
             max_retries = 2
             err = ''
@@ -2086,7 +2120,11 @@ class Handler(BaseHTTPRequestHandler):
         except (BrokenPipeError, ConnectionResetError):
             pass
 
-    def send_file(self, path: pathlib.Path, mime='text/html; charset=utf-8'):
+    def send_file(self, path: pathlib.Path, mime='text/html; charset=utf-8', no_cache=False):
+        """Serve a file with appropriate headers.
+        Set no_cache=True for HTML entry points to prevent browsers from caching
+        stale asset references after a dashboard rebuild.
+        """
         if not path.exists():
             self.send_error(404)
             return
@@ -2095,6 +2133,8 @@ class Handler(BaseHTTPRequestHandler):
             self.send_response(200)
             self.send_header('Content-Type', mime)
             self.send_header('Content-Length', str(len(body)))
+            if no_cache:
+                self.send_header('Cache-Control', 'no-store')
             cors_headers(self)
             self.end_headers()
             self.wfile.write(body)
@@ -2117,14 +2157,17 @@ class Handler(BaseHTTPRequestHandler):
     def do_GET(self):
         p = urlparse(self.path).path.rstrip('/')
         if p in ('', '/dashboard', '/dashboard.html'):
-            self.send_file(DIST / 'index.html')
+            self.send_file(DIST / 'index.html', no_cache=True)
         elif p == '/healthz':
             checks = {'dataDir': DATA.is_dir(), 'tasksReadable': (DATA / 'tasks_source.json').exists()}
             checks['dataWritable'] = os.access(str(DATA), os.W_OK)
             all_ok = all(checks.values())
             self.send_json({'status': 'ok' if all_ok else 'degraded', 'ts': now_iso(), 'checks': checks})
         elif p == '/api/live-status':
-            self.send_json(read_json(DATA / 'live_status.json'))
+            live_path = DATA / 'live_status.json'
+            if not live_path.exists():
+                log.warning(f'live_status.json not found at {live_path} — run refresh_live_data.py to generate it')
+            self.send_json(read_json(live_path))
         elif p == '/api/agent-config':
             self.send_json(read_json(DATA / 'agent_config.json'))
         elif p == '/api/model-change-log':
@@ -2189,7 +2232,7 @@ class Handler(BaseHTTPRequestHandler):
             if not p.startswith('/api/'):
                 idx = DIST / 'index.html'
                 if idx.exists():
-                    self.send_file(idx)
+                    self.send_file(idx, no_cache=True)
                     return
             self.send_error(404)
 
@@ -2469,6 +2512,12 @@ def main():
 
     server = HTTPServer((args.host, args.port), Handler)
     log.info(f'Three Departments & Six Ministries Dashboard started → http://{args.host}:{args.port}')
+    log.info(f'  DATA  = {DATA}  (exists={DATA.is_dir()})')
+    log.info(f'  DIST  = {DIST}  (exists={DIST.is_dir()})')
+    if not DATA.is_dir():
+        log.warning(f'DATA directory not found: {DATA} — set EDICT_DATA_DIR env var to override')
+    if not DIST.is_dir():
+        log.warning(f'DIST directory not found: {DIST} — run "npm run build" or set EDICT_DIST_DIR env var')
     print(f'   Press Ctrl+C to stop')
 
     # Startup recovery: re-dispatch queued tasks interrupted by previous kill

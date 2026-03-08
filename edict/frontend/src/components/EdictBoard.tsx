@@ -161,6 +161,7 @@ export default function EdictBoard() {
 
   const tasks = liveStatus?.tasks || [];
   const allEdicts = tasks.filter(isEdict);
+  const allSessions = tasks.filter((t) => !isEdict(t));
   const activeEdicts = allEdicts.filter((t) => !isArchived(t));
   const archivedEdicts = allEdicts.filter((t) => isArchived(t));
 
@@ -218,10 +219,36 @@ export default function EdictBoard() {
       <div className="edict-grid">
         {edicts.length === 0 ? (
           <div className="empty" style={{ gridColumn: '1/-1' }}>
-            No edicts yet<br />
-            <small style={{ fontSize: 11, marginTop: 6, display: 'block', color: 'var(--muted)' }}>
-              Send tasks to Taizi via Feishu; Taizi will triage and forward to Zhongshu for processing
-            </small>
+            {allEdicts.length > 0 ? (
+              <>
+                No {edictFilter === 'active' ? 'active' : edictFilter === 'archived' ? 'archived' : ''} edicts
+                <br />
+                <small style={{ fontSize: 11, marginTop: 6, display: 'block', color: 'var(--muted)' }}>
+                  {allEdicts.length} edict{allEdicts.length !== 1 ? 's' : ''} total
+                  {activeEdicts.length > 0 && edictFilter === 'archived'
+                    ? ` — ${activeEdicts.length} active edict${activeEdicts.length !== 1 ? 's' : ''} in the Active view`
+                    : archivedEdicts.length > 0 && edictFilter === 'active'
+                    ? ` — ${archivedEdicts.length} completed/archived edict${archivedEdicts.length !== 1 ? 's' : ''} in the Archived view`
+                    : ''}
+                </small>
+              </>
+            ) : (
+              <>
+                No edicts yet
+                {liveStatus === null ? (
+                  <br />
+                ) : (
+                  <>
+                    <br />
+                    <small style={{ fontSize: 11, marginTop: 6, display: 'block', color: 'var(--muted)' }}>
+                      {allSessions.length > 0
+                        ? `${allSessions.length} agent session${allSessions.length !== 1 ? 's' : ''} found in the Sessions tab — edict tasks must have IDs starting with JJC- (e.g. JJC-20260301-001)`
+                        : 'Send tasks to Taizi via Feishu; Taizi will triage and forward to Zhongshu for processing'}
+                    </small>
+                  </>
+                )}
+              </>
+            )}
           </div>
         ) : (
           edicts.map((t) => <EdictCard key={t.id} task={t} />)
