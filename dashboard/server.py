@@ -34,9 +34,13 @@ _DEFAULT_ORIGINS = {
 }
 _SAFE_NAME_RE = re.compile(r'^[a-zA-Z0-9_\-\u4e00-\u9fff]+$')
 
-BASE = pathlib.Path(__file__).parent
-DIST = BASE / 'dist'          # React build output (npm run build)
-DATA = BASE.parent / "data"
+BASE = pathlib.Path(__file__).resolve().parent
+# Allow overrides via environment variables so the server works correctly when
+# run as a systemd service from a different working directory or user account.
+_dist_env = os.environ.get('EDICT_DIST_DIR')
+_data_env = os.environ.get('EDICT_DATA_DIR')
+DIST = pathlib.Path(_dist_env) if _dist_env else BASE / 'dist'
+DATA = pathlib.Path(_data_env) if _data_env else BASE.parent / 'data'
 SCRIPTS = BASE.parent / 'scripts'
 
 # Static asset MIME types
@@ -2154,7 +2158,10 @@ class Handler(BaseHTTPRequestHandler):
             all_ok = all(checks.values())
             self.send_json({'status': 'ok' if all_ok else 'degraded', 'ts': now_iso(), 'checks': checks})
         elif p == '/api/live-status':
-            self.send_json(read_json(DATA / 'live_status.json'))
+            live_path = DATA / 'live_status.json'
+            if not live_path.exists():
+                log.warning(f'live_status.json not found at {live_path} — run refresh_live_data.py to generate it')
+            self.send_json(read_json(live_path))
         elif p == '/api/agent-config':
             self.send_json(read_json(DATA / 'agent_config.json'))
         elif p == '/api/model-change-log':
@@ -2499,6 +2506,12 @@ def main():
 
     server = HTTPServer((args.host, args.port), Handler)
     log.info(f'Three Departments & Six Ministries Dashboard started → http://{args.host}:{args.port}')
+    log.info(f'  DATA  = {DATA}  (exists={DATA.is_dir()})')
+    log.info(f'  DIST  = {DIST}  (exists={DIST.is_dir()})')
+    if not DATA.is_dir():
+        log.warning(f'DATA directory not found: {DATA} — set EDICT_DATA_DIR env var to override')
+    if not DIST.is_dir():
+        log.warning(f'DIST directory not found: {DIST} — run "npm run build" or set EDICT_DIST_DIR env var')
     print(f'   Press Ctrl+C to stop')
 
     # Startup recovery: re-dispatch queued tasks interrupted by previous kill
