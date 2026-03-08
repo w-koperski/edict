@@ -17,13 +17,13 @@ def test_create_and_get(tmp_path):
     original = kb.TASKS_FILE
     kb.TASKS_FILE = tasks_file
     try:
-        kb.cmd_create('TEST-001', '测试任务创建和查询功能验证', 'Inbox', '工部', '工部尚书')
+        kb.cmd_create('TEST-001', 'Test task creation and retrieval functionality', 'Inbox', 'Gongbu', 'Minister of Works')
         tasks = json.loads(tasks_file.read_text())
         assert any(t.get('id') == 'TEST-001' for t in tasks)
         t = next(t for t in tasks if t['id'] == 'TEST-001')
-        assert t['title'] == '测试任务创建和查询功能验证'
+        assert t['title'] == 'Test task creation and retrieval functionality'
         assert t['state'] == 'Inbox'
-        assert t['org'] == '工部'
+        assert t['org'] == 'Gongbu'
     finally:
         kb.TASKS_FILE = original
 
@@ -55,9 +55,9 @@ def test_block_and_unblock(tmp_path):
     original = kb.TASKS_FILE
     kb.TASKS_FILE = tasks_file
     try:
-        kb.cmd_block('T-2', '等待依赖')
+        kb.cmd_block('T-2', 'Waiting for dependency')
         tasks = json.loads(tasks_file.read_text())
         assert tasks[0]['state'] == 'Blocked'
-        assert tasks[0]['block'] == '等待依赖'
+        assert tasks[0]['block'] == 'Waiting for dependency'
     finally:
         kb.TASKS_FILE = original

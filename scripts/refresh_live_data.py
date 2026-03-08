@@ -19,10 +19,10 @@ def output_meta(path):
 
 
 def main():
-    # 使用 officials_stats.json（与 sync_officials_stats.py 统一）
+    # Use officials_stats.json (unified with sync_officials_stats.py)
     officials_data = read_json(DATA / 'officials_stats.json', {})
     officials = officials_data.get('officials', []) if isinstance(officials_data, dict) else officials_data
-    # 任务源优先：tasks_source.json（可对接外部系统同步写入）
+    # Task source priority: tasks_source.json (can sync with external systems)
     tasks = atomic_json_read(DATA / 'tasks_source.json', [])
     if not tasks:
         tasks = read_json(DATA / 'tasks.json', [])
@@ -40,7 +40,7 @@ def main():
         t['org'] = t.get('org') or org_map.get(t.get('official', ''), '')
         t['outputMeta'] = output_meta(t.get('output', ''))
 
-        # 心跳时效检测：对 Doing/Assigned 状态的任务标注活跃度
+        # Heartbeat freshness check: annotate activity for Doing/Assigned tasks
         if t.get('state') in ('Doing', 'Assigned', 'Review'):
             updated_raw = t.get('updatedAt') or t.get('sourceMeta', {}).get('updatedAt')
             age_sec = None
@@ -54,13 +54,13 @@ def main():
                 except Exception:
                     pass
             if age_sec is None:
-                t['heartbeat'] = {'status': 'unknown', 'label': '⚪ 未知', 'ageSec': None}
+                t['heartbeat'] = {'status': 'unknown', 'label': '⚪ Unknown', 'ageSec': None}
             elif age_sec < 180:
-                t['heartbeat'] = {'status': 'active', 'label': f'🟢 活跃 {int(age_sec//60)}分钟前', 'ageSec': int(age_sec)}
+                t['heartbeat'] = {'status': 'active', 'label': f'🟢 Active {int(age_sec//60)}m ago', 'ageSec': int(age_sec)}
             elif age_sec < 600:
-                t['heartbeat'] = {'status': 'warn', 'label': f'🟡 可能停滞 {int(age_sec//60)}分钟前', 'ageSec': int(age_sec)}
+                t['heartbeat'] = {'status': 'warn', 'label': f'🟡 Possibly stalled {int(age_sec//60)}m ago', 'ageSec': int(age_sec)}
             else:
-                t['heartbeat'] = {'status': 'stalled', 'label': f'🔴 已停滞 {int(age_sec//60)}分钟', 'ageSec': int(age_sec)}
+                t['heartbeat'] = {'status': 'stalled', 'label': f'🔴 Stalled {int(age_sec//60)}m', 'ageSec': int(age_sec)}
         else:
             t['heartbeat'] = None
 
@@ -86,11 +86,11 @@ def main():
         if t.get('state') == 'Done':
             lm = t.get('outputMeta', {}).get('lastModified')
             history.append({
-                'at': lm or '未知',
+                'at': lm or 'unknown',
                 'official': t.get('official'),
                 'task': t.get('title'),
                 'out': t.get('output'),
-                'qa': '通过' if t.get('outputMeta', {}).get('exists') else '待补成果'
+                'qa': 'passed' if t.get('outputMeta', {}).get('exists') else 'pending output'
             })
 
     payload = {

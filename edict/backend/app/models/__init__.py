@@ -1,4 +1,4 @@
-"""Edict 数据模型包。"""
+"""Edict data models package."""
 
 from .task import Task, TaskState
 from .event import Event

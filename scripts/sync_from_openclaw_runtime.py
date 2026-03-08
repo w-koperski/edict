@@ -42,20 +42,20 @@ def state_from_session(age_ms, aborted):
 
 def detect_official(agent_id):
     mapping = {
-        'main':    ('储君', '太子'),        # legacy id for taizi
-        'taizi':   ('储君', '太子'),
-        'zhongshu': ('中书令', '中书省'),
-        'menxia':  ('侍中', '门下省'),
-        'shangshu': ('尚书令', '尚书省'),
-        'hubu':    ('户部尚书', '户部'),
-        'libu':    ('礼部尚书', '礼部'),
-        'bingbu':  ('兵部尚书', '兵部'),
-        'xingbu':  ('刑部尚书', '刑部'),
-        'gongbu':  ('工部尚书', '工部'),
-        'libu_hr': ('吏部尚书', '吏部'),
-        'zaochao': ('钦天监', '朝报司'),
+        'main':     ('Crown Prince', 'Taizi'),      # legacy id for taizi
+        'taizi':    ('Crown Prince', 'Taizi'),
+        'zhongshu': ('Grand Chancellor', 'Zhongshu'),
+        'menxia':   ('Chief Censor', 'Menxia'),
+        'shangshu': ('Grand Secretary', 'Shangshu'),
+        'hubu':     ('Minister of Revenue', 'Hubu'),
+        'libu':     ('Minister of Rites', 'Libu'),
+        'bingbu':   ('Minister of War', 'Bingbu'),
+        'xingbu':   ('Minister of Justice', 'Xingbu'),
+        'gongbu':   ('Minister of Works', 'Gongbu'),
+        'libu_hr':  ('Minister of Personnel', 'Libu_hr'),
+        'zaochao':  ('Morning Official', 'Zaochao'),
     }
-    return mapping.get(agent_id, ('尚书令', '尚书省'))
+    return mapping.get(agent_id, ('Grand Secretary', 'Shangshu'))
 
 
 def load_activity(session_file, limit=12):
@@ -139,8 +139,8 @@ def build_task(agent_id, session_key, row, now_ms):
     channel = row.get('lastChannel') or (row.get('origin') or {}).get('channel') or '-'
     session_file = row.get('sessionFile', '')
     
-    # 尝试从 activity 获取更有意义的当前状态描述
-    latest_act = '等待指令'
+    # Try to get a more meaningful current status description from activity
+    latest_act = 'Awaiting instructions'
     acts = load_activity(session_file, limit=5)
     
     # If the absolute latest is a tool result, look for the preceding assistant thought
@@ -151,24 +151,24 @@ def build_task(agent_id, session_key, row, now_ms):
             # Look for next assistant message (which is actually previous in time)
             for next_act in acts[1:]:
                 if next_act['kind'] == 'assistant':
-                    latest_act = f"正在执行: {next_act['text'][:80]}"
+                    latest_act = f"Executing: {next_act['text'][:80]}"
                     break
             else:
                 latest_act = first_act['text'][:60]
         elif first_act['kind'] == 'assistant':
-             latest_act = f"思考中: {first_act['text'][:80]}"
+             latest_act = f"Thinking: {first_act['text'][:80]}"
         else:
              latest_act = acts[0]['text'][:60]
     
     title_label = (row.get('origin') or {}).get('label') or session_key
-    # 清洗会话标题：agent:xxx:cron:uuid → 定时任务, agent:xxx:subagent:uuid → 子任务
+    # Clean session title: agent:xxx:cron:uuid → scheduled task, agent:xxx:subagent:uuid → subtask
     import re
     if re.match(r'agent:\w+:cron:', title_label):
-        title = f"{org}定时任务"
+        title = f"{org} Scheduled Task"
     elif re.match(r'agent:\w+:subagent:', title_label):
-        title = f"{org}子任务"
+        title = f"{org} Subtask"
     elif title_label == session_key or len(title_label) > 40:
-        title = f"{org}会话"
+        title = f"{org} Session"
     else:
         title = f"{title_label}"
     
@@ -180,14 +180,14 @@ def build_task(agent_id, session_key, row, now_ms):
         'state': state,
         'now': latest_act,
         'eta': ms_to_str(updated_at),
-        'block': '上次运行中断' if aborted else '无',
+        'block': 'Last run was interrupted' if aborted else 'none',
         'output': session_file,
         'flow': {
             'draft': f"agent={agent_id}",
             'review': f"updatedAt={ms_to_str(updated_at)}",
             'dispatch': f"sessionKey={session_key}",
         },
-        'ac': '来自 OpenClaw runtime sessions 的实时映射',
+        'ac': 'Real-time mapping from OpenClaw runtime sessions',
         'activity': load_activity(session_file, limit=10),
         'sourceMeta': {
             'agentId': agent_id,
@@ -236,7 +236,7 @@ def main():
                         continue
                     tasks.append(build_task(agent_id, session_key, row, now_ms))
 
-        # merge mission control tasks (最小接入)
+        # merge mission control tasks
         mc_tasks_file = DATA / 'mission_control_tasks.json'
         if mc_tasks_file.exists():
             try:
@@ -246,7 +246,7 @@ def main():
             except Exception:
                 pass
 
-        # merge manual parallel tasks (用于军机处并行看板展示)
+        # merge manual parallel tasks (for dashboard parallel kanban display)
         manual_tasks_file = DATA / 'manual_parallel_tasks.json'
         if manual_tasks_file.exists():
             try:
@@ -258,7 +258,7 @@ def main():
 
         tasks.sort(key=lambda x: x.get('sourceMeta', {}).get('updatedAt', 0), reverse=True)
 
-        # 去重（同一 id 只保留第一个=最新的）
+        # Deduplicate (keep only first = newest per id)
         seen_ids = set()
         deduped = []
         for t in tasks:
@@ -267,53 +267,53 @@ def main():
                 deduped.append(t)
         tasks = deduped
 
-        # ── 过滤掉非 JJC 且非活跃的系统会话，防止看板噪音 ──
-        # 规则: 仅保留 24小时内更新的活跃会话，且排除 cron/subagent 等纯后台任务
+        # ── Filter out inactive system sessions to reduce dashboard noise ──
+        # Rule: only keep sessions updated within 24 hours, exclude cron/subagent background tasks
         filtered_tasks = []
         one_day_ago = now_ms - 24 * 3600 * 1000
         for t in tasks:
-            # 始终保留 JJC 任务（如果有的话，虽然这里主要是 OC 任务，但以防万一）
+            # Always keep JJC tasks (edict tasks from the Emperor)
             if str(t['id']).startswith('JJC'):
                 filtered_tasks.append(t)
                 continue
             
-            # OC 任务过滤
+            # OC task filtering
             updated = t.get('sourceMeta', {}).get('updatedAt', 0)
             title = t.get('title', '')
             
-            # 1. 排除太旧的 (超过24小时)
+            # 1. Exclude stale sessions (older than 24 hours)
             if updated < one_day_ago:
                 continue
             
-            # 2. 排除纯后台 cron / subagent 任务，除非它们正在报错
-            if '定时任务' in title or '子任务' in title:
-                # 只有当它 block 或者 error 时才显示，否则视为噪音
+            # 2. Exclude pure background cron / subagent tasks, unless erroring
+            if 'Scheduled Task' in title or 'Subtask' in title:
+                # Only show when blocked or erroring, otherwise treat as noise
                 if t.get('state') != 'Blocked':
                     continue
 
-            # 3. 排除非活跃的 OC 会话 (超过 5 分钟无响应)，避免污染看板
-            # 除非它是 Blocked (报错)，或者是今天新建的
+            # 3. Hide inactive OC sessions (no response for > 5 min) to avoid polluting kanban
+            # Exception: Blocked (erroring) sessions or sessions created today
             state = t.get('state')
             # state_from_session: < 2min = Doing, < 60min = Review, else = Next
             if state not in ('Doing', 'Blocked'):
-                # 如果不是正在进行或报错，就隐藏掉
-                # 特例: 如果是 mission control (mc-) 的心跳，可能也没必要显示，除非 Doing
+                # If not in-progress or erroring, hide it
+                # Exception: mission control (mc-) heartbeats may also be unnecessary, unless Doing
                 continue
 
             filtered_tasks.append(t)
         
         tasks = filtered_tasks
         
-        # ── 保留已有的 JJC-* 旨意任务（不覆盖皇上下旨记录）──
-        # JJC 任务的 now 字段由 Agent 自己通过 kanban_update.py progress 命令主动上报，
-        # 不再从会话日志中被动抓取。这里只做合并，不做 activity 映射。
+        # ── Preserve existing JJC-* edict tasks (don't overwrite Emperor's edicts) ──
+        # JJC task 'now' field is actively reported by Agents via kanban_update.py progress,
+        # not passively scraped from session logs. Just merge here, no activity mapping.
         existing_tasks_file = DATA / 'tasks_source.json'
         if existing_tasks_file.exists():
             try:
                 existing = json.loads(existing_tasks_file.read_text())
                 jjc_existing = [t for t in existing if str(t.get('id', '')).startswith('JJC')]
                 
-                # 去掉 tasks 里已有的 JJC（以防重复），再把旨意放到最前面
+                # Remove already-existing JJC tasks from tasks (to avoid duplicates), then put edicts at the front
                 tasks = [t for t in tasks if not str(t.get('id', '')).startswith('JJC')]
                 tasks = jjc_existing + tasks
             except Exception as e:

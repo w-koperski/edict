@@ -1,4 +1,4 @@
-"""Alembic env.py — 支持 async Postgres。"""
+"""Alembic env.py — supports async Postgres."""
 
 import asyncio
 from logging.config import fileConfig
@@ -15,7 +15,7 @@ config = context.config
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-# 导入所有模型以注册 metadata
+# Import all models to register metadata
 import sys
 import os
 

@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>军机处 · 三省六部总控台</title>
+  <title>Grand Council · Three Departments &amp; Six Ministries Control Center</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@700;900&display=swap');
     :root{
@@ -36,7 +36,7 @@
     .tbadge{font-size:10px;padding:1px 5px;border-radius:999px;background:#1a2040;color:var(--acc);margin-left:4px}
     .panel{display:none}.panel.active{display:block}
 
-    /* ══ 旨意看板 ══ */
+    /* ══ Edict Kanban ══ */
     .edict-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:12px}
     .edict-card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px;cursor:pointer;transition:border-color .15s,transform .1s,box-shadow .15s}
     .edict-card:hover{border-color:var(--acc);transform:translateY(-2px);box-shadow:0 4px 20px rgba(106,158,255,.1)}
@@ -71,14 +71,14 @@
     .st-Next{border-color:#4a9adf44;color:#4a9adf;background:#0a1424}
 
     /* dept colors */
-    .dt-中书省{border-color:#a07aff44;color:#a07aff;background:#1a0f38}
-    .dt-门下省{border-color:#6a9eff44;color:#6a9eff;background:#0f1a38}
-    .dt-尚书省{border-color:#6aef9a44;color:#6aef9a;background:#0a2018}
-    .dt-礼部{border-color:#f5c84244;color:#f5c842;background:#201a08}
-    .dt-户部{border-color:#ff9a6a44;color:#ff9a6a;background:#28100a}
-    .dt-兵部{border-color:#ff527044;color:#ff5270;background:#280a10}
-    .dt-刑部{border-color:#cc444444;color:#cc4444;background:#280808}
-    .dt-工部{border-color:#44aaff44;color:#44aaff;background:#081828}
+    .dt-zhongshu{border-color:#a07aff44;color:#a07aff;background:#1a0f38}
+    .dt-menxia{border-color:#6a9eff44;color:#6a9eff;background:#0f1a38}
+    .dt-shangshu{border-color:#6aef9a44;color:#6aef9a;background:#0a2018}
+    .dt-libu{border-color:#f5c84244;color:#f5c842;background:#201a08}
+    .dt-hubu{border-color:#ff9a6a44;color:#ff9a6a;background:#28100a}
+    .dt-bingbu{border-color:#ff527044;color:#ff5270;background:#280a10}
+    .dt-xingbu{border-color:#cc444444;color:#cc4444;background:#280808}
+    .dt-gongbu{border-color:#44aaff44;color:#44aaff;background:#081828}
 
     .ec-footer{display:flex;align-items:center;justify-content:space-between;margin-top:10px;flex-wrap:wrap;gap:6px}
     .hb{font-size:10px;padding:2px 7px;border-radius:999px;border:1px solid var(--line)}
@@ -139,7 +139,7 @@
     .mr-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px}
     .mr-val{font-size:13px;font-weight:600;word-break:break-all}
 
-    /* ══ 省部调度 tab ══ */
+    /* ══ Dept Dispatch tab ══ */
     .duty-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:12px}
     .duty-card{background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden;transition:border-color .15s}
     .duty-card:hover{border-color:#2e3d6a}
@@ -158,10 +158,10 @@
 
     .dc-body{padding:14px 16px}
 
-    /* 候命状态 */
+    /* Standby state */
     .dc-idle{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:13px;padding:6px 0}
 
-    /* 执行中任务 */
+    /* In-progress tasks */
     .dc-task{display:flex;flex-direction:column;gap:6px}
     .dc-task-id{font-size:10px;color:var(--acc);font-weight:700;letter-spacing:.04em}
     .dc-task-title{font-size:14px;font-weight:700;color:var(--text);line-height:1.3}
@@ -510,7 +510,7 @@
 
     .off-grid{display:none} /* legacy, hidden */
 
-    /* ══ 早朝简报 ══ */
+    /* ══ Morning Brief ══ */
     .mn-hdr{display:flex;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:18px;padding:14px 18px;background:linear-gradient(135deg,#0a1228,#140e28);border:1px solid #1a2a4a;border-radius:14px}
     .mn-date{font-size:20px;font-weight:800;background:linear-gradient(135deg,#f5c842,#ff9a3c);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
     .mn-sub{font-size:12px;color:var(--muted);margin-top:2px}
@@ -645,11 +645,11 @@
 <!-- COURT CEREMONY -->
 <div class="ceremony-bg" id="ceremony" style="display:none" onclick="skipCeremony()">
   <div class="crm-glow"></div>
-  <div class="crm-line1" id="crm-l1">早朝开始</div>
-  <div class="crm-line2" id="crm-l2">各部听旨</div>
+  <div class="crm-line1" id="crm-l1">Morning Court Begins</div>
+  <div class="crm-line2" id="crm-l2">All Departments Attend</div>
   <div class="crm-line3" id="crm-l3"></div>
   <div class="crm-date" id="crm-date"></div>
-  <div class="crm-skip">点击任意处跳过</div>
+  <div class="crm-skip">Click anywhere to skip</div>
 </div>
 
 <div class="wrap">
@@ -657,171 +657,171 @@
   <!-- HEADER -->
   <div class="hdr">
     <div>
-      <div class="logo">⚔️ 军机处 · 三省六部总控台</div>
-      <div class="sub">皇上视角 · 实时旨意追踪</div>
+      <div class="logo">⚔️ Grand Council · Three Departments &amp; Six Ministries Control Center</div>
+      <div class="sub">Emperor's View · Real-time Edict Tracking</div>
     </div>
     <div class="hdr-r">
-      <span class="chip" id="chip-sync">⟳ 同步中</span>
-      <span class="chip" id="chip-tasks">— 旨意</span>
-      <button class="btn-refresh" onclick="loadAll()">⟳ 立即刷新</button>
+      <span class="chip" id="chip-sync">⟳ Syncing</span>
+      <span class="chip" id="chip-tasks">— Edicts</span>
+      <button class="btn-refresh" onclick="loadAll()">⟳ Refresh Now</button>
       <span id="cd"></span>
     </div>
   </div>
 
   <!-- TABS -->
   <div class="tabs">
-    <div class="tab active" data-tab="edicts">📜 旨意看板 <span class="tbadge" id="tb-e">0</span></div>
-    <div class="tab" data-tab="monitor">🔭 省部调度 <span class="tbadge" id="tb-m">0</span></div>
-    <div class="tab" data-tab="officials">👥 官员总览</div>
-    <div class="tab" data-tab="models">⚙️ 模型配置</div>
-    <div class="tab" data-tab="skills">🛠️ 技能配置</div>
-    <div class="tab" data-tab="sessions">💬 小任务 <span class="tbadge" id="tb-s">0</span></div>
-    <div class="tab" data-tab="memorials">📜 奏折阁 <span class="tbadge" id="tb-mem">0</span></div>
-    <div class="tab" data-tab="templates">📜 旨库</div>
-    <div class="tab" data-tab="morning">📰 天下要闻</div>
+    <div class="tab active" data-tab="edicts">📜 Edict Board <span class="tbadge" id="tb-e">0</span></div>
+    <div class="tab" data-tab="monitor">🔭 Dept Dispatch <span class="tbadge" id="tb-m">0</span></div>
+    <div class="tab" data-tab="officials">👥 Officials</div>
+    <div class="tab" data-tab="models">⚙️ Model Config</div>
+    <div class="tab" data-tab="skills">🛠️ Skills Config</div>
+    <div class="tab" data-tab="sessions">💬 Sub-tasks <span class="tbadge" id="tb-s">0</span></div>
+    <div class="tab" data-tab="memorials">📜 Memorial Archive <span class="tbadge" id="tb-mem">0</span></div>
+    <div class="tab" data-tab="templates">📜 Template Library</div>
+    <div class="tab" data-tab="morning">📰 Daily News</div>
   </div>
 
-  <!-- ══ 旨意看板 ══ -->
+  <!-- ══ Edict Kanban ══ -->
   <div class="panel active" id="panel-edicts">
     <div class="archive-bar" id="archive-bar">
-      <span class="ab-label">📋 筛选：</span>
-      <button class="ab-btn active" data-filter="active" onclick="setEdictFilter('active')">🔥 进行中</button>
-      <button class="ab-btn" data-filter="archived" onclick="setEdictFilter('archived')">📦 已归档</button>
-      <button class="ab-btn" data-filter="all" onclick="setEdictFilter('all')">全部</button>
+      <span class="ab-label">📋 Filter:</span>
+      <button class="ab-btn active" data-filter="active" onclick="setEdictFilter('active')">🔥 Active</button>
+      <button class="ab-btn" data-filter="archived" onclick="setEdictFilter('archived')">📦 Archived</button>
+      <button class="ab-btn" data-filter="all" onclick="setEdictFilter('all')">All</button>
       <span class="ab-count" id="archive-count"></span>
-      <button class="ab-scan" id="btn-global-scan" onclick="runGlobalSchedulerScan()">🧭 太子巡检</button>
-      <span class="ab-scan-status" id="global-scan-status">未巡检</span>
-      <button class="ab-scan-detail" id="btn-global-scan-detail" onclick="toggleGlobalScanDetails()" style="display:none">查看巡检详情</button>
-      <button class="ab-scan-copy" id="btn-global-scan-copy" onclick="copyGlobalScanReport()" style="display:none">📋 复制巡检报告</button>
-      <button class="ab-archive-all" id="btn-archive-done" onclick="archiveAllDone()" style="display:none">📦 一键归档已完成</button>
+      <button class="ab-scan" id="btn-global-scan" onclick="runGlobalSchedulerScan()">🧭 Taizi Inspection</button>
+      <span class="ab-scan-status" id="global-scan-status">Not yet inspected</span>
+      <button class="ab-scan-detail" id="btn-global-scan-detail" onclick="toggleGlobalScanDetails()" style="display:none">View Inspection Details</button>
+      <button class="ab-scan-copy" id="btn-global-scan-copy" onclick="copyGlobalScanReport()" style="display:none">📋 Copy Scan Report</button>
+      <button class="ab-archive-all" id="btn-archive-done" onclick="archiveAllDone()" style="display:none">📦 Archive All Done</button>
     </div>
     <div class="global-scan-detail" id="global-scan-detail"></div>
     <div id="edict-grid" class="edict-grid"></div>
   </div>
 
-  <!-- ══ 省部调度 ══ -->
+  <!-- ══ Dept Dispatch ══ -->
   <div class="panel" id="panel-monitor">
     <div id="agent-status-panel"></div>
-    <div style="font-size:12px;color:var(--muted);margin-bottom:14px">各省部当前承接旨意与执行状态 · 每5秒自动刷新</div>
+    <div style="font-size:12px;color:var(--muted);margin-bottom:14px">Current edict status across departments · Auto-refreshes every 5s</div>
     <div class="duty-grid" id="duty-grid"></div>
   </div>
 
-  <!-- ══ 官员总览 ══ -->
+  <!-- ══ Officials Overview ══ -->
   <div class="panel" id="panel-officials">
     <div id="off-activity" class="off-activity" style="display:none"></div>
     <div id="off-kpi" class="off-kpi"></div>
     <div class="off-layout">
       <div id="off-ranklist" class="off-ranklist"></div>
-      <div id="off-detail" class="off-detail"><div class="od-empty">← 点击左侧官员查看详情</div></div>
+      <div id="off-detail" class="off-detail"><div class="od-empty">← Click an official on the left to view details</div></div>
     </div>
   </div>
 
-  <!-- ══ 模型配置 ══ -->
+  <!-- ══ Model Config ══ -->
   <div class="panel" id="panel-models">
-    <div class="sec-title" style="margin-bottom:14px">各省部 · 模型配置 <span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:11px;color:var(--muted)">— 更改后自动重启 Gateway（约5秒）</span></div>
+    <div class="sec-title" style="margin-bottom:14px">Departments · Model Config <span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:11px;color:var(--muted)">— Gateway auto-restarts after changes (~5s)</span></div>
     <div class="model-grid" id="model-grid"></div>
-    <div class="cl-wrap"><div class="cl-title">变更记录</div><div id="cl-list"></div></div>
+    <div class="cl-wrap"><div class="cl-title">Change Log</div><div id="cl-list"></div></div>
   </div>
 
-  <!-- ══ 技能配置 ══ -->
+  <!-- ══ Skills Config ══ -->
   <div class="panel" id="panel-skills">
-    <div class="sec-title" style="margin-bottom:14px">各省部 · Skills 配置 <span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:11px;color:var(--muted)">— 点击技能查看详情，底部可添加新技能</span></div>
+    <div class="sec-title" style="margin-bottom:14px">Departments · Skills Config <span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:11px;color:var(--muted)">— Click a skill to view details, add new skills at the bottom</span></div>
     <div class="skills-grid" id="skills-grid"></div>
   </div>
 
-  <!-- ══ 小任务/会话监控 ══ -->
+  <!-- ══ Subtasks / Session Monitor ══ -->
   <div class="panel" id="panel-sessions">
-    <div style="font-size:12px;color:var(--muted);margin-bottom:14px">飞书/Telegram 中的日常对话与小任务 · 非JJC圣旨类任务</div>
+    <div style="font-size:12px;color:var(--muted);margin-bottom:14px">Daily conversations and sub-tasks in Feishu/Telegram · Non-JJC edict tasks</div>
     <div class="sess-filters">
-      <span style="font-size:11px;color:var(--muted)">筛选：</span>
-      <span class="sess-filter active" data-sf="all" onclick="filterSessions('all',this)">全部</span>
-      <span class="sess-filter" data-sf="active" onclick="filterSessions('active',this)">进行中</span>
-      <span class="sess-filter" data-sf="zhongshu" onclick="filterSessions('zhongshu',this)">中书省</span>
-      <span class="sess-filter" data-sf="shangshu" onclick="filterSessions('shangshu',this)">尚书省</span>
-      <span class="sess-filter" data-sf="libu" onclick="filterSessions('libu',this)">礼部</span>
-      <span class="sess-filter" data-sf="hubu" onclick="filterSessions('hubu',this)">户部</span>
-      <span class="sess-filter" data-sf="bingbu" onclick="filterSessions('bingbu',this)">兵部</span>
-      <span class="sess-filter" data-sf="xingbu" onclick="filterSessions('xingbu',this)">刑部</span>
-      <span class="sess-filter" data-sf="gongbu" onclick="filterSessions('gongbu',this)">工部</span>
-      <span class="sess-filter" data-sf="libu_hr" onclick="filterSessions('libu_hr',this)">吏部</span>
-      <span class="sess-filter" data-sf="menxia" onclick="filterSessions('menxia',this)">门下省</span>
-      <span class="sess-filter" data-sf="zaochao" onclick="filterSessions('zaochao',this)">钦天监</span>
+      <span style="font-size:11px;color:var(--muted)">Filter:</span>
+      <span class="sess-filter active" data-sf="all" onclick="filterSessions('all',this)">All</span>
+      <span class="sess-filter" data-sf="active" onclick="filterSessions('active',this)">In Progress</span>
+      <span class="sess-filter" data-sf="zhongshu" onclick="filterSessions('zhongshu',this)">Zhongshu</span>
+      <span class="sess-filter" data-sf="shangshu" onclick="filterSessions('shangshu',this)">Shangshu</span>
+      <span class="sess-filter" data-sf="libu" onclick="filterSessions('libu',this)">Libu</span>
+      <span class="sess-filter" data-sf="hubu" onclick="filterSessions('hubu',this)">Hubu</span>
+      <span class="sess-filter" data-sf="bingbu" onclick="filterSessions('bingbu',this)">Bingbu</span>
+      <span class="sess-filter" data-sf="xingbu" onclick="filterSessions('xingbu',this)">Xingbu</span>
+      <span class="sess-filter" data-sf="gongbu" onclick="filterSessions('gongbu',this)">Gongbu</span>
+      <span class="sess-filter" data-sf="libu_hr" onclick="filterSessions('libu_hr',this)">Libu (HR)</span>
+      <span class="sess-filter" data-sf="menxia" onclick="filterSessions('menxia',this)">Menxia</span>
+      <span class="sess-filter" data-sf="zaochao" onclick="filterSessions('zaochao',this)">Zaochao</span>
     </div>
     <div id="sess-grid" class="sess-grid"></div>
   </div>
 
-  <!-- ══ 奏折阁 ══ -->
+  <!-- ══ Memorials ══ -->
   <div class="panel" id="panel-memorials">
     <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
       <div style="flex:1">
-        <div class="sec-title" style="margin-bottom:2px">📜 奏折阁 · 旨意存档</div>
-        <div style="font-size:11px;color:var(--muted)">任务完成后自动生成奏折，记录从下旨到完成的完整过程</div>
+        <div class="sec-title" style="margin-bottom:2px">📜 Memorial Archive · Edict Archives</div>
+        <div style="font-size:11px;color:var(--muted)">Memorials are auto-generated on task completion, recording the full process from edict to completion</div>
       </div>
       <select id="mem-filter" onchange="renderMemorials()" style="font-size:11px;padding:4px 10px;background:var(--panel2);border:1px solid var(--line);border-radius:6px;color:var(--text);outline:none">
-        <option value="all">全部</option>
-        <option value="Done">已完成</option>
-        <option value="Cancelled">已取消</option>
+        <option value="all">All</option>
+        <option value="Done">Completed</option>
+        <option value="Cancelled">Cancelled</option>
       </select>
     </div>
     <div id="mem-list" class="mem-list"></div>
   </div>
 
-  <!-- ══ 圣旨模板库 ══ -->
+  <!-- ══ Edict Template Library ══ -->
   <div class="panel" id="panel-templates">
     <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
       <div style="flex:1">
-        <div class="sec-title" style="margin-bottom:2px">📜 旨库 · 圣旨模板</div>
-        <div style="font-size:11px;color:var(--muted)">选择模板、填写参数、一键下旨 — 降低使用门槛，快速启动任务</div>
+        <div class="sec-title" style="margin-bottom:2px">📜 Template Library · Edict Templates</div>
+        <div style="font-size:11px;color:var(--muted)">Select a template, fill in parameters, and issue an edict with one click — quickly launch tasks</div>
       </div>
     </div>
     <div class="tpl-cats" id="tpl-cats"></div>
     <div class="tpl-grid" id="tpl-grid"></div>
   </div>
 
-  <!-- ══ 天下要闻 ══ -->
+  <!-- ══ World News ══ -->
   <div class="panel" id="panel-morning">
     <div class="mb-hdr">
       <div>
-        <div class="mb-title">📰 天下要闻 · 御览</div>
-        <div id="mb-subtitle" class="mb-sub">加载中…</div>
+        <div class="mb-title">📰 Daily News · Imperial View</div>
+        <div id="mb-subtitle" class="mb-sub">Loading…</div>
       </div>
       <div style="display:flex;gap:8px;align-items:center">
-        <button class="btn btn-g" onclick="toggleSubConfig()" style="font-size:12px;padding:6px 14px">⚙ 订阅管理</button>
-        <button class="btn btn-g" id="mb-refresh-btn" onclick="refreshNews()" style="font-size:12px;padding:6px 14px">⟳ 立即采集</button>
+        <button class="btn btn-g" onclick="toggleSubConfig()" style="font-size:12px;padding:6px 14px">⚙ Subscription Settings</button>
+        <button class="btn btn-g" id="mb-refresh-btn" onclick="refreshNews()" style="font-size:12px;padding:6px 14px">⟳ Fetch Now</button>
       </div>
     </div>
 
-    <!-- 订阅管理面板 -->
+    <!-- Subscription Management Panel -->
     <div id="sub-config" class="sub-config" style="display:none">
       <div class="sub-section">
-        <div class="sub-sec-title">📂 新闻分类 <span style="font-weight:400;font-size:11px;color:var(--muted)">— 勾选启用，取消禁用</span></div>
+        <div class="sub-sec-title">News Categories <span style="font-weight:400;font-size:11px;color:var(--muted)">— Check to enable, uncheck to disable</span></div>
         <div id="sub-cats" class="sub-cats"></div>
       </div>
       <div class="sub-section">
-        <div class="sub-sec-title">🔑 自定义关注词 <span style="font-weight:400;font-size:11px;color:var(--muted)">— 额外关键词过滤</span></div>
+        <div class="sub-sec-title">🔑 Custom Keywords <span style="font-weight:400;font-size:11px;color:var(--muted)">— Additional keyword filters</span></div>
         <div id="sub-keywords" class="sub-kw-list"></div>
         <div style="display:flex;gap:6px;margin-top:8px">
-          <input id="new-kw" class="sub-input" placeholder="输入关键词，如：芯片、SpaceX…" onkeydown="if(event.key==='Enter')addKeyword()">
-          <button class="btn btn-p" onclick="addKeyword()" style="font-size:12px;padding:6px 14px">添加</button>
+          <input id="new-kw" class="sub-input" placeholder="Enter keyword, e.g.: AI, SpaceX…" onkeydown="if(event.key==='Enter')addKeyword()">
+          <button class="btn btn-p" onclick="addKeyword()" style="font-size:12px;padding:6px 14px">Add</button>
         </div>
       </div>
       <div class="sub-section">
-        <div class="sub-sec-title">📡 自定义 RSS 源</div>
+        <div class="sub-sec-title">📡 Custom RSS Feeds</div>
         <div id="sub-feeds" class="sub-feed-list"></div>
         <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">
-          <input id="new-feed-name" class="sub-input" placeholder="源名称" style="max-width:120px">
+          <input id="new-feed-name" class="sub-input" placeholder="Feed Name" style="max-width:120px">
           <input id="new-feed-url" class="sub-input" placeholder="RSS URL" style="flex:1">
           <select id="new-feed-cat" class="sub-input" style="max-width:130px"></select>
-          <button class="btn btn-p" onclick="addFeed()" style="font-size:12px;padding:6px 14px">添加</button>
+          <button class="btn btn-p" onclick="addFeed()" style="font-size:12px;padding:6px 14px">Add</button>
         </div>
       </div>
       <div class="sub-section">
-        <div class="sub-sec-title">🔔 飞书推送</div>
+        <div class="sub-sec-title">🔔 Feishu Push</div>
         <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
-          <input id="feishu-webhook" class="sub-input" placeholder="飞书 Webhook URL（留空则不推送）" style="flex:1">
-          <button class="btn btn-p" onclick="saveSubConfig()" style="font-size:12px;padding:6px 14px">保存全部配置</button>
+          <input id="feishu-webhook" class="sub-input" placeholder="Feishu Webhook URL (leave blank to disable)" style="flex:1">
+          <button class="btn btn-p" onclick="saveSubConfig()" style="font-size:12px;padding:6px 14px">Save All Settings</button>
         </div>
-        <div style="font-size:11px;color:var(--muted);margin-top:6px">采集完成后自动推送简报链接到飞书群。<a href="https://open.feishu.cn/document/client-docs/bot-v3/add-custom-bot" target="_blank" style="color:var(--acc)">如何创建自定义机器人？</a></div>
+        <div style="font-size:11px;color:var(--muted);margin-top:6px">After collection, automatically push briefing links to messaging group.<a href="https://open.feishu.cn/document/client-docs/bot-v3/add-custom-bot" target="_blank" style="color:var(--acc)">How to create a custom bot?</a></div>
       </div>
       <div id="sub-status" style="font-size:12px;margin-top:8px;display:none"></div>
     </div>
@@ -843,10 +843,10 @@
   <div class="confirm-box">
     <div class="confirm-title" id="confirm-title"></div>
     <div class="confirm-msg" id="confirm-msg"></div>
-    <input class="confirm-input" id="confirm-reason" placeholder="原因（可选）"/>
+    <input class="confirm-input" id="confirm-reason" placeholder="Reason (optional)"/>
     <div class="confirm-btns">
-      <button class="btn btn-g" onclick="closeConfirm()">取消</button>
-      <button class="btn btn-p" id="confirm-ok" onclick="doConfirm()">确认</button>
+      <button class="btn btn-g" onclick="closeConfirm()">Cancel</button>
+      <button class="btn btn-p" id="confirm-ok" onclick="doConfirm()">Confirm</button>
     </div>
   </div>
 </div>
@@ -891,12 +891,12 @@ function restoreGlobalScanState(){
   if(st){
     const at = globalScanCheckedAt.replace('T',' ').substring(11,19);
     const count = globalScanCount;
-    st.textContent = count || at ? `最近巡检: ${count} 个动作${at ? ' · ' + at : ''}` : '未巡检';
+    st.textContent = count || at ? `Last Inspection: ${count} action(s)${at ? ' · ' + at : ''}` : 'Not Yet Inspected';
   }
   if(detailBtn){
     detailBtn.style.display = globalScanActions.length ? 'inline-block' : 'none';
     detailBtn.classList.toggle('active', globalScanDetailOpen);
-    detailBtn.textContent = globalScanDetailOpen ? '收起巡检详情' : '查看巡检详情';
+    detailBtn.textContent = globalScanDetailOpen ? 'Collapse Inspection' : 'View Inspection Details';
   }
   if(copyBtn){
     copyBtn.style.display = globalScanActions.length ? 'inline-block' : 'none';
@@ -906,19 +906,19 @@ function restoreGlobalScanState(){
 
 /* ══ PIPELINE DEFINITION ══ */
 const PIPE = [
-  {key:'Inbox',    dept:'皇上',   icon:'👑', action:'下旨'},
-  {key:'Taizi',    dept:'太子',   icon:'🤴', action:'分拣'},
-  {key:'Zhongshu', dept:'中书省', icon:'📜', action:'起草'},
-  {key:'Menxia',   dept:'门下省', icon:'🔍', action:'审议'},
-  {key:'Assigned', dept:'尚书省', icon:'📮', action:'派发'},
-  {key:'Doing',    dept:'六部',   icon:'⚙️', action:'执行'},
-  {key:'Review',   dept:'尚书省', icon:'🔎', action:'汇总'},
-  {key:'Done',     dept:'回奏',   icon:'✅', action:'完成'},
+  {key:'Inbox',    dept:'Emperor',       icon:'👑', action:'Decree'},
+  {key:'Taizi',    dept:'Taizi',         icon:'🤴', action:'Triage'},
+  {key:'Zhongshu', dept:'Zhongshu',      icon:'📜', action:'Draft'},
+  {key:'Menxia',   dept:'Menxia',        icon:'🔍', action:'Review'},
+  {key:'Assigned', dept:'Shangshu',      icon:'📮', action:'Dispatch'},
+  {key:'Doing',    dept:'6 Ministries',  icon:'⚙️', action:'Execute'},
+  {key:'Review',   dept:'Shangshu',      icon:'🔎', action:'Consolidate'},
+  {key:'Done',     dept:'Report',        icon:'✅', action:'Complete'},
 ];
 const PIPE_STATE_IDX = {Inbox:0,Pending:0,Taizi:1,Zhongshu:2,Menxia:3,Assigned:4,Doing:5,Review:6,Done:7,Blocked:5,Cancelled:5,Next:4};
 
 /* ══ DEPT COLORS ══ */
-const DEPT_COLOR = {'太子':'#e8a040','中书省':'#a07aff','门下省':'#6a9eff','尚书省':'#6aef9a','礼部':'#f5c842','户部':'#ff9a6a','兵部':'#ff5270','刑部':'#cc4444','工部':'#44aaff','吏部':'#9b59b6','皇上':'#ffd700','回奏':'#2ecc8a'};
+const DEPT_COLOR = {'Taizi':'#e8a040','Zhongshu':'#a07aff','Menxia':'#6a9eff','Shangshu':'#6aef9a','Libu':'#f5c842','Hubu':'#ff9a6a','Bingbu':'#ff5270','Xingbu':'#cc4444','Gongbu':'#44aaff','Libu_hr':'#9b59b6','Emperor':'#ffd700','Reply':'#2ecc8a','Emperor':'#ffd700','Taizi':'#e8a040','Zhongshu':'#a07aff','Menxia':'#6a9eff','Shangshu':'#6aef9a','6 Ministries':'#6aef9a','Report':'#2ecc8a','Libu (Rites)':'#f5c842','Hubu (Finance)':'#ff9a6a','Bingbu (War)':'#ff5270','Xingbu (Justice)':'#cc4444','Gongbu (Works)':'#44aaff','Libu (Personnel)':'#9b59b6'};
 function deptColor(d){return DEPT_COLOR[d]||'#6a9eff'}
 
 /* ══ UTILS ══ */
@@ -926,21 +926,21 @@ const esc=s=>s?String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g
 async function fetchJ(u){const r=await fetch(u,{cache:'no-store'});if(!r.ok)throw Error(r.status);return r.json()}
 async function postJ(u,d){const r=await fetch(u,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(d)});return r.json()}
 function toast(msg,type='ok',ms=3000){const el=document.createElement('div');el.className=`toast ${type}`;el.textContent=msg;document.getElementById('toaster').appendChild(el);setTimeout(()=>el.remove(),ms)}
-const STATE_LABEL={Inbox:'收件',Pending:'待处理',Taizi:'太子分拣',Zhongshu:'中书起草',Menxia:'门下审议',Assigned:'已派发',Doing:'执行中',Review:'待审查',Done:'已完成',Blocked:'阻塞',Cancelled:'已取消',Next:'待执行'};
-// 根据轮次动态生成状态标签
+const STATE_LABEL={Inbox:'Inbox',Pending:'Pending',Taizi:'Taizi Triage',Zhongshu:'Zhongshu Draft',Menxia:'Menxia Review',Assigned:'Dispatched',Doing:'In Progress',Review:'Under Review',Done:'Completed',Blocked:'Blocked',Cancelled:'Cancelled',Next:'Queued'};
+// Dynamically generate status labels based on round
 function stateLabel(t){
   const r = t.review_round||0;
-  if(t.state==='Menxia' && r>1) return `门下审议（第${r}轮）`;
-  if(t.state==='Zhongshu' && r>0) return `中书修订（第${r}轮）`;
+  if(t.state==='Menxia' && r>1) return `Menxia Review (Round ${r})`;
+  if(t.state==='Zhongshu' && r>0) return `Zhongshu Revision (Round ${r})`;
   return STATE_LABEL[t.state]||t.state;
 }
 
 /* ══ TASK CLASSIFICATION ══ */
-// 皇上的旨意：JJC-* 开头，有真实标题
+// Emperor's edicts: JJC-* prefix, with real title
 function isEdict(t){ return /^JJC-/i.test(t.id||'') }
-// 系统会话：OC-* / MC-* 开头
+// System sessions: OC-* / MC-* prefix
 function isSession(t){ return /^(OC-|MC-)/i.test(t.id||'') }
-// 归档判定：Done/Cancelled 或手动标记 archived
+// Archive logic: Done/Cancelled or manually marked archived
 function isArchived(t){ return t.archived || ['Done','Cancelled'].includes(t.state) }
 let edictFilter = 'active';  // 'active' | 'archived' | 'all'
 function setEdictFilter(f){
@@ -988,22 +988,22 @@ function renderEdicts(tasks){
   });
   // Tab badge = active count only
   document.getElementById('tb-e').textContent = activeEdicts.length;
-  document.getElementById('chip-tasks').textContent = activeEdicts.length + ' 道旨意';
+  document.getElementById('chip-tasks').textContent = activeEdicts.length + ' Edict(s)';
   // Archive stats
-  document.getElementById('archive-count').textContent = `活跃 ${activeEdicts.length} · 归档 ${archivedEdicts.length} · 共 ${allEdicts.length}`;
-  // Show "一键归档" button if there are un-archived Done/Cancelled tasks
+  document.getElementById('archive-count').textContent = `Active ${activeEdicts.length} · Archived ${archivedEdicts.length} · Total ${allEdicts.length}`;
+  // Show "Bulk Archive" button if there are un-archived Done/Cancelled tasks
   const unArchivedDone = allEdicts.filter(t=>!t.archived && ['Done','Cancelled'].includes(t.state));
   document.getElementById('btn-archive-done').style.display = unArchivedDone.length ? '' : 'none';
   const el = document.getElementById('edict-grid');
   if(!edicts.length){
-    el.innerHTML='<div class="empty" style="grid-column:1/-1">暂无旨意<br><small style="font-size:11px;margin-top:6px;display:block;color:var(--muted)">通过飞书向太子发送任务，太子分拣后转中书省处理</small></div>';
+    el.innerHTML='<div class="empty" style="grid-column:1/-1">No Edicts<br><small style="font-size:11px;margin-top:6px;display:block;color:var(--muted)">Send tasks to Taizi; Taizi triages and routes to Zhongshu for processing</small></div>';
     return;
   }
   el.innerHTML = edicts.map(t => {
     const hb = t.heartbeat||{status:'unknown',label:'⚪'};
     const deptCls = 'dt-'+(t.org||'').replace(/\s/g,'');
     const stCls = 'st-'+(t.state||'');
-    const isBlocked = t.block && t.block !== '无' && t.block !== '-';
+    const isBlocked = t.block && t.block !== 'None' && t.block !== '-';
     const curStage = PIPE.find((_,i) => getPipeStatus(t)[i].status === 'active');
     const todos = t.todos||[];
     const todoDone = todos.filter(x=>x.status==='completed').length;
@@ -1015,21 +1015,21 @@ function renderEdicts(tasks){
     <div class="edict-card${archCls}" onclick='openTask(${JSON.stringify(t.id)})'>
       ${miniPipe(t)}
       <div class="ec-id">${esc(t.id)}</div>
-      <div class="ec-title">${esc(t.title||'(无标题)')}</div>
+      <div class="ec-title">${esc(t.title||'(No title)')}</div>
       <div class="ec-meta">
         <span class="tag ${stCls}">${stateLabel(t)}</span>
         ${t.org ? `<span class="tag ${deptCls}">${esc(t.org)}</span>` : ''}
-        ${curStage ? `<span style="font-size:11px;color:var(--muted)">当前: <b style="color:${deptColor(curStage.dept)}">${curStage.dept} · ${curStage.action}</b></span>` : ''}
+        ${curStage ? `<span style="font-size:11px;color:var(--muted)">Current: <b style="color:${deptColor(curStage.dept)}">${curStage.dept} · ${curStage.action}</b></span>` : ''}
       </div>
       ${t.now && t.now !== '-' ? `<div style="font-size:11px;color:var(--muted);line-height:1.5;margin-bottom:6px">${esc(t.now.substring(0,80))}</div>` : ''}
       ${(t.review_round||0)>0 ? `<div style="font-size:11px;margin-bottom:6px">
         ${Array.from({length:t.review_round||0},(_,i)=>`<span style="display:inline-block;width:14px;height:14px;border-radius:50%;background:${i<(t.review_round||0)-1?'#1a3a6a':'var(--acc)'}22;border:1px solid ${i<(t.review_round||0)-1?'#2a4a8a':'var(--acc)'};font-size:9px;text-align:center;line-height:13px;margin-right:2px;color:${i<(t.review_round||0)-1?'#4a6aaa':'var(--acc)'}">${i+1}</span>`).join('')}
-        <span style="color:var(--muted);font-size:10px">第 ${t.review_round} 轮磋商</span>
+        <span style="color:var(--muted);font-size:10px">Round ${t.review_round} consultation</span>
       </div>` : ''}
       ${todoTotal ? `<div class="ec-todo-bar">
         <span>📋 ${todoDone}/${todoTotal}</span>
         <div class="ec-todo-track"><div class="ec-todo-fill" style="width:${Math.round(todoDone/todoTotal*100)}%"></div></div>
-        <span>${todoDone===todoTotal?'✅ 全部完成':'🔄 进行中'}</span>
+        <span>${todoDone===todoTotal?'✅ All done':'🔄 In progress'}</span>
       </div>` : ''}
       <div class="ec-footer">
         <span class="hb ${hb.status}">${esc(hb.label)}</span>
@@ -1037,11 +1037,11 @@ function renderEdicts(tasks){
         ${t.eta && t.eta !== '-' ? `<span style="font-size:11px;color:var(--muted)">📅 ${esc(t.eta)}</span>` : ''}
       </div>
       <div class="ec-actions" onclick="event.stopPropagation()">
-        ${canStop ? `<button class="mini-act" onclick="confirmAction('${esc(t.id)}','stop')">⏸ 叫停</button>
-        <button class="mini-act danger" onclick="confirmAction('${esc(t.id)}','cancel')">🚫 取消</button>` : ''}
-        ${canResume ? `<button class="mini-act" onclick="taskAction('${esc(t.id)}','resume','恢复执行')">▶ 恢复</button>` : ''}
-        ${isArchived(t) && !t.archived ? `<button class="mini-act" onclick="archiveTask('${esc(t.id)}')" title="移入归档">📦 归档</button>` : ''}
-        ${t.archived ? `<button class="mini-act" onclick="unarchiveTask('${esc(t.id)}')" title="取消归档">📤 取消归档</button>` : ''}
+        ${canStop ? `<button class="mini-act" onclick="confirmAction('${esc(t.id)}','stop')">⏸ Halt</button>
+        <button class="mini-act danger" onclick="confirmAction('${esc(t.id)}','cancel')">🚫 Cancel</button>` : ''}
+        ${canResume ? `<button class="mini-act" onclick="taskAction('${esc(t.id)}','resume','Resume')">▶ Resume</button>` : ''}
+        ${isArchived(t) && !t.archived ? `<button class="mini-act" onclick="archiveTask('${esc(t.id)}')" title="Move to archive">📦 Archive</button>` : ''}
+        ${t.archived ? `<button class="mini-act" onclick="unarchiveTask('${esc(t.id)}')" title="Unarchive">📤 Unarchive</button>` : ''}
       </div>
     </div>`;
   }).join('');
@@ -1059,7 +1059,7 @@ async function loadAgentsStatus(){
     renderAgentsStatus(_agentsStatusData);
   }catch(e){
     document.getElementById('agent-status-panel').innerHTML=
-      '<div class="as-panel"><div style="color:var(--danger);font-size:12px">⚠️ 无法获取 Agent 状态</div></div>';
+      '<div class="as-panel"><div style="color:var(--danger);font-size:12px">⚠️ Cannot fetch Agent status</div></div>';
   }finally{
     _agentsStatusLoading = false;
   }
@@ -1069,7 +1069,7 @@ function renderAgentsStatus(data){
   if(!data||!data.ok) return;
   const gw = data.gateway||{};
   const agents = data.agents||[];
-  // 跳过 main（和 taizi 重复）
+  // Skip main (duplicate of taizi)
   const filtered = agents.filter(a=>a.id!=='main');
   const running = filtered.filter(a=>a.status==='running').length;
   const idle = filtered.filter(a=>a.status==='idle').length;
@@ -1080,10 +1080,10 @@ function renderAgentsStatus(data){
   document.getElementById('agent-status-panel').innerHTML=`
     <div class="as-panel">
       <div class="as-header">
-        <span class="as-title">🔌 Agent 在线状态</span>
-        <span class="as-gw ${gwCls}">Gateway: ${esc(gw.status||'未知')}</span>
-        <button class="as-refresh" onclick="loadAgentsStatus()" title="刷新状态">🔄 刷新</button>
-        ${offline+unconf>0?`<button class="as-wake-all" onclick="wakeAllAgents()" title="唤醒所有离线Agent">⚡ 全部唤醒</button>`:''}
+        <span class="as-title">🔌 Agent Online Status</span>
+        <span class="as-gw ${gwCls}">Gateway: ${esc(gw.status||'Unknown')}</span>
+        <button class="as-refresh" onclick="loadAgentsStatus()" title="Refresh status">🔄 Refresh</button>
+        ${offline+unconf>0?`<button class="as-wake-all" onclick="wakeAllAgents()" title="Wake all offline Agents">⚡ Wake All</button>`:''}
       </div>
       <div class="as-grid">
         ${filtered.map(a=>{
@@ -1095,31 +1095,31 @@ function renderAgentsStatus(data){
             <div class="as-label">${esc(a.label)}</div>
             <div class="as-role">${esc(a.role)}</div>
             <div class="as-status">${esc(a.statusLabel)}</div>
-            ${a.lastActive?`<div class="as-time">⏰ ${esc(a.lastActive)}</div>`:'<div class="as-time">无活动记录</div>'}
-            ${canWake?`<button class="as-wake-btn" onclick="event.stopPropagation();wakeAgent('${a.id}',this)">⚡ 唤醒</button>`:''}
+            ${a.lastActive?`<div class="as-time">⏰ ${esc(a.lastActive)}</div>`:'<div class="as-time">No activity records</div>'}
+            ${canWake?`<button class="as-wake-btn" onclick="event.stopPropagation();wakeAgent('${a.id}',this)">⚡ Wake</button>`:''}
           </div>`;
         }).join('')}
       </div>
       <div class="as-summary">
-        <span><span class="as-dot running" style="position:static;width:8px;height:8px"></span> ${running} 运行中</span>
-        <span><span class="as-dot idle" style="position:static;width:8px;height:8px"></span> ${idle} 待命</span>
-        ${offline?`<span><span class="as-dot offline" style="position:static;width:8px;height:8px"></span> ${offline} 离线</span>`:''}
-        ${unconf?`<span><span class="as-dot unconfigured" style="position:static;width:8px;height:8px"></span> ${unconf} 未配置</span>`:''}
-        <span style="margin-left:auto;font-size:10px;color:var(--muted)">检测于 ${(data.checkedAt||'').substring(11,19)}</span>
+        <span><span class="as-dot running" style="position:static;width:8px;height:8px"></span> ${running} Running</span>
+        <span><span class="as-dot idle" style="position:static;width:8px;height:8px"></span> ${idle} On Standby</span>
+        ${offline?`<span><span class="as-dot offline" style="position:static;width:8px;height:8px"></span> ${offline} Offline</span>`:''}
+        ${unconf?`<span><span class="as-dot unconfigured" style="position:static;width:8px;height:8px"></span> ${unconf} Unconfigured</span>`:''}
+        <span style="margin-left:auto;font-size:10px;color:var(--muted)">Detected at ${(data.checkedAt||'').substring(11,19)}</span>
       </div>
     </div>`;
 }
 
 async function wakeAgent(agentId, btn){
-  if(btn){ btn.disabled=true; btn.textContent='⏳ 唤醒中...'; }
+  if(btn){ btn.disabled=true; btn.textContent='⏳ Waking...'; }
   try{
     const r = await postJ(API+'/agent-wake', {agentId});
-    toast(r.message||'唤醒指令已发出','ok');
-    // 30秒后自动刷新状态
+    toast(r.message||'Wake command sent','ok');
+    // Auto-refresh status after 30s
     setTimeout(()=>loadAgentsStatus(), 30000);
   }catch(e){
-    toast('唤醒失败: '+e.message,'err');
-    if(btn){ btn.disabled=false; btn.textContent='⚡ 唤醒'; }
+    toast('Wake failed: '+e.message,'err');
+    if(btn){ btn.disabled=false; btn.textContent='⚡ Wake'; }
   }
 }
 
@@ -1128,34 +1128,34 @@ async function wakeAllAgents(){
   const toWake = (_agentsStatusData.agents||[]).filter(a=>
     a.id!=='main' && a.status!=='running' && a.status!=='unconfigured'
   );
-  if(!toWake.length){ toast('所有 Agent 均已在线','ok'); return; }
-  toast(`正在唤醒 ${toWake.length} 个 Agent...`,'ok',5000);
+  if(!toWake.length){ toast('All Agents are online','ok'); return; }
+  toast(`Waking ${toWake.length} Agent(s)...`,'ok',5000);
   for(const a of toWake){
     try{ await postJ(API+'/agent-wake', {agentId: a.id}); }catch(e){}
   }
-  toast(`${toWake.length} 个唤醒指令已发出，30秒后刷新状态`,'ok',5000);
+  toast(`${toWake.length} wake command(s) sent, refreshing status in 30s`,'ok',5000);
   setTimeout(()=>loadAgentsStatus(), 30000);
 }
 
 /* ══ DEPT MONITOR ══ */
 function renderMonitor(tasks){
   const DEPTS = [
-    {id:'taizi',   label:'太子',  emoji:'🤴',role:'太子',    rank:'储君'},
-    {id:'zhongshu',label:'中书省',emoji:'📜',role:'中书令',  rank:'正一品'},
-    {id:'menxia',  label:'门下省',emoji:'🔍',role:'侍中',    rank:'正一品'},
-    {id:'shangshu',label:'尚书省',emoji:'📮',role:'尚书令',  rank:'正一品'},
-    {id:'libu',    label:'礼部',  emoji:'📝',role:'礼部尚书',rank:'正二品'},
-    {id:'hubu',    label:'户部',  emoji:'💰',role:'户部尚书',rank:'正二品'},
-    {id:'bingbu',  label:'兵部',  emoji:'⚔️',role:'兵部尚书',rank:'正二品'},
-    {id:'xingbu',  label:'刑部',  emoji:'⚖️',role:'刑部尚书',rank:'正二品'},
-    {id:'gongbu',  label:'工部',  emoji:'🔧',role:'工部尚书',rank:'正二品'},
-    {id:'libu_hr', label:'吏部',  emoji:'👔',role:'吏部尚书',rank:'正二品'},
-    {id:'zaochao', label:'钦天监',emoji:'🌟',role:'朝报官',  rank:'正三品'},
+    {id:'taizi',   label:'Taizi (Triage)',      org:'Taizi',   emoji:'🤴',role:'Crown Prince',          rank:'Heir Apparent'},
+    {id:'zhongshu',label:'Zhongshu (Planning)',  org:'Zhongshu', emoji:'📜',role:'Grand Secretary',        rank:'First Rank'},
+    {id:'menxia',  label:'Menxia (Review)',      org:'Menxia', emoji:'🔍',role:'Senior Censor',          rank:'First Rank'},
+    {id:'shangshu',label:'Shangshu (Dispatch)',  org:'Shangshu', emoji:'📮',role:'Grand Scribe',           rank:'First Rank'},
+    {id:'libu',    label:'Libu (Rites)',         org:'Libu',   emoji:'📝',role:'Minister of Rites',      rank:'Second Rank'},
+    {id:'hubu',    label:'Hubu (Finance)',       org:'Hubu',   emoji:'💰',role:'Minister of Finance',    rank:'Second Rank'},
+    {id:'bingbu',  label:'Bingbu (War)',         org:'Bingbu',   emoji:'⚔️',role:'Minister of War',        rank:'Second Rank'},
+    {id:'xingbu',  label:'Xingbu (Justice)',     org:'Xingbu',   emoji:'⚖️',role:'Minister of Justice',    rank:'Second Rank'},
+    {id:'gongbu',  label:'Gongbu (Works)',       org:'Gongbu',   emoji:'🔧',role:'Minister of Works',      rank:'Second Rank'},
+    {id:'libu_hr', label:'Libu (Personnel)',     org:'Libu_hr',   emoji:'👔',role:'Minister of Personnel',  rank:'Second Rank'},
+    {id:'zaochao', label:'Qintian Jian',         org:'Zaochao', emoji:'🌟',role:'Court Announcer',        rank:'Third Rank'},
   ];
 
-  // 每个部门当前承接的旨意：从 JJC 任务里找 org 匹配且非 Done 的
+  // Current edicts per dept: find JJC tasks matching org, non-Done
   const activeTasks = tasks.filter(t => isEdict(t) && t.state !== 'Done' && t.state !== 'Next');
-  // 官员统计数据（如已加载）
+  // Official stats data (if loaded)
   const offMap = {};
   if(officialsData && officialsData.officials){
     officialsData.officials.forEach(o=>offMap[o.id]=o);
@@ -1163,11 +1163,11 @@ function renderMonitor(tasks){
 
   let activeCount = 0;
   const cards = DEPTS.map(d => {
-    // 该部门正在处理的旨意
-    const myTasks = activeTasks.filter(t => t.org === d.label);
-    // 也从 flow_log 中找最近参与的旨意
+    // Edicts currently handled by this dept
+    const myTasks = activeTasks.filter(t => t.org === (d.org || d.label));
+    // Also find most recent edict from flow_log
     const recentEdict = tasks.filter(t=>isEdict(t))
-      .find(t=>(t.flow_log||[]).some(f=>f.from===d.label||f.to===d.label));
+      .find(t=>(t.flow_log||[]).some(f=>f.from===(d.org||d.label)||f.to===(d.org||d.label)));
 
     const isActive = myTasks.some(t=>t.state==='Doing');
     const isBlocked = myTasks.some(t=>t.state==='Blocked');
@@ -1176,7 +1176,7 @@ function renderMonitor(tasks){
     if(isActive) activeCount++;
 
     const dotCls = isBlocked?'blocked':isActive?'busy':hb.status==='active'?'active':'idle';
-    const statusText = isBlocked?'⚠️ 阻塞':isActive?'⚙️ 执行中':hb.status==='active'?'🟢 活跃':'⚪ 候命';
+    const statusText = isBlocked?'⚠️ Blocked':isActive?'⚙️ In Progress':hb.status==='active'?'🟢 Active':'⚪ Standby';
     const cardCls = isBlocked?'blocked-card':isActive?'active-card':'';
 
     return `<div class="duty-card ${cardCls}">
@@ -1195,26 +1195,26 @@ function renderMonitor(tasks){
         ${myTasks.length ? myTasks.map(t=>`
           <div class="dc-task" onclick='openTask(${JSON.stringify(t.id)})' style="cursor:pointer;padding:6px;border-radius:8px;border:1px solid var(--line);margin-bottom:6px">
             <div class="dc-task-id">${esc(t.id)}</div>
-            <div class="dc-task-title">${esc(t.title||'(无标题)')}</div>
+            <div class="dc-task-title">${esc(t.title||'(No title)')}</div>
             ${t.now&&t.now!=='-'?`<div class="dc-task-now">${esc(t.now.substring(0,70))}</div>`:''}
             <div class="dc-task-meta">
               <span class="tag st-${t.state}">${stateLabel(t)}</span>
-              ${t.block&&t.block!=='无'?`<span class="tag" style="border-color:#ff527044;color:var(--danger)">🚫${esc(t.block)}</span>`:''}
+              ${t.block&&t.block!=='None'?`<span class="tag" style="border-color:#ff527044;color:var(--danger)">🚫${esc(t.block)}</span>`:''}
             </div>
           </div>`).join('') :
           `<div class="dc-idle">
             <span style="font-size:20px">🪭</span>
-            <span>候命中 ${recentEdict?`· 最近参与 <b style="color:var(--muted)">${esc(recentEdict.id)}</b>`:'· 尚无旨意记录'}</span>
+            <span>On Standby · ${recentEdict?`· Last edict: <b style="color:var(--muted)">${esc(recentEdict.id)}</b>`:'· No edict records'}</span>
           </div>`}
       </div>
       <div class="dc-footer">
-        <span class="dc-model">🤖 ${esc(off.model_short||'待配置')}</span>
+        <span class="dc-model">🤖 ${esc(off.model_short||'Not configured')}</span>
         ${off.last_active?`<span class="dc-la">⏰ ${esc(off.last_active)}</span>`:''}
       </div>
     </div>`;
   });
 
-  document.getElementById('tb-m').textContent = activeCount + '活跃';
+  document.getElementById('tb-m').textContent = activeCount + ' active';
   document.getElementById('duty-grid').innerHTML = cards.join('');
 }
 
@@ -1225,7 +1225,7 @@ function openTask(id){
   if(!t)return;
   const stages = getPipeStatus(t);
   const activeStage = stages.find(s=>s.status==='active');
-  const hb = t.heartbeat||{status:'unknown',label:'⚪ 无数据'};
+  const hb = t.heartbeat||{status:'unknown',label:'⚪ No Data'};
   const flowLog = t.flow_log||[];
   const todos = t.todos||[];
   const todoDone = todos.filter(x=>x.status==='completed').length;
@@ -1235,20 +1235,20 @@ function openTask(id){
 
   document.getElementById('modal-body').innerHTML = `
     <div class="modal-id">${esc(t.id)}</div>
-    <div class="modal-title">${esc(t.title||'(无标题)')}</div>
+    <div class="modal-title">${esc(t.title||'(No title)')}</div>
 
-    <!-- 当前阶段横幅 -->
+    <!-- Current Stage Banner -->
     ${activeStage ? `
     <div class="cur-stage">
       <div class="cs-icon">${activeStage.icon}</div>
       <div class="cs-info">
         <div class="cs-dept" style="color:${deptColor(activeStage.dept)}">${activeStage.dept}</div>
-        <div class="cs-action">当前阶段：${activeStage.action}</div>
+        <div class="cs-action">Current stage: ${activeStage.action}</div>
       </div>
       <span class="hb ${hb.status} cs-hb">${esc(hb.label)}</span>
     </div>` : ''}
 
-    <!-- 流程管线 -->
+    <!-- Pipeline -->
     <div class="m-pipe">
       ${stages.map((s,i) => `
         <div class="mp-stage">
@@ -1263,42 +1263,42 @@ function openTask(id){
       `).join('')}
     </div>
 
-    <!-- 操作按钮 -->
+    <!-- Action Buttons -->
     <div class="task-actions">
-      ${canStop ? `<button class="btn-action btn-stop" onclick="confirmAction('${esc(t.id)}','stop')">⏸ 叫停任务</button>
-      <button class="btn-action btn-cancel" onclick="confirmAction('${esc(t.id)}','cancel')">🚫 取消任务</button>` : ''}
-      ${canResume ? `<button class="btn-action btn-resume" onclick="taskAction('${esc(t.id)}','resume','恢复执行')">▶️ 恢复执行</button>` : ''}
-      ${['Review','Menxia'].includes(t.state) ? `<button class="btn-action" style="background:#2ecc8a22;color:#2ecc8a;border:1px solid #2ecc8a44" onclick="reviewAction('${esc(t.id)}','approve')">✅ 准奏</button>
-      <button class="btn-action" style="background:#ff527022;color:#ff5270;border:1px solid #ff527044" onclick="reviewAction('${esc(t.id)}','reject')">🚫 封驳</button>` : ''}
-      ${['Pending','Taizi','Zhongshu','Menxia','Assigned','Doing','Review','Next'].includes(t.state) ? `<button class="btn-action" style="background:#7c5cfc18;color:#7c5cfc;border:1px solid #7c5cfc44" onclick="advanceState('${esc(t.id)}','${esc(t.state)}')">⏩ 推进到下一步</button>` : ''}
+      ${canStop ? `<button class="btn-action btn-stop" onclick="confirmAction('${esc(t.id)}','stop')">⏸ Halt Task</button>
+      <button class="btn-action btn-cancel" onclick="confirmAction('${esc(t.id)}','cancel')">🚫 Cancel Task</button>` : ''}
+      ${canResume ? `<button class="btn-action btn-resume" onclick="taskAction('${esc(t.id)}','resume','Resume')">▶️ Resume Execution</button>` : ''}
+      ${['Review','Menxia'].includes(t.state) ? `<button class="btn-action" style="background:#2ecc8a22;color:#2ecc8a;border:1px solid #2ecc8a44" onclick="reviewAction('${esc(t.id)}','approve')">✅ Approve</button>
+      <button class="btn-action" style="background:#ff527022;color:#ff5270;border:1px solid #ff527044" onclick="reviewAction('${esc(t.id)}','reject')">🚫 Reject</button>` : ''}
+      ${['Pending','Taizi','Zhongshu','Menxia','Assigned','Doing','Review','Next'].includes(t.state) ? `<button class="btn-action" style="background:#7c5cfc18;color:#7c5cfc;border:1px solid #7c5cfc44" onclick="advanceState('${esc(t.id)}','${esc(t.state)}')">⏩ Advance to Next Step</button>` : ''}
     </div>
 
-    <!-- 太子调度 -->
+    <!-- Taizi Dispatch -->
     <div class="sched-section">
       <div class="sched-head">
-        <span class="sched-title">🧭 太子调度</span>
-        <span class="sched-status" id="sched-status">加载中...</span>
+        <span class="sched-title">🧭 Taizi Dispatch</span>
+        <span class="sched-status" id="sched-status">Loading...</span>
       </div>
       <div class="sched-grid" id="sched-grid">
-        <div class="sched-kpi"><div class="k">停滞时长</div><div class="v">-</div></div>
-        <div class="sched-kpi"><div class="k">重试次数</div><div class="v">-</div></div>
-        <div class="sched-kpi"><div class="k">升级级别</div><div class="v">-</div></div>
-        <div class="sched-kpi"><div class="k">派发状态</div><div class="v">-</div></div>
+        <div class="sched-kpi"><div class="k">Stall Duration</div><div class="v">-</div></div>
+        <div class="sched-kpi"><div class="k">Retry Count</div><div class="v">-</div></div>
+        <div class="sched-kpi"><div class="k">Escalation Level</div><div class="v">-</div></div>
+        <div class="sched-kpi"><div class="k">Dispatch Status</div><div class="v">-</div></div>
       </div>
       <div class="sched-line" id="sched-line"></div>
       <div class="sched-actions">
-        <button class="sched-btn" onclick="schedulerAction('${esc(t.id)}','retry')">🔁 重试派发</button>
-        <button class="sched-btn warn" onclick="schedulerAction('${esc(t.id)}','escalate')">📣 升级协调</button>
-        <button class="sched-btn danger" onclick="schedulerAction('${esc(t.id)}','rollback')">↩️ 回滚稳定点</button>
-        <button class="sched-btn" onclick="schedulerAction('${esc(t.id)}','scan')">🔍 立即扫描</button>
+        <button class="sched-btn" onclick="schedulerAction('${esc(t.id)}','retry')">🔁 Retry Dispatch</button>
+        <button class="sched-btn warn" onclick="schedulerAction('${esc(t.id)}','escalate')">📣 Escalate</button>
+        <button class="sched-btn danger" onclick="schedulerAction('${esc(t.id)}','rollback')">↩️ Rollback to Stable</button>
+        <button class="sched-btn" onclick="schedulerAction('${esc(t.id)}','scan')">🔍 Scan Now</button>
       </div>
     </div>
 
-    <!-- Todo 子任务 -->
+    <!-- Todo Subtasks -->
     ${todoTotal ? `
     <div class="todo-section">
       <div class="todo-header">
-        <div class="m-sec-label" style="margin-bottom:0;border:none;padding:0">子任务清单（${todoDone}/${todoTotal}）</div>
+        <div class="m-sec-label" style="margin-bottom:0;border:none;padding:0">Sub-task List (${todoDone}/${todoTotal})</div>
         <div class="todo-progress">
           <div class="todo-bar"><div class="todo-bar-fill" style="width:${Math.round(todoDone/todoTotal*100)}%"></div></div>
           <span>${Math.round(todoDone/todoTotal*100)}%</span>
@@ -1308,7 +1308,7 @@ function openTask(id){
         ${todos.map(td => {
           const ico = td.status==='completed'?'✅':td.status==='in-progress'?'🔄':'⬜';
           const stCls = td.status==='completed'?'s-done':td.status==='in-progress'?'s-progress':'s-notstarted';
-          const stLabel = td.status==='completed'?'已完成':td.status==='in-progress'?'进行中':'待开始';
+          const stLabel = td.status==='completed'?'Completed':td.status==='in-progress'?'In Progress':'Not Started';
           const itemCls = td.status==='completed'?'done':'';
           const hasDetail = !!(td.detail);
           const detailCls = hasDetail ? 'has-detail' : '';
@@ -1326,27 +1326,27 @@ function openTask(id){
       </div>
     </div>` : ''}
 
-    <!-- 基本信息 -->
+    <!-- Basic Info -->
     <div class="m-section">
       <div class="m-rows">
-        <div class="m-row"><div class="mr-label">状态</div><div class="mr-val"><span class="tag st-${t.state}">${stateLabel(t)}</span>${(t.review_round||0)>0?`<span style="font-size:11px;color:var(--muted);margin-left:8px">共磋商 ${t.review_round} 轮</span>`:''}</div></div>
-        <div class="m-row"><div class="mr-label">执行部门</div><div class="mr-val"><span class="tag dt-${(t.org||'').replace(/\s/g,'')}">${esc(t.org||'—')}</span></div></div>
-        ${t.eta&&t.eta!=='-'?`<div class="m-row"><div class="mr-label">预计完成</div><div class="mr-val">${esc(t.eta)}</div></div>`:''}
-        ${t.block&&t.block!=='无'&&t.block!=='-'?`<div class="m-row"><div class="mr-label" style="color:var(--danger)">阻塞项</div><div class="mr-val" style="color:var(--danger)">${esc(t.block)}</div></div>`:''}
-        ${t.now&&t.now!=='-'?`<div class="m-row" style="grid-column:1/-1"><div class="mr-label">当前进展</div><div class="mr-val" style="font-weight:400;font-size:12px">${esc(t.now)}</div></div>`:''}
-        ${t.ac?`<div class="m-row" style="grid-column:1/-1"><div class="mr-label">验收标准</div><div class="mr-val" style="font-weight:400;font-size:12px">${esc(t.ac)}</div></div>`:''}
+        <div class="m-row"><div class="mr-label">Status</div><div class="mr-val"><span class="tag st-${t.state}">${stateLabel(t)}</span>${(t.review_round||0)>0?`<span style="font-size:11px;color:var(--muted);margin-left:8px">${t.review_round} consultation round(s)</span>`:''}</div></div>
+        <div class="m-row"><div class="mr-label">Department</div><div class="mr-val"><span class="tag dt-${(t.org||'').replace(/\s/g,'')}">${esc(t.org||'—')}</span></div></div>
+        ${t.eta&&t.eta!=='-'?`<div class="m-row"><div class="mr-label">ETA</div><div class="mr-val">${esc(t.eta)}</div></div>`:''}
+        ${t.block&&t.block!=='None'&&t.block!=='-'?`<div class="m-row"><div class="mr-label" style="color:var(--danger)">Blocker</div><div class="mr-val" style="color:var(--danger)">${esc(t.block)}</div></div>`:''}
+        ${t.now&&t.now!=='-'?`<div class="m-row" style="grid-column:1/-1"><div class="mr-label">Current Progress</div><div class="mr-val" style="font-weight:400;font-size:12px">${esc(t.now)}</div></div>`:''}
+        ${t.ac?`<div class="m-row" style="grid-column:1/-1"><div class="mr-label">Acceptance Criteria</div><div class="mr-val" style="font-weight:400;font-size:12px">${esc(t.ac)}</div></div>`:''}
       </div>
     </div>
 
-    <!-- 流转日志 -->
+    <!-- Flow Log -->
     ${flowLog.length ? `
     <div class="m-section">
-      <div class="m-sec-label">流转日志（${flowLog.length} 条）</div>
+      <div class="m-sec-label">Flow Log (${flowLog.length} entries)</div>
       <div class="fl-timeline">
         ${flowLog.map(fl => {
           const col = deptColor(fl.from||'');
-          const isOk = (fl.remark||'').includes('✅')||fl.to==='皇上';
-          const dotCls = isOk ? 'fl-ok' : (fl.from==='皇上'||fl.to==='皇上') ? 'fl-purple' : 'fl-blue';
+          const isOk = (fl.remark||'').includes('✅')||fl.to==='Emperor';
+          const dotCls = isOk ? 'fl-ok' : (fl.from==='Emperor'||fl.to==='Emperor') ? 'fl-purple' : 'fl-blue';
           return `<div class="fl-item">
             <div class="fl-time">${fl.at?fl.at.substring(11,16):''}</div>
             <div class="fl-dot" style="background:${col}"></div>
@@ -1361,33 +1361,33 @@ function openTask(id){
           </div>`
         }).join('')}
       </div>
-    </div>` : '<div style="font-size:12px;color:var(--muted);padding:8px 0">暂无流转记录（任务启动后自动填充）</div>'}
+    </div>` : '<div style="font-size:12px;color:var(--muted);padding:8px 0">No flow records yet (auto-populated once task starts)</div>'}
 
-    <!-- 产出物 -->
+    <!-- Output -->
     ${t.output&&t.output!=='-'&&t.output!==''?`
     <div class="m-section">
-      <div class="m-sec-label">产出物</div>
+      <div class="m-sec-label">Outputs</div>
       <code>${esc(t.output)}</code>
     </div>`:''}
 
-    <!-- 实时动态 / 执行回顾 -->
+    <!-- Live Feed / Execution Review -->
     <div class="la-section" id="live-activity-section">
       <div class="la-header">
-        <span class="la-title"><span class="la-dot" id="la-dot"></span>${['Done','Cancelled'].includes(t.state)?'执行回顾':'实时动态'}</span>
-        <span class="la-agent" id="la-agent-label">加载中...</span>
+        <span class="la-title"><span class="la-dot" id="la-dot"></span>${['Done','Cancelled'].includes(t.state)?'Execution Review':'Live Activity'}</span>
+        <span class="la-agent" id="la-agent-label">Loading...</span>
       </div>
       <div id="la-phase-bar"></div>
       <div id="la-todos-bar"></div>
       <div id="la-resource-bar"></div>
       <div class="la-log" id="la-log">
-        <div class="la-empty">正在获取 Agent 活动数据...</div>
+        <div class="la-empty">Fetching Agent activity data...</div>
       </div>
     </div>
   `;
 
   document.getElementById('modal-bg').classList.add('open');
 
-  // 启动实时动态（Done 任务只拉一次，不轮询）
+  // Start live feed (Done tasks fetched once, no polling)
   if(['Done','Cancelled'].includes(t.state)){
     startLiveActivity(t.id, true);
   } else {
@@ -1430,16 +1430,16 @@ async function fetchLiveActivity(){
     fetchSchedulerState(_laTaskId);
   }catch(e){
     const log=document.getElementById('la-log');
-    if(log) log.innerHTML='<div class="la-empty">获取活动数据失败</div>';
+    if(log) log.innerHTML='<div class="la-empty">Failed to fetch activity data</div>';
   }
 }
 
 function fmtStalled(sec){
   const v=Math.max(0, parseInt(sec||0,10));
-  if(v<60) return `${v}秒`;
-  if(v<3600) return `${Math.floor(v/60)}分${v%60}秒`;
+  if(v<60) return `${v}s`;
+  if(v<3600) return `${Math.floor(v/60)}m ${v%60}s`;
   const h=Math.floor(v/3600), m=Math.floor((v%3600)/60);
-  return `${h}小时${m}分`;
+  return `${h}h ${m}m`;
 }
 
 async function fetchSchedulerState(taskId){
@@ -1450,7 +1450,7 @@ async function fetchSchedulerState(taskId){
     const d = await fetchJ(API+`/scheduler-state/${encodeURIComponent(taskId)}`);
     renderSchedulerState(d);
   }catch(e){
-    statusEl.textContent='加载失败';
+    statusEl.textContent='Load failed';
   }
 }
 
@@ -1461,7 +1461,7 @@ function renderSchedulerState(data){
   if(!statusEl||!grid||!line) return;
 
   if(!data||!data.ok){
-    statusEl.textContent=(data&&data.error)?data.error:'无调度数据';
+    statusEl.textContent=(data&&data.error)?data.error:'No scheduler data';
     return;
   }
 
@@ -1470,22 +1470,22 @@ function renderSchedulerState(data){
   const retryCount = s.retryCount||0;
   const escalation = s.escalationLevel||0;
   const dispatchStatus = s.lastDispatchStatus||'idle';
-  const statusText = s.enabled===false?'已禁用':'运行中';
-  const lvlText = escalation===0?'无': escalation===1?'门下省': '尚书省';
+  const statusText = s.enabled===false?'Disabled':'Running';
+  const lvlText = escalation===0?'None': escalation===1?'Menxia': 'Shangshu';
 
-  statusEl.textContent = `${statusText} · 阈值 ${s.stallThresholdSec||180}s`;
+  statusEl.textContent = `${statusText} · Threshold ${s.stallThresholdSec||180}s`;
   grid.innerHTML = `
-    <div class="sched-kpi"><div class="k">停滞时长</div><div class="v">${esc(fmtStalled(stalledSec))}</div></div>
-    <div class="sched-kpi"><div class="k">重试次数</div><div class="v">${retryCount}</div></div>
-    <div class="sched-kpi"><div class="k">升级级别</div><div class="v">${esc(lvlText)}</div></div>
-    <div class="sched-kpi"><div class="k">派发状态</div><div class="v">${esc(dispatchStatus)}</div></div>
+    <div class="sched-kpi"><div class="k">Stall Duration</div><div class="v">${esc(fmtStalled(stalledSec))}</div></div>
+    <div class="sched-kpi"><div class="k">Retry Count</div><div class="v">${retryCount}</div></div>
+    <div class="sched-kpi"><div class="k">Escalation Level</div><div class="v">${esc(lvlText)}</div></div>
+    <div class="sched-kpi"><div class="k">Dispatch Status</div><div class="v">${esc(dispatchStatus)}</div></div>
   `;
 
   const pieces=[];
-  if(s.lastProgressAt) pieces.push(`最近进展 ${esc((s.lastProgressAt||'').replace('T',' ').substring(0,19))}`);
-  if(s.lastDispatchAt) pieces.push(`最近派发 ${esc((s.lastDispatchAt||'').replace('T',' ').substring(0,19))}`);
-  pieces.push(`自动回滚 ${s.autoRollback===false?'关闭':'开启'}`);
-  if(s.lastDispatchAgent) pieces.push(`目标 ${esc(s.lastDispatchAgent)}`);
+  if(s.lastProgressAt) pieces.push(`Last Progress: ${esc((s.lastProgressAt||'').replace('T',' ').substring(0,19))}`);
+  if(s.lastDispatchAt) pieces.push(`Last Dispatch: ${esc((s.lastDispatchAt||'').replace('T',' ').substring(0,19))}`);
+  pieces.push(`Auto-rollback: ${s.autoRollback===false?'Off':'On'}`);
+  if(s.lastDispatchAgent) pieces.push(`Target: ${esc(s.lastDispatchAgent)}`);
   line.innerHTML = pieces.map(x=>`<span>${x}</span>`).join('');
 }
 
@@ -1494,25 +1494,25 @@ async function schedulerAction(taskId, action){
   try{
     if(action==='scan'){
       const r = await postJ(API+'/scheduler-scan', {thresholdSec: 180});
-      if(r.ok){ toast(`🔍 扫描完成：${r.count||0} 个动作`,'ok'); }
-      else{ toast(r.error||'扫描失败','err'); }
+      if(r.ok){ toast(`🔍 Scan complete: ${r.count||0} action(s)`,'ok'); }
+      else{ toast(r.error||'Scan failed','err'); }
       fetchSchedulerState(taskId);
       return;
     }
 
-    const reason = prompt(`请输入${action==='retry'?'重试':action==='escalate'?'升级':'回滚'}原因（可留空）：`) || '';
+    const reason = prompt(`Enter reason for ${action==='retry'?'retry':action==='escalate'?'escalation':'rollback'} (optional):`) || '';
     const routeMap = {
       retry: '/scheduler-retry',
       escalate: '/scheduler-escalate',
       rollback: '/scheduler-rollback',
     };
     const r = await postJ(API + routeMap[action], {taskId, reason});
-    if(r.ok){ toast(r.message||'操作成功','ok'); }
-    else{ toast(r.error||'操作失败','err'); }
+    if(r.ok){ toast(r.message||'Operation successful','ok'); }
+    else{ toast(r.error||'Operation failed','err'); }
     fetchSchedulerState(taskId);
     loadAll();
   }catch(e){
-    toast('服务器连接失败','err');
+    toast('Server connection failed','err');
   }
 }
 
@@ -1523,12 +1523,12 @@ function renderLiveActivity(data){
   if(!log)return;
 
   if(!data.ok||!data.activity||!data.activity.length){
-    const msg=data.message||data.error||'Agent 尚未上报进展（等待 Agent 调用 progress 命令）';
+    const msg=data.message||data.error||'Agent has not reported progress yet (waiting for Agent to call the progress command)';
     log.innerHTML=`<div class="la-empty">${esc(msg)}</div>`;
     if(dot)dot.classList.add('idle');
     if(agLbl){
       const agents=(data.relatedAgents||[]).join(', ');
-      agLbl.textContent=agents?`搜索范围: ${agents}`:'无对应 Agent';
+      agLbl.textContent=agents?`Search scope: ${agents}`:'No corresponding Agent';
     }
     return;
   }
@@ -1536,25 +1536,25 @@ function renderLiveActivity(data){
   if(agLbl){
     const parts=[];
     if(data.agentLabel)parts.push(data.agentLabel);
-    if(data.relatedAgents&&data.relatedAgents.length>1) parts.push(`${data.relatedAgents.length}个 Agent`);
-    if(data.lastActive)parts.push(`最后活跃: ${data.lastActive}`);
+    if(data.relatedAgents&&data.relatedAgents.length>1) parts.push(`${data.relatedAgents.length} Agent(s)`);
+    if(data.lastActive)parts.push(`Last active: ${data.lastActive}`);
     agLbl.textContent=parts.join(' · ');
   }
 
   const srcBanner = '';
 
-  // ── 阶段耗时时间线 ──
+  // ── Stage duration timeline ──
   const phaseBar = document.getElementById('la-phase-bar');
   if(phaseBar && data.phaseDurations && data.phaseDurations.length){
     const maxDur = Math.max(...data.phaseDurations.map(p=>p.durationSec||1), 1);
-    const phaseColors = {'皇上':'#eab308','太子':'#f97316','中书省':'#3b82f6','门下省':'#8b5cf6','尚书省':'#10b981','六部':'#06b6d4','礼部':'#ec4899','户部':'#f59e0b','兵部':'#ef4444','刑部':'#6366f1','工部':'#14b8a6','吏部':'#d946ef'};
-    let totalDurText = data.totalDuration ? `<span style="margin-left:auto;font-size:10px;color:var(--muted)">总耗时 ${data.totalDuration}</span>` : '';
+    const phaseColors = {'Emperor':'#eab308','Taizi':'#f97316','Zhongshu':'#3b82f6','Menxia':'#8b5cf6','Shangshu':'#10b981','Six Ministries':'#06b6d4','Libu':'#ec4899','Hubu':'#f59e0b','Bingbu':'#ef4444','Xingbu':'#6366f1','Gongbu':'#14b8a6','Libu_hr':'#d946ef'};
+    let totalDurText = data.totalDuration ? `<span style="margin-left:auto;font-size:10px;color:var(--muted)">Total duration: ${data.totalDuration}</span>` : '';
     phaseBar.innerHTML = `<div style="padding:4px 0 8px;border-bottom:1px solid var(--border)">
-      <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px"><span style="font-size:11px;font-weight:600;color:var(--fg)">⏱ 阶段耗时</span>${totalDurText}</div>
+      <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px"><span style="font-size:11px;font-weight:600;color:var(--fg)">⏱ Stage Duration</span>${totalDurText}</div>
       ${data.phaseDurations.map(p=>{
         const pct=Math.max(5,Math.round((p.durationSec||1)/maxDur*100));
         const color=phaseColors[p.phase]||'#6b7280';
-        const ongoing=p.ongoing?'<span style="font-size:9px;color:#60a5fa"> ●进行中</span>':'';
+        const ongoing=p.ongoing?'<span style="font-size:9px;color:#60a5fa"> ● In Progress</span>':'';
         return `<div style="display:flex;align-items:center;gap:6px;margin:2px 0;font-size:11px">
           <span style="min-width:48px;color:var(--muted);text-align:right">${esc(p.phase)}</span>
           <div style="flex:1;height:14px;background:var(--panel);border-radius:3px;overflow:hidden">
@@ -1566,15 +1566,15 @@ function renderLiveActivity(data){
     </div>`;
   }
 
-  // ── Todos 进度条 ──
+  // ── Todos progress bar ──
   const todosBar=document.getElementById('la-todos-bar');
   if(todosBar && data.todosSummary){
     const s=data.todosSummary;
     todosBar.innerHTML=`<div style="padding:4px 0 8px;border-bottom:1px solid var(--border)">
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
-        <span style="font-size:11px;font-weight:600;color:var(--fg)">📊 执行进度</span>
+        <span style="font-size:11px;font-weight:600;color:var(--fg)">📊 Execution Progress</span>
         <span style="font-size:20px;font-weight:700;color:${s.percent>=100?'#22c55e':s.percent>=50?'#60a5fa':'var(--fg)'}">${s.percent}%</span>
-        <span style="font-size:10px;color:var(--muted)">✅${s.completed} 🔄${s.inProgress} ⬜${s.notStarted} / 共${s.total}项</span>
+        <span style="font-size:10px;color:var(--muted)">✅${s.completed} 🔄${s.inProgress} ⬜${s.notStarted} / Total: ${s.total} items</span>
       </div>
       <div style="height:8px;background:var(--panel);border-radius:4px;overflow:hidden;display:flex">
         <div style="width:${s.total?s.completed/s.total*100:0}%;background:#22c55e;transition:width .3s"></div>
@@ -1583,7 +1583,7 @@ function renderLiveActivity(data){
     </div>`;
   }
 
-  // ── 资源消耗汇总 ──
+  // ── Resource usage summary ──
   const resBar=document.getElementById('la-resource-bar');
   if(resBar && data.resourceSummary){
     const r=data.resourceSummary;
@@ -1592,17 +1592,17 @@ function renderLiveActivity(data){
     if(r.totalCost) parts.push(`💰 $${r.totalCost.toFixed(4)}`);
     if(r.totalElapsedSec){
       const m=Math.floor(r.totalElapsedSec/60), s=r.totalElapsedSec%60;
-      parts.push(`⏳ ${m>0?m+'分':''}${s}秒`);
+      parts.push(`⏳ ${m>0?m+'m':''}${s}s`);
     }
     if(parts.length){
       resBar.innerHTML=`<div style="padding:4px 0 8px;border-bottom:1px solid var(--border);display:flex;gap:12px;align-items:center">
-        <span style="font-size:11px;font-weight:600;color:var(--fg)">📈 资源消耗</span>
+        <span style="font-size:11px;font-weight:600;color:var(--fg)">📈 Resource Usage</span>
         ${parts.map(p=>`<span style="font-size:11px;color:var(--muted)">${p}</span>`).join('')}
       </div>`;
     }
   }
 
-  // 判断是否活跃（最后一条活动5分钟内）
+  // Determine if active (last activity within 5 min)
   const lastEntry=data.activity[data.activity.length-1];
   let isActive=false;
   if(lastEntry&&lastEntry.at){
@@ -1612,7 +1612,7 @@ function renderLiveActivity(data){
   if(dot){dot.classList.toggle('idle',!isActive);}
 
   // Agent label map
-  const _agentLabels={main:'太子',zhongshu:'中书省',menxia:'门下省',shangshu:'尚书省',libu:'礼部',hubu:'户部',bingbu:'兵部',xingbu:'刑部',gongbu:'工部',libu_hr:'吏部',zaochao:'钦天监'};
+  const _agentLabels={main:'Taizi',zhongshu:'Zhongshu',menxia:'Menxia',shangshu:'Shangshu',libu:'Libu (Rites)',hubu:'Hubu (Finance)',bingbu:'Bingbu (War)',xingbu:'Xingbu (Justice)',gongbu:'Gongbu (Works)',libu_hr:'Libu (Personnel)',zaochao:'Qintian Jian'};
 
   const renderEntry=(a)=>{
     const time=a.at?fmtActivityTime(a.at):'';
@@ -1621,11 +1621,11 @@ function renderLiveActivity(data){
     }
     if(a.kind==='progress'){
       const agBadge=a.agent?`<span style="font-size:9px;color:var(--muted);background:var(--panel);padding:1px 4px;border-radius:3px;margin-right:4px">${_agentLabels[a.agent]||a.agent}</span>`:'';
-      return `<div class="la-entry la-assistant"><span class="la-icon">🔄</span><span class="la-body">${agBadge}<b>当前进展：</b>${esc(a.text)}</span><span class="la-time">${time}</span></div>`;
+      return `<div class="la-entry la-assistant"><span class="la-icon">🔄</span><span class="la-body">${agBadge}<b>Current Progress:</b>${esc(a.text)}</span><span class="la-time">${time}</span></div>`;
     }
     if(a.kind==='todos'){
       const agBadge=a.agent?`<span style="font-size:9px;color:var(--muted);background:var(--panel);padding:1px 4px;border-radius:3px;margin-right:4px">${_agentLabels[a.agent]||a.agent}</span>`:'';
-      // diff 高亮
+      // diff highlight
       const diffMap=new Map();
       if(a.diff){
         (a.diff.changed||[]).forEach(c=>diffMap.set(c.id,{type:'changed',from:c.from,to:c.to}));
@@ -1635,11 +1635,11 @@ function renderLiveActivity(data){
         const icon=td.status==='completed'?'✅':td.status==='in-progress'?'🔄':'⬜';
         const cls=td.status==='completed'?'style="opacity:0.5;text-decoration:line-through"':td.status==='in-progress'?'style="color:#60a5fa;font-weight:bold"':'';
         const d=diffMap.get(String(td.id));
-        const diffTag=d?(d.type==='changed'&&d.to==='completed'?'<span style="color:#22c55e;font-size:9px;margin-left:4px">✨刚完成</span>':d.type==='changed'?`<span style="color:#f59e0b;font-size:9px;margin-left:4px">↻${d.from}→${d.to}</span>`:d.type==='added'?'<span style="color:#3b82f6;font-size:9px;margin-left:4px">🆕新增</span>':''):'';
+        const diffTag=d?(d.type==='changed'&&d.to==='completed'?'<span style="color:#22c55e;font-size:9px;margin-left:4px">✨ Just Done</span>':d.type==='changed'?`<span style="color:#f59e0b;font-size:9px;margin-left:4px">↻${d.from}→${d.to}</span>`:d.type==='added'?'<span style="color:#3b82f6;font-size:9px;margin-left:4px">🆕 Added</span>':''):'';
         return `<div ${cls}>${icon} ${esc(td.title)}${diffTag}</div>`;
       }).join('');
       const removedHtml=(a.diff&&a.diff.removed&&a.diff.removed.length)?a.diff.removed.map(r=>`<div style="opacity:0.4;text-decoration:line-through">🗑 ${esc(r.title)}</div>`).join(''):'';
-      return `<div class="la-entry" style="flex-direction:column;align-items:flex-start;gap:2px"><div style="font-size:11px;color:var(--muted);margin-bottom:2px">${agBadge}📝 执行计划</div>${items}${removedHtml}</div>`;
+      return `<div class="la-entry" style="flex-direction:column;align-items:flex-start;gap:2px"><div style="font-size:11px;color:var(--muted);margin-bottom:2px">${agBadge}📝 Execution Plan</div>${items}${removedHtml}</div>`;
     }
     // legacy kinds (assistant/tool_result/user) - backward compatibility
     const agBadge=a.agent?`<span style="font-size:9px;color:var(--muted);background:var(--panel);padding:1px 4px;border-radius:3px;margin-right:4px">${_agentLabels[a.agent]||a.agent}</span>`:'';
@@ -1685,17 +1685,17 @@ function renderLiveActivity(data){
     });
 
     groupedHtml=`<div class="la-groups">${Array.from(grouped.entries()).map(([agent, items])=>{
-      const label=_agentLabels[agent]||agent||'未标识';
+      const label=_agentLabels[agent]||agent||'Unknown';
       const last=items[items.length-1];
       const lastTime=last&&last.at?fmtActivityTime(last.at):'--:--:--';
-      return `<div class="la-group"><div class="la-group-hd"><span class="name">${esc(label)}</span><span>最近更新 ${lastTime}</span></div><div class="la-group-bd">${items.map(renderEntry).join('')}</div></div>`;
+      return `<div class="la-group"><div class="la-group-hd"><span class="name">${esc(label)}</span><span>Last updated: ${lastTime}</span></div><div class="la-group-bd">${items.map(renderEntry).join('')}</div></div>`;
     }).join('')}</div>`;
   }
 
   const entries=flowHtml+groupedHtml;
 
   const shouldScroll=_laLastCount!==data.activity.length;
-  log.innerHTML=srcBanner+(entries||'<div class="la-empty">暂无此任务的对话记录</div>');
+  log.innerHTML=srcBanner+(entries||'<div class="la-empty">No conversation records for this task</div>');
   _laLastCount=data.activity.length;
 
   if(shouldScroll){
@@ -1716,7 +1716,7 @@ function fmtActivityTime(ts){
 }
 
 /* ══ MODEL CONFIG ══ */
-// Fallback 硬编码列表，优先从后端 knownModels 动态获取
+// Fallback hardcoded list; prefer dynamic fetch from backend knownModels
 const FALLBACK_MODELS=[
   {id:'anthropic/claude-sonnet-4-6',l:'Claude Sonnet 4.6',p:'Anthropic'},
   {id:'anthropic/claude-opus-4-5',l:'Claude Opus 4.5',p:'Anthropic'},
@@ -1734,14 +1734,14 @@ const FALLBACK_MODELS=[
   {id:'copilot/o3-mini',l:'o3-mini',p:'Copilot'},
 ];
 function getModels(cfg){
-  // 优先从后端 agent_config.json 的 knownModels 字段动态获取
+  // Prefer dynamic fetch from knownModels in backend agent_config.json
   if(cfg && cfg.knownModels && cfg.knownModels.length){
     return cfg.knownModels.map(m=>({id:m.id, l:m.label, p:m.provider}));
   }
   return FALLBACK_MODELS;
 }
 function renderModels(cfg){
-  if(!cfg||!cfg.agents){document.getElementById('model-grid').innerHTML='<div class="empty" style="grid-column:1/-1">请确保本地服务器已启动</div>';return}
+  if(!cfg||!cfg.agents){document.getElementById('model-grid').innerHTML='<div class="empty" style="grid-column:1/-1">Please ensure the local server is running</div>';return}
   const models = getModels(cfg);
   const opts=models.map(m=>`<option value="${m.id}">${m.l} (${m.p})</option>`).join('');
   document.getElementById('model-grid').innerHTML=cfg.agents.map(ag=>`
@@ -1749,9 +1749,9 @@ function renderModels(cfg){
       <div class="mc-top"><span class="mc-emoji">${ag.emoji||'🏛️'}</span>
         <div><div class="mc-name">${esc(ag.label)} <span style="font-size:11px;color:var(--muted)">${esc(ag.id)}</span></div><div class="mc-role">${esc(ag.role)}</div></div>
       </div>
-      <div class="mc-cur">当前: <b>${esc(ag.model)}</b></div>
+      <div class="mc-cur">Current: <b>${esc(ag.model)}</b></div>
       <select class="msel" id="sel-${ag.id}" onchange="onMC('${ag.id}')">${opts}</select>
-      <div class="mc-btns"><button class="btn btn-p" id="btn-${ag.id}" onclick="applyModel('${ag.id}')" disabled>应用</button><button class="btn btn-g" onclick="resetMC('${ag.id}')">重置</button></div>
+      <div class="mc-btns"><button class="btn btn-p" id="btn-${ag.id}" onclick="applyModel('${ag.id}')" disabled>Apply</button><button class="btn btn-g" onclick="resetMC('${ag.id}')">Reset</button></div>
       <div class="mc-st" id="mcs-${ag.id}"></div>
     </div>`).join('');
   cfg.agents.forEach(ag=>{const s=document.getElementById('sel-'+ag.id);if(s)s.value=ag.model});
@@ -1760,36 +1760,36 @@ function onMC(id){const s=document.getElementById('sel-'+id),b=document.getEleme
 function resetMC(id){const s=document.getElementById('sel-'+id),b=document.getElementById('btn-'+id),ag=agentConfig&&agentConfig.agents?agentConfig.agents.find(a=>a.id===id):null;if(!ag||!s)return;s.value=ag.model;b.disabled=true}
 async function applyModel(id){
   const s=document.getElementById('sel-'+id),b=document.getElementById('btn-'+id),st=document.getElementById('mcs-'+id);
-  if(!s||!b)return;b.disabled=true;st.className='mc-st pending';st.textContent='⟳ 提交中…';
+  if(!s||!b)return;b.disabled=true;st.className='mc-st pending';st.textContent='⟳ Submitting…';
   try{const r=await postJ(API+'/set-model',{agentId:id,model:s.value});
-    if(r.ok){st.className='mc-st ok';st.textContent='✅ 已提交，Gateway 重启中（约5秒）';toast(id+'模型已更改','ok');setTimeout(()=>loadAgentConfig(),5500)}
-    else{st.className='mc-st err';st.textContent='❌ '+( r.error||'错误');b.disabled=false}
-  }catch(e){st.className='mc-st err';st.textContent='❌ 无法连接服务器';b.disabled=false}
+    if(r.ok){st.className='mc-st ok';st.textContent='✅ Submitted, Gateway restarting (~5s)';toast(id+' model changed','ok');setTimeout(()=>loadAgentConfig(),5500)}
+    else{st.className='mc-st err';st.textContent='❌ '+( r.error||'Error');b.disabled=false}
+  }catch(e){st.className='mc-st err';st.textContent='❌ Cannot connect to server';b.disabled=false}
 }
 function renderCL(log){
   const el=document.getElementById('cl-list');
-  if(!log||!log.length){el.innerHTML='<div style="font-size:12px;color:var(--muted);padding:8px 0">暂无变更</div>';return}
+  if(!log||!log.length){el.innerHTML='<div style="font-size:12px;color:var(--muted);padding:8px 0">No changes</div>';return}
   el.innerHTML=[...log].reverse().slice(0,15).map(e=>{
-    const rb = e.rolledBack ? ' <span style="color:var(--danger);font-size:10px;border:1px solid #ff527044;padding:1px 5px;border-radius:3px">⚠ 已回滚</span>' : '';
+    const rb = e.rolledBack ? ' <span style="color:var(--danger);font-size:10px;border:1px solid #ff527044;padding:1px 5px;border-radius:3px">⚠ Rolled back</span>' : '';
     return `<div class="cl-row"><span class="cl-t">${esc((e.at||'').substring(0,16).replace('T',' '))}</span><span class="cl-a">${esc(e.agentId||'')}</span><span class="cl-c"><b>${esc(e.oldModel||'')}</b> → <b>${esc(e.newModel||'')}</b>${rb}</span></div>`;
   }).join('')
 }
 
 /* ══ SKILLS ══ */
 function renderSkills(cfg){
-  if(!cfg||!cfg.agents){document.getElementById('skills-grid').innerHTML='<div class="empty">无法加载</div>';return}
+  if(!cfg||!cfg.agents){document.getElementById('skills-grid').innerHTML='<div class="empty">Failed to load</div>';return}
   document.getElementById('skills-grid').innerHTML=cfg.agents.map(ag=>`
-    <div class="sk-card"><div class="sk-hdr"><span class="sk-emoji">${ag.emoji||'🏛️'}</span><span class="sk-name">${esc(ag.label)}</span><span class="sk-cnt">${(ag.skills||[]).length} 技能</span></div>
-    <div class="sk-list">${!(ag.skills||[]).length?'<div class="sk-empty">暂无 Skills</div>':(ag.skills||[]).map(sk=>`<div class="sk-item" onclick="openSkill('${esc(ag.id)}','${esc(sk.name)}')"><span class="si-name">📦 ${esc(sk.name)}</span><span class="si-desc">${esc(sk.description||'无描述')}</span><span class="si-arrow">›</span></div>`).join('')}</div>
-    <div class="sk-add" onclick="openAddSkillForm('${esc(ag.id)}','${esc(ag.label)}')">＋ 添加技能</div></div>`).join('')
+    <div class="sk-card"><div class="sk-hdr"><span class="sk-emoji">${ag.emoji||'🏛️'}</span><span class="sk-name">${esc(ag.label)}</span><span class="sk-cnt">${(ag.skills||[]).length} Skill(s)</span></div>
+    <div class="sk-list">${!(ag.skills||[]).length?'<div class="sk-empty">No Skills</div>':(ag.skills||[]).map(sk=>`<div class="sk-item" onclick="openSkill('${esc(ag.id)}','${esc(sk.name)}')"><span class="si-name">📦 ${esc(sk.name)}</span><span class="si-desc">${esc(sk.description||'No description')}</span><span class="si-arrow">›</span></div>`).join('')}</div>
+    <div class="sk-add" onclick="openAddSkillForm('${esc(ag.id)}','${esc(ag.label)}')">＋ Add Skill</div></div>`).join('')
 }
 
-/* skill detail modal — 写入 modal-body (复用已有 modal) */
+/* skill detail modal — write to modal-body (reuse existing modal) */
 async function openSkill(agentId, skillName){
   document.getElementById('modal-body').innerHTML=`
     <div style="font-size:11px;color:var(--acc);font-weight:700;letter-spacing:.04em;margin-bottom:4px">${esc(agentId.toUpperCase())}</div>
     <div style="font-size:20px;font-weight:800;margin-bottom:16px">📦 ${esc(skillName)}</div>
-    <div id="sk-modal-content" class="sk-modal-body"><div style="color:var(--muted);font-size:12px;padding:24px;text-align:center">⟳ 加载中…</div></div>`;
+    <div id="sk-modal-content" class="sk-modal-body"><div style="color:var(--muted);font-size:12px;padding:24px;text-align:center">⟳ Loading…</div></div>`;
   document.getElementById('modal-bg').classList.add('open');
   try{
     const r = await fetchJ(API+'/skill-content/'+encodeURIComponent(agentId)+'/'+encodeURIComponent(skillName));
@@ -1799,11 +1799,11 @@ async function openSkill(agentId, skillName){
       const html = simpleMarkdown(r.content||'');
       el.innerHTML = `<div class="sk-md">${html}</div><div class="sk-path">📂 ${esc(r.path||'')}</div>`;
     } else {
-      el.innerHTML = `<div style="color:#ff5270;font-size:13px;padding:16px">❌ ${esc(r.error||'无法读取')}</div>`;
+      el.innerHTML = `<div style="color:#ff5270;font-size:13px;padding:16px">❌ ${esc(r.error||'Failed to read')}</div>`;
     }
   }catch(e){
     const el = document.getElementById('sk-modal-content');
-    if(el) el.innerHTML = `<div style="color:#ff5270;font-size:13px;padding:16px">❌ 服务器连接失败</div>`;
+    if(el) el.innerHTML = `<div style="color:#ff5270;font-size:13px;padding:16px">❌ Server connection failed</div>`;
   }
 }
 
@@ -1841,39 +1841,39 @@ function simpleMarkdown(md){
   return h;
 }
 
-/* ══ ADD SKILL FORM (规范化表单) ══ */
+/* ══ ADD SKILL FORM (standardized form) ══ */
 function openAddSkillForm(agentId, agentLabel){
   document.getElementById('modal-body').innerHTML=`
-    <div style="font-size:11px;color:var(--acc);font-weight:700;letter-spacing:.04em;margin-bottom:4px">为 ${esc(agentLabel)} 添加技能</div>
-    <div style="font-size:20px;font-weight:800;margin-bottom:18px">＋ 新增 Skill</div>
+    <div style="font-size:11px;color:var(--acc);font-weight:700;letter-spacing:.04em;margin-bottom:4px">Add skill for ${esc(agentLabel)}</div>
+    <div style="font-size:20px;font-weight:800;margin-bottom:18px">＋ New Skill</div>
     <div style="background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:14px;margin-bottom:18px;font-size:12px;line-height:1.7;color:var(--muted)">
-      <b style="color:var(--text)">📋 Skill 规范说明</b><br>
-      • 技能名称使用<b style="color:var(--text)">小写英文 + 连字符</b>，如 <code style="background:var(--bg);padding:2px 6px;border-radius:4px">data-analysis</code>、<code style="background:var(--bg);padding:2px 6px;border-radius:4px">code-review</code><br>
-      • 创建后会在 <code style="background:var(--bg);padding:2px 6px;border-radius:4px">~/.openclaw/workspace-${esc(agentId)}/skills/{name}/SKILL.md</code> 生成模板文件<br>
-      • SKILL.md 使用 <b style="color:var(--text)">YAML frontmatter</b> 头部（name + description），正文为 Markdown 格式<br>
-      • 技能会在 agent 收到相关任务时<b style="color:var(--text)">自动激活</b>，无需手动触发
+      <b style="color:var(--text)">📋 Skill Guidelines</b><br>
+      • Use <b style="color:var(--text)">lowercase letters + hyphens</b> for skill names, e.g. <code style="background:var(--bg);padding:2px 6px;border-radius:4px">data-analysis</code>、<code style="background:var(--bg);padding:2px 6px;border-radius:4px">code-review</code><br>
+      • After creation, a template will be generated at <code style="background:var(--bg);padding:2px 6px;border-radius:4px">~/.openclaw/workspace-${esc(agentId)}/skills/{name}/SKILL.md</code> template file generated<br>
+      • SKILL.md uses <b style="color:var(--text)">YAML frontmatter</b> (name + description), body in Markdown format<br>
+      • The skill will <b style="color:var(--text)">automatically activate</b> when agent receives related tasks
     </div>
     <form onsubmit="submitAddSkill(event,'${esc(agentId)}','${esc(agentLabel)}')" style="display:flex;flex-direction:column;gap:14px">
       <div>
-        <label style="font-size:12px;font-weight:600;display:block;margin-bottom:6px">技能名称 <span style="color:#ff5270">*</span></label>
-        <input id="ask-name" type="text" required placeholder="如 data-analysis, code-review, doc-writer"
-          pattern="[a-z0-9][a-z0-9\\-]*[a-z0-9]" title="小写英文+连字符，至少2个字符"
+        <label style="font-size:12px;font-weight:600;display:block;margin-bottom:6px">Skill Name <span style="color:#ff5270">*</span></label>
+        <input id="ask-name" type="text" required placeholder="e.g. data-analysis, code-review, doc-writer"
+          pattern="[a-z0-9][a-z0-9\\-]*[a-z0-9]" title="Lowercase letters + hyphens, at least 2 characters"
           style="width:100%;padding:10px 12px;background:var(--bg);border:1px solid var(--line);border-radius:8px;color:var(--text);font-size:13px;outline:none"
           oninput="this.value=this.value.toLowerCase().replace(/[^a-z0-9\\-]/g,'')">
       </div>
       <div>
-        <label style="font-size:12px;font-weight:600;display:block;margin-bottom:6px">技能描述 <span style="color:var(--muted);font-weight:400">(一句话说明用途)</span></label>
-        <input id="ask-desc" type="text" placeholder="如：负责代码审查与质量检测，发现潜在Bug和安全风险"
+        <label style="font-size:12px;font-weight:600;display:block;margin-bottom:6px">Skill Description <span style="color:var(--muted);font-weight:400">(one sentence about its purpose)</span></label>
+        <input id="ask-desc" type="text" placeholder="e.g.: Responsible for code review and quality inspection, detecting potential bugs and security risks"
           style="width:100%;padding:10px 12px;background:var(--bg);border:1px solid var(--line);border-radius:8px;color:var(--text);font-size:13px;outline:none">
       </div>
       <div>
-        <label style="font-size:12px;font-weight:600;display:block;margin-bottom:6px">触发条件 <span style="color:var(--muted);font-weight:400">(可选，何时激活此技能)</span></label>
-        <input id="ask-trigger" type="text" placeholder="如：当任务涉及代码质量、安全审查时激活"
+        <label style="font-size:12px;font-weight:600;display:block;margin-bottom:6px">Trigger Condition <span style="color:var(--muted);font-weight:400">(optional, when to activate this skill)</span></label>
+        <input id="ask-trigger" type="text" placeholder="e.g.: Activate when task involves code quality or security review"
           style="width:100%;padding:10px 12px;background:var(--bg);border:1px solid var(--line);border-radius:8px;color:var(--text);font-size:13px;outline:none">
       </div>
       <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:4px">
-        <button type="button" class="btn btn-g" onclick="closeModal()" style="padding:8px 20px;font-size:13px">取消</button>
-        <button type="submit" id="ask-submit" class="btn" style="padding:8px 20px;font-size:13px;background:var(--acc);color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:600">📦 创建技能</button>
+        <button type="button" class="btn btn-g" onclick="closeModal()" style="padding:8px 20px;font-size:13px">Cancel</button>
+        <button type="submit" id="ask-submit" class="btn" style="padding:8px 20px;font-size:13px;background:var(--acc);color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:600">📦 Create Skill</button>
       </div>
     </form>`;
   document.getElementById('modal-bg').classList.add('open');
@@ -1887,35 +1887,35 @@ async function submitAddSkill(e, agentId, agentLabel){
   const trigger = document.getElementById('ask-trigger').value.trim();
   if(!name) return;
   const btn = document.getElementById('ask-submit');
-  btn.disabled=true; btn.textContent='⟳ 创建中…';
+  btn.disabled=true; btn.textContent='⟳ Creating…';
   try{
     const r = await postJ(API+'/add-skill', {agentId, skillName:name, description:desc, trigger:trigger});
     if(r.ok){
-      toast(`✅ 技能 ${name} 已添加到 ${agentLabel}`, 'ok');
+      toast(`✅ Skill ${name} added to ${agentLabel}`, 'ok');
       closeModal();
       loadAgentConfig();
-    } else { toast(r.error||'添加失败','err'); btn.disabled=false; btn.textContent='📦 创建技能'; }
-  }catch(e){ toast('服务器连接失败','err'); btn.disabled=false; btn.textContent='📦 创建技能'; }
+    } else { toast(r.error||'Add failed','err'); btn.disabled=false; btn.textContent='📦 Create Skill'; }
+  }catch(e){ toast('Server connection failed','err'); btn.disabled=false; btn.textContent='📦 Create Skill'; }
 }
 
 /* ══ DATA LOADING ══ */
 async function loadLive(){
   try{
     liveStatus=await fetchJ(API+'/live-status');
-    // 提前加载官员数据，供省部调度 Tab 使用
+    // Pre-load officials data for Dept Dispatch tab
     if(!officialsData){
       try{ officialsData = await fetchJ(API+'/officials-stats'); }catch(e){}
     }
     const tasks=liveStatus.tasks||[];
     const sync=liveStatus.syncStatus||{};
     const cs=document.getElementById('chip-sync');
-    cs.textContent=sync.ok?'✅ 同步正常':'⚠️ 同步异常';
+    cs.textContent=sync.ok?'✅ Sync OK':'⚠️ Sync Error';
     cs.className='chip '+(sync.ok?'ok':'warn');
     renderEdicts(tasks);
     renderMonitor(tasks);
     renderSessions(tasks);
   }catch(e){
-    document.getElementById('chip-sync').textContent='❌ 服务器未启动';
+    document.getElementById('chip-sync').textContent='❌ Server offline';
     document.getElementById('chip-sync').className='chip err';
   }
 }
@@ -1927,7 +1927,7 @@ async function loadAgentConfig(){
     const log=await fetchJ(API+'/model-change-log').catch(()=>[]);
     renderCL(log);
   }catch(e){
-    document.getElementById('model-grid').innerHTML='<div class="empty" style="grid-column:1/-1">⚠️ 请先启动本地服务器：<code>python3 dashboard/server.py</code></div>';
+    document.getElementById('model-grid').innerHTML='<div class="empty" style="grid-column:1/-1">⚠️ Please start the local server first: <code>python3 dashboard/server.py</code></div>';
   }
 }
 async function loadAll(){
@@ -1939,46 +1939,46 @@ async function loadAll(){
   if(activeTab==='morning' && !_newsPolling) loadMorning();
 }
 
-/* ══ SESSIONS / 小任务 ══ */
+/* ══ SESSIONS / Subtasks ══ */
 const AGENT_EMOJI_MAP = {};
 const AGENT_LABEL_MAP = {};
 let sessFilter = 'all';
 
 // isEdict already defined above
 
-/* 从 title 和 sourceMeta 中提取人类可读名称 */
+/* Extract human-readable name from title and sourceMeta */
 function humanTitle(t){
   let title = t.title||'';
-  // "褚凤天 会话" → ok, keep
-  // "agent:shangshu:main 会话" → "尚书省 主会话"
-  // "agent:gongbu:subagent:xxx 会话" → "工部 子任务"
-  // "agent:shangshu:cron:xxx 会话" → "尚书省 定时任务"
-  // "heartbeat 会话" → "心跳检测"
-  if(title==='heartbeat 会话') return '💓 心跳检测';
+  // "Personal session" → ok, keep
+  // "agent:shangshu:main session" → "Shangshu Main Session"
+  // "agent:gongbu:subagent:xxx session" → "Gongbu Subtask"
+  // "agent:shangshu:cron:xxx session" → "Shangshu Scheduled Task"
+  // "heartbeat session" → "Heartbeat Check"
+  if(title==='heartbeat session') return '💓 Heartbeat';
   const m = title.match(/^agent:(\w+):(\w+)/);
   if(m){
     const agLabel = AGENT_LABEL_MAP[m[1]] || m[1];
-    if(m[2]==='main') return agLabel+' · 主会话';
-    if(m[2]==='subagent') return agLabel+' · 子任务执行';
-    if(m[2]==='cron') return agLabel+' · 定时任务';
+    if(m[2]==='main') return agLabel+' · Main Session';
+    if(m[2]==='subagent') return agLabel+' · Sub-task Execution';
+    if(m[2]==='cron') return agLabel+' · Scheduled Task';
     return agLabel+' · '+m[2];
   }
-  // "兵部：Mission Control 映射验收" — already nice
-  return title.replace(/ 会话$/, '') || t.id;
+  // "Bingbu: Mission Control mapping review" — already nice
+  return title.replace(/ session/, '') || t.id;
 }
 
-/* 提取来源渠道 */
+/* Extract source channel */
 function channelLabel(t){
   const now = t.now||'';
-  if(now.includes('feishu/direct')) return {icon:'💬', text:'飞书对话'};
-  if(now.includes('feishu'))        return {icon:'💬', text:'飞书'};
+  if(now.includes('feishu/direct')) return {icon:'💬', text:'Feishu DM'};
+  if(now.includes('feishu'))        return {icon:'💬', text:'Feishu'};
   if(now.includes('webchat'))       return {icon:'🌐', text:'WebChat'};
-  if(now.includes('cron'))          return {icon:'⏰', text:'定时'};
-  if(now.includes('direct'))        return {icon:'📨', text:'直连'};
-  return {icon:'🔗', text:'会话'};
+  if(now.includes('cron'))          return {icon:'⏰', text:'Scheduled'};
+  if(now.includes('direct'))        return {icon:'📨', text:'Direct'};
+  return {icon:'🔗', text:'Session'};
 }
 
-/* 提取最后一条有意义的 assistant 消息 */
+/* Extract last meaningful assistant message */
 function lastMessage(t){
   const acts = t.activity||[];
   for(let i=acts.length-1;i>=0;i--){
@@ -1987,7 +1987,7 @@ function lastMessage(t){
       let txt = a.text||'';
       if(txt.startsWith('NO_REPLY')) continue;
       if(txt.startsWith('Reasoning:')) continue;
-      // 清理 markdown 和 [[reply_to_current]]
+      // Clean markdown and [[reply_to_current]]
       txt = txt.replace(/\[\[.*?\]\]/g,'').replace(/\*\*/g,'').replace(/^#+\s/gm,'').trim();
       return txt.substring(0,120) + (txt.length>120?'…':'');
     }
@@ -2013,7 +2013,7 @@ function renderSessions(tasks){
 
   const grid = document.getElementById('sess-grid');
   if(!filtered.length){
-    grid.innerHTML = '<div style="font-size:13px;color:var(--muted);padding:24px;text-align:center;grid-column:1/-1">暂无小任务/会话数据</div>';
+    grid.innerHTML = '<div style="font-size:13px;color:var(--muted);padding:24px;text-align:center;grid-column:1/-1">No subtasks / session data</div>';
     return;
   }
 
@@ -2029,8 +2029,8 @@ function renderSessions(tasks){
     const totalTk = sm.totalTokens||0;
     const updatedAt = t.eta||''; // eta is actually the last update time in our data
     const hbDot = hb.status==='active'?'🟢':hb.status==='warn'?'🟡':hb.status==='stalled'?'🔴':'⚪';
-    const hbText = hb.label ? hb.label.replace(/^[🟢🟡🔴⚪]\s*/,'') : '未知';
-    const model = (t.now||'').match(/模型\s*(\S+)/);
+    const hbText = hb.label ? hb.label.replace(/^[🟢🟡🔴⚪]\s*/,'') : 'Unknown';
+    const model = (t.now||'').match(/model\s*(\S+)/);
     const modelStr = model ? model[1] : '';
     const st = t.state||'Unknown';
 
@@ -2059,7 +2059,7 @@ function renderSessions(tasks){
   }).join('');
 }
 
-/* 会话详情弹窗 */
+/* Session detail modal */
 function openSessionDetail(jsonStr){
   const t = JSON.parse(jsonStr);
   const agent = extractAgent(t);
@@ -2070,7 +2070,7 @@ function openSessionDetail(jsonStr){
   const hb = t.heartbeat||{};
   const sm = t.sourceMeta||{};
   const acts = t.activity||[];
-  const model = (t.now||'').match(/模型\s*(\S+)/);
+  const model = (t.now||'').match(/model\s*(\S+)/);
   const st = t.state||'Unknown';
 
   document.getElementById('modal-body').innerHTML=`
@@ -2084,21 +2084,21 @@ function openSessionDetail(jsonStr){
       ${hb.label?`<span style="font-size:11px">${esc(hb.label)}</span>`:''}
     </div>
 
-    <!-- 统计 -->
+    <!-- Stats -->
     <div style="display:flex;gap:14px;margin-bottom:18px;flex-wrap:wrap">
-      ${sm.totalTokens?`<div style="background:var(--panel2);padding:10px 16px;border-radius:8px;font-size:12px"><div style="font-size:16px;font-weight:700;color:var(--acc)">${sm.totalTokens.toLocaleString()}</div><div style="color:var(--muted);font-size:10px">总 Tokens</div></div>`:''}
-      ${sm.inputTokens!=null?`<div style="background:var(--panel2);padding:10px 16px;border-radius:8px;font-size:12px"><div style="font-size:16px;font-weight:700">${(sm.inputTokens||0).toLocaleString()}</div><div style="color:var(--muted);font-size:10px">输入</div></div>`:''}
-      ${sm.outputTokens!=null?`<div style="background:var(--panel2);padding:10px 16px;border-radius:8px;font-size:12px"><div style="font-size:16px;font-weight:700">${(sm.outputTokens||0).toLocaleString()}</div><div style="color:var(--muted);font-size:10px">输出</div></div>`:''}
+      ${sm.totalTokens?`<div style="background:var(--panel2);padding:10px 16px;border-radius:8px;font-size:12px"><div style="font-size:16px;font-weight:700;color:var(--acc)">${sm.totalTokens.toLocaleString()}</div><div style="color:var(--muted);font-size:10px">Total Tokens</div></div>`:''}
+      ${sm.inputTokens!=null?`<div style="background:var(--panel2);padding:10px 16px;border-radius:8px;font-size:12px"><div style="font-size:16px;font-weight:700">${(sm.inputTokens||0).toLocaleString()}</div><div style="color:var(--muted);font-size:10px">Input</div></div>`:''}
+      ${sm.outputTokens!=null?`<div style="background:var(--panel2);padding:10px 16px;border-radius:8px;font-size:12px"><div style="font-size:16px;font-weight:700">${(sm.outputTokens||0).toLocaleString()}</div><div style="color:var(--muted);font-size:10px">Output</div></div>`:''}
     </div>
 
-    <!-- 最近活动 -->
-    <div style="font-size:12px;font-weight:700;margin-bottom:8px;color:var(--text)">📋 最近活动 <span style="font-weight:400;color:var(--muted)">(${acts.length} 条)</span></div>
+    <!-- Recent Activity -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:8px;color:var(--text)">📋 Recent Activity <span style="font-weight:400;color:var(--muted)">(${acts.length})</span></div>
     <div style="max-height:350px;overflow-y:auto;border:1px solid var(--line);border-radius:10px;background:var(--panel2)">
-      ${!acts.length?'<div style="padding:16px;color:var(--muted);font-size:12px;text-align:center">暂无活动记录</div>'
+      ${!acts.length?'<div style="padding:16px;color:var(--muted);font-size:12px;text-align:center">No activity records</div>'
        :acts.slice(-15).reverse().map(a=>{
         const kind = a.kind||'';
         const kIcon = kind==='assistant'?'🤖':kind==='tool'?'🔧':kind==='user'?'👤':'📝';
-        const kLabel = kind==='assistant'?'回复':kind==='tool'?'工具':kind==='user'?'用户':'事件';
+        const kLabel = kind==='assistant'?'Reply':kind==='tool'?'Tool':kind==='user'?'User':'Event';
         let txt = (a.text||'').replace(/\[\[.*?\]\]/g,'').replace(/\*\*/g,'').trim();
         if(txt.length>200) txt=txt.substring(0,200)+'…';
         const time = (a.at||'').substring(11,19);
@@ -2128,7 +2128,7 @@ function extractAgent(t){
     const known = ['taizi','zhongshu','menxia','shangshu','hubu','libu','bingbu','xingbu','gongbu','zaochao'];
     for(const k of known){ if(sm.agentId.includes(k)) return k; }
   }
-  return (t.org||'').replace(/省|部/g,'').toLowerCase();
+  return (t.org||'').replace(/[^ -]/g,'').replace(/ .*$/,'').toLowerCase();
 }
 
 function timeAgo(iso){
@@ -2138,12 +2138,12 @@ function timeAgo(iso){
     if(isNaN(d.getTime())) return '';
     const diff = Date.now() - d.getTime();
     const mins = Math.floor(diff/60000);
-    if(mins<0) return '刚刚';
-    if(mins<1) return '刚刚';
-    if(mins<60) return mins+'分钟前';
+    if(mins<0) return 'just now';
+    if(mins<1) return 'just now';
+    if(mins<60) return mins+'m ago';
     const hrs = Math.floor(mins/60);
-    if(hrs<24) return hrs+'小时前';
-    return Math.floor(hrs/24)+'天前';
+    if(hrs<24) return hrs+'h ago';
+    return Math.floor(hrs/24)+'d ago';
   }catch(e){ return ''; }
 }
 
@@ -2154,14 +2154,14 @@ function filterSessions(filter, el){
   renderSessions(liveStatus?liveStatus.tasks:[]);
 }
 
-/* ══ MORNING BRIEF (天下要闻) ══ */
+/* ══ MORNING BRIEF (World News) ══ */
 const CAT_META = {
-  '政治': {icon:'🏛️', color:'#6a9eff', desc:'全球政治动态'},
-  '军事': {icon:'⚔️',  color:'#ff5270', desc:'军事与冲突'},
-  '经济': {icon:'💹',  color:'#2ecc8a', desc:'经济与市场'},
-  'AI大模型': {icon:'🤖', color:'#a07aff', desc:'AI与大模型进展'},
+  'Politics': {icon:'🏛️', color:'#6a9eff', desc:'Global political developments'},
+  'Military': {icon:'⚔️',  color:'#ff5270', desc:'Military & conflicts'},
+  'Economy': {icon:'💹',  color:'#2ecc8a', desc:'Economy & markets'},
+  'AI/LLM': {icon:'🤖', color:'#a07aff', desc:'AI & LLM updates'},
 };
-const DEFAULT_CATS = ['政治','军事','经济','AI大模型'];
+const DEFAULT_CATS = ['Politics','Military','Economy','AI/LLM'];
 
 // --- Subscription config ---
 let subConfig = null;
@@ -2199,10 +2199,10 @@ function renderSubConfig(){
         <span class="sf-cat">${esc(f.category)}</span>
         <span class="sf-del" onclick="removeFeed(${i})">✕</span>
       </div>`).join('')
-    : '<div style="font-size:12px;color:var(--muted);padding:4px 0">暂无自定义源</div>';
+    : '<div style="font-size:12px;color:var(--muted);padding:4px 0">No custom sources</div>';
   // Feed category dropdown
   const sel = document.getElementById('new-feed-cat');
-  sel.innerHTML = allCats.map(c=>`<option value="${c}">${c}</option>`).join('') + '<option value="__new__">+ 新分类…</option>';
+  sel.innerHTML = allCats.map(c=>`<option value="${c}">${c}</option>`).join('') + '<option value="__new__">+ New Category…</option>';
   // Feishu webhook
   document.getElementById('feishu-webhook').value = subConfig.feishu_webhook||'';
 }
@@ -2247,9 +2247,9 @@ function addFeed(){
   const name=document.getElementById('new-feed-name').value.trim();
   const url=document.getElementById('new-feed-url').value.trim();
   let cat=document.getElementById('new-feed-cat').value;
-  if(!name||!url){toast('请填写源名称和URL','err');return}
+  if(!name||!url){toast('Please fill in feed name and URL','err');return}
   if(cat==='__new__'){
-    const nc=prompt('输入新分类名称：');
+    const nc=prompt('Enter new category name:');
     if(!nc) return;
     cat=nc;
     // ensure category exists
@@ -2272,38 +2272,38 @@ function removeFeed(i){
 async function saveSubConfig(){
   subConfig.feishu_webhook = document.getElementById('feishu-webhook').value.trim();
   const st = document.getElementById('sub-status');
-  st.style.display='block'; st.style.color='var(--acc)'; st.textContent='⟳ 保存中…';
+  st.style.display='block'; st.style.color='var(--acc)'; st.textContent='⟳ Saving…';
   try{
     const r = await postJ(API+'/morning-config', subConfig);
-    if(r.ok){ st.style.color='var(--ok)'; st.textContent='✅ 配置已保存'; toast('订阅配置已保存','ok'); }
-    else{ st.style.color='var(--danger)'; st.textContent='❌ '+(r.error||'保存失败'); }
-  }catch(e){ st.style.color='var(--danger)'; st.textContent='❌ 服务器连接失败'; }
+    if(r.ok){ st.style.color='var(--ok)'; st.textContent='✅ Settings saved'; toast('Subscription settings saved','ok'); }
+    else{ st.style.color='var(--danger)'; st.textContent='❌ '+(r.error||'Save failed'); }
+  }catch(e){ st.style.color='var(--danger)'; st.textContent='❌ Server connection failed'; }
   setTimeout(()=>st.style.display='none', 3000);
 }
 
 // --- News rendering ---
 async function loadMorning(){
   const body = document.getElementById('mb-body');
-  body.innerHTML = '<div class="mb-loading">⟳ 加载要闻中…</div>';
+  body.innerHTML = '<div class="mb-loading">⟳ Loading news…</div>';
   try{
     const d = await fetchJ(API+'/morning-brief');
     await loadSubConfig();
     renderMorning(d);
   }catch(e){
-    body.innerHTML = '<div class="mb-empty">⚠️ 暂无数据，请点击「立即采集」</div>';
+    body.innerHTML = '<div class="mb-empty">⚠️ No data. Click "Fetch Now" to collect.</div>';
   }
 }
 
 function renderMorning(d){
   const sub = document.getElementById('mb-subtitle');
   if(d.generated_at){
-    const dateStr = d.date ? d.date.replace(/(\d{4})(\d{2})(\d{2})/,'$1年$2月$3日') : '';
-    sub.textContent = `${dateStr} | 采集于 ${d.generated_at} | 共 ${Object.values(d.categories||{}).flat().length} 条要闻`;
+    const dateStr = d.date ? d.date.replace(/(\d{4})(\d{2})(\d{2})/, '$2/$3/$1') : '';
+    sub.textContent = `${dateStr} | Collected at ${d.generated_at} | ${Object.values(d.categories||{}).flat().length} news items`;
   }
   const body = document.getElementById('mb-body');
   const cats = d.categories||{};
   if(!Object.keys(cats).length){
-    body.innerHTML='<div class="mb-empty">暂无数据，点击右上角「立即采集」获取今日简报</div>';
+    body.innerHTML='<div class="mb-empty">No data. Click "Fetch Now" in the top right to get today\'s brief.</div>';
     return;
   }
   // Filter by enabled categories
@@ -2324,13 +2324,13 @@ function renderMorning(d){
         <div class="mb-cat-hdr">
           <span class="mb-cat-icon">${meta.icon}</span>
           <span class="mb-cat-name" style="color:${meta.color}">${esc(cat)}</span>
-          <span class="mb-cat-cnt">${scored.length} 条</span>
+          <span class="mb-cat-cnt">${scored.length} items</span>
         </div>
         <div class="mb-news-list">
-          ${!scored.length ? '<div class="mb-empty" style="padding:16px">暂无新闻</div>' :
+          ${!scored.length ? '<div class="mb-empty" style="padding:16px">No news</div>' :
             scored.map(item => {
               const hasImg = item.image && item.image.startsWith('http');
-              const kwBadge = item._kwHits ? `<span style="font-size:9px;padding:1px 5px;border-radius:999px;background:#a07aff22;color:#a07aff;border:1px solid #a07aff44;margin-left:4px">⭐ 关注</span>` : '';
+              const kwBadge = item._kwHits ? `<span style="font-size:9px;padding:1px 5px;border-radius:999px;background:#a07aff22;color:#a07aff;border:1px solid #a07aff44;margin-left:4px">⭐ Watch</span>` : '';
               return `<div class="mb-card" onclick="window.open('${esc(item.link)}','_blank')">
                 <div class="mb-img">
                   ${hasImg
@@ -2358,44 +2358,44 @@ let _lastBriefDate = null;
 
 async function refreshNews(){
   const btn = document.getElementById('mb-refresh-btn');
-  btn.disabled = true; btn.textContent = '⟳ 采集中…';
+  btn.disabled = true; btn.textContent = '⟳ Collecting…';
   try{
-    // 记录采集前的数据时间戳
+    // Record data timestamp before collection
     try{
       const old = await fetchJ(API+'/morning-brief');
       _lastBriefDate = old.generated_at || null;
     }catch(e){ _lastBriefDate = null; }
     const r = await postJ(API+'/morning-brief/refresh', {});
-    toast(r.message||'采集已触发，自动检测更新中…', 'ok', 5000);
-    // 轮询检测更新（每5秒检查一次，最多2分钟）
+    toast(r.message||'Collection triggered, checking for updates…', 'ok', 5000);
+    // Poll for updates (every 5s, max 2 min)
     if(_newsPolling) clearInterval(_newsPolling);
     let pollCount = 0;
     _newsPolling = setInterval(async ()=>{
       pollCount++;
-      if(pollCount > 24){ // 2分钟超时
+      if(pollCount > 24){ // 2 min timeout
         clearInterval(_newsPolling);
         _newsPolling = null;
-        btn.disabled = false; btn.textContent = '⟳ 立即采集';
-        toast('采集超时，请重试', 'err');
+        btn.disabled = false; btn.textContent = '⟳ Fetch Now';
+        toast('Collection timed out, please retry', 'err');
         return;
       }
       try{
         const fresh = await fetchJ(API+'/morning-brief');
         if(fresh.generated_at && fresh.generated_at !== _lastBriefDate){
-          // 数据已更新
+          // Data updated
           clearInterval(_newsPolling);
           _newsPolling = null;
-          btn.disabled = false; btn.textContent = '⟳ 立即采集';
+          btn.disabled = false; btn.textContent = '⟳ Fetch Now';
           await loadMorning();
-          toast('✅ 天下要闻已更新', 'ok');
+          toast('✅ Daily News updated', 'ok');
         } else {
-          btn.textContent = `⟳ 采集中… (${pollCount * 5}s)`;
+          btn.textContent = `⟳ Collecting… (${pollCount * 5}s)`;
         }
       }catch(e){}
     }, 5000);
   }catch(e){
-    toast('触发失败', 'err');
-    btn.disabled = false; btn.textContent = '⟳ 立即采集';
+    toast('Trigger failed', 'err');
+    btn.disabled = false; btn.textContent = '⟳ Fetch Now';
   }
 }
 
@@ -2408,7 +2408,7 @@ async function loadOfficials(){
     officialsData = await fetchJ(API+'/officials-stats');
     renderOfficials(officialsData);
   }catch(e){
-    document.getElementById('off-detail').innerHTML='<div class="od-empty">⚠️ 无法加载，请确认服务器已启动</div>';
+    document.getElementById('off-detail').innerHTML='<div class="od-empty">⚠️ Cannot load — ensure server is running</div>';
   }
 }
 
@@ -2420,61 +2420,61 @@ function renderOfficials(data){
   const totals = data.totals||{};
   const maxTk = Math.max(...offs.map(o=>o.tokens_in+o.tokens_out+o.cache_read+o.cache_write),1);
 
-  // 活跃提示条
+  // Active hint bar
   const alive = offs.filter(o=>(o.heartbeat||{}).status==='active');
   const actEl = document.getElementById('off-activity');
   if(alive.length){
     actEl.style.display='flex';
-    actEl.innerHTML=`<span class="act-label">🟢 当前活跃：</span>`
+    actEl.innerHTML=`<span class="act-label">🟢 Currently Active:</span>`
       +alive.map(o=>`<span class="act-dot alive">${o.emoji} ${o.role}</span>`).join('')
-      +`<span style="color:var(--muted);font-size:11px;margin-left:auto">其余官员待命</span>`;
+      +`<span style="color:var(--muted);font-size:11px;margin-left:auto">Other officials on standby</span>`;
   }
 
-  // KPI 行
+  // KPI row
   document.getElementById('off-kpi').innerHTML=`
-    <div class="kpi"><div class="kpi-v blue">${offs.length}</div><div class="kpi-l">在职官员</div></div>
-    <div class="kpi"><div class="kpi-v gold">${totals.tasks_done||0}</div><div class="kpi-l">累计完成旨意</div></div>
-    <div class="kpi"><div class="kpi-v ${(totals.cost_cny||0)>20?'warn':'green'}">¥${totals.cost_cny||0}</div><div class="kpi-l">累计费用（含缓存）</div></div>
-    <div class="kpi"><div class="kpi-v" style="font-size:16px;padding-top:4px">${esc(data.top_official||'—')}</div><div class="kpi-l">功绩最高</div></div>`;
+    <div class="kpi"><div class="kpi-v blue">${offs.length}</div><div class="kpi-l">Officials</div></div>
+    <div class="kpi"><div class="kpi-v gold">${totals.tasks_done||0}</div><div class="kpi-l">Edicts Completed</div></div>
+    <div class="kpi"><div class="kpi-v ${(totals.cost_cny||0)>20?'warn':'green'}">¥${totals.cost_cny||0}</div><div class="kpi-l">Total Cost (incl. cache)</div></div>
+    <div class="kpi"><div class="kpi-v" style="font-size:16px;padding-top:4px">${esc(data.top_official||'—')}</div><div class="kpi-l">Top Performer</div></div>`;
 
-  // 左侧排行榜
+  // Left leaderboard
   document.getElementById('off-ranklist').innerHTML=`
-    <div class="orl-hdr">功绩排行</div>`
+    <div class="orl-hdr">Merit Ranking</div>`
     +offs.map(o=>{
       const hb=o.heartbeat||{status:'idle'};
       return `<div class="orl-item${selectedOfficial===o.id?' selected':''}" onclick="selectOfficial('${o.id}',this)">
         <span class="orl-medal">${o.merit_rank<=3?MEDALS[o.merit_rank-1]:'#'+o.merit_rank}</span>
         <span class="orl-emoji">${o.emoji}</span>
         <span class="orl-name"><div class="orl-role">${esc(o.role)}</div><div class="orl-org">${esc(o.label)}</div></span>
-        <span class="orl-score">${o.merit_score}分</span>
+        <span class="orl-score">${o.merit_score} pts</span>
         <span class="orl-hbdot ${hb.status}"></span>
       </div>`;
     }).join('');
 
-  // 默认选中第一个
+  // Select first item by default
   if(!selectedOfficial && offs.length) selectOfficial(offs[0].id);
 }
 
 function selectOfficial(id, el){
   selectedOfficial = id;
-  // 高亮行
+  // Highlight row
   document.querySelectorAll('.orl-item').forEach(x=>x.classList.remove('selected'));
   if(el) el.classList.add('selected');
-  // 渲染详情
+  // Render details
   if(!officialsData) return;
   const o = officialsData.officials.find(x=>x.id===id);
   if(!o) return;
-  const hb = o.heartbeat||{status:'idle',label:'⚪ 待命'};
+  const hb = o.heartbeat||{status:'idle',label:'⚪ On Standby'};
   const totTk = o.tokens_in+o.tokens_out+o.cache_read+o.cache_write;
   const maxTk = Math.max(...officialsData.officials.map(x=>x.tokens_in+x.tokens_out+x.cache_read+x.cache_write),1);
   const costCls = o.cost_cny>10?'hi':o.cost_cny>3?'md':'lo';
   const edicts = o.participated_edicts||[];
 
   const tkBars = [
-    {l:'输入', v:o.tokens_in,   color:'#6a9eff', max:maxTk},
-    {l:'输出', v:o.tokens_out,  color:'#a07aff', max:maxTk},
-    {l:'缓存读', v:o.cache_read, color:'#2ecc8a', max:maxTk},
-    {l:'缓存写', v:o.cache_write,color:'#f5c842', max:maxTk},
+    {l:'Input', v:o.tokens_in,   color:'#6a9eff', max:maxTk},
+    {l:'Output', v:o.tokens_out,  color:'#a07aff', max:maxTk},
+    {l:'Cache Read', v:o.cache_read, color:'#2ecc8a', max:maxTk},
+    {l:'Cache Write', v:o.cache_write,color:'#f5c842', max:maxTk},
   ];
 
   document.getElementById('off-detail').innerHTML=`
@@ -2484,28 +2484,28 @@ function selectOfficial(id, el){
       <div>
         <div class="od-name">${esc(o.role)}</div>
         <div class="od-role">${esc(o.label)} · <span style="color:var(--acc)">${esc(o.model_short||o.model)}</span></div>
-        <div class="od-rank-badge">🏅 ${esc(o.rank)} · 功绩分 ${o.merit_score}</div>
+        <div class="od-rank-badge">🏅 ${esc(o.rank)} · Merit ${o.merit_score} pts</div>
       </div>
       <div class="od-hb">
         <div class="hb ${hb.status}" style="margin-bottom:4px">${esc(hb.label)}</div>
-        ${o.last_active?`<div style="font-size:10px;color:var(--muted)">活跃 ${esc(o.last_active)}</div>`:''}
-        <div style="font-size:10px;color:var(--muted);margin-top:2px">${o.sessions} 个会话 · ${o.messages} 条消息</div>
+        ${o.last_active?`<div style="font-size:10px;color:var(--muted)">Active ${esc(o.last_active)}</div>`:''}
+        <div style="font-size:10px;color:var(--muted);margin-top:2px">${o.sessions} sessions · ${o.messages} messages</div>
       </div>
     </div>
 
-    <!-- 核心功绩 -->
+    <!-- Core Achievements -->
     <div class="od-section">
-      <div class="od-sec-title">功绩统计</div>
+      <div class="od-sec-title">Merit Statistics</div>
       <div class="od-stats">
-        <div class="ods"><div class="ods-v" style="color:var(--ok)">${o.tasks_done}</div><div class="ods-l">完成旨意</div></div>
-        <div class="ods"><div class="ods-v" style="color:var(--warn)">${o.tasks_active}</div><div class="ods-l">执行中</div></div>
-        <div class="ods"><div class="ods-v" style="color:var(--acc)">${o.flow_participations}</div><div class="ods-l">流转参与</div></div>
+        <div class="ods"><div class="ods-v" style="color:var(--ok)">${o.tasks_done}</div><div class="ods-l">Edicts Done</div></div>
+        <div class="ods"><div class="ods-v" style="color:var(--warn)">${o.tasks_active}</div><div class="ods-l">Active</div></div>
+        <div class="ods"><div class="ods-v" style="color:var(--acc)">${o.flow_participations}</div><div class="ods-l">Flow Participations</div></div>
       </div>
     </div>
 
-    <!-- Token 消耗 -->
+    <!-- Token Usage -->
     <div class="od-section">
-      <div class="od-sec-title">Token 消耗</div>
+      <div class="od-sec-title">Token Usage</div>
       ${tkBars.map(b=>`
       <div class="tbar">
         <div class="tbar-hdr"><span class="tbar-label">${b.l}</span><span class="tbar-val">${b.v.toLocaleString()}</span></div>
@@ -2513,21 +2513,21 @@ function selectOfficial(id, el){
       </div>`).join('')}
     </div>
 
-    <!-- 费用 -->
+    <!-- Cost -->
     <div class="od-section">
-      <div class="od-sec-title">累计费用</div>
+      <div class="od-sec-title">Total Cost</div>
       <div class="od-cost-row">
-        <div class="cost-chip ${costCls}"><b>¥${o.cost_cny}</b> 人民币</div>
-        <div class="cost-chip ${costCls}"><b>$${o.cost_usd}</b> 美元</div>
-        <div class="cost-chip" style="font-size:11px;color:var(--muted)">总计 ${totTk.toLocaleString()} tokens（含缓存）</div>
+        <div class="cost-chip ${costCls}"><b>¥${o.cost_cny}</b> CNY</div>
+        <div class="cost-chip ${costCls}"><b>$${o.cost_usd}</b> USD</div>
+        <div class="cost-chip" style="font-size:11px;color:var(--muted)">Total ${totTk.toLocaleString()} tokens (incl. cache)</div>
       </div>
     </div>
 
-    <!-- 参与旨意 -->
+    <!-- Participating Edicts -->
     <div class="od-section">
-      <div class="od-sec-title">参与旨意（${edicts.length} 道）</div>
+      <div class="od-sec-title">Participating Edicts (${edicts.length})</div>
       ${!edicts.length
-        ? '<div style="font-size:12px;color:var(--muted);padding:8px 0">暂无旨意记录</div>'
+        ? '<div style="font-size:12px;color:var(--muted);padding:8px 0">No edict records</div>'
         : `<div class="od-edict-list">${edicts.map(e=>`
           <div class="oe-item" onclick='openTask(${JSON.stringify(e.id)})'>
             <span class="oe-id">${esc(e.id)}</span>
@@ -2540,13 +2540,13 @@ function selectOfficial(id, el){
 /* ══ TASK ACTIONS ══ */
 let _confirmCb = null;
 function confirmAction(taskId, action){
-  const titles = {stop:'⏸ 叫停任务', cancel:'🚫 取消任务'};
-  const msgs = {stop:`确定要叫停 <b>${esc(taskId)}</b> 吗？任务将暂停，可稍后恢复。`, cancel:`确定要取消 <b>${esc(taskId)}</b> 吗？任务将标记为已取消。`};
+  const titles = {stop:'⏸ Halt Task', cancel:'🚫 Cancel Task'};
+  const msgs = {stop:`Confirm halting <b>${esc(taskId)}</b>? The task will be paused and can be resumed later.`, cancel:`Confirm cancelling <b>${esc(taskId)}</b>? The task will be marked as cancelled.`};
   document.getElementById('confirm-title').innerHTML = titles[action]||action;
   document.getElementById('confirm-msg').innerHTML = msgs[action]||'';
   document.getElementById('confirm-reason').value = '';
   document.getElementById('confirm-ok').className = action==='cancel'?'btn btn-action btn-cancel':'btn btn-action btn-stop';
-  document.getElementById('confirm-ok').textContent = action==='cancel'?'确认取消':'确认叫停';
+  document.getElementById('confirm-ok').textContent = action==='cancel'?'Confirm Cancel':'Confirm Halt';
   document.getElementById('confirm-bg').classList.add('open');
   _confirmCb = () => {
     const reason = document.getElementById('confirm-reason').value.trim();
@@ -2560,57 +2560,57 @@ async function taskAction(taskId, action, reason){
   try{
     const r = await postJ(API+'/task-action', {taskId, action, reason: reason||''});
     if(r.ok){ toast(r.message,'ok'); loadAll(); /* close modal if open */ document.getElementById('modal-bg').classList.remove('open'); }
-    else toast(r.error||'操作失败','err');
-  }catch(e){ toast('服务器连接失败','err'); }
+    else toast(r.error||'Operation failed','err');
+  }catch(e){ toast('Server connection failed','err'); }
 }
 
-/* ══ REVIEW ACTION (御批 准奏/封驳) ══ */
+/* ══ REVIEW ACTION (Imperial Review: Approve/Reject) ══ */
 async function reviewAction(taskId, action){
-  const labels = {approve:'准奏', reject:'封驳'};
-  const comment = prompt(`${labels[action]} ${taskId}\n\n请输入批注（可留空）：`);
+  const labels = {approve:'Approve', reject:'Reject'};
+  const comment = prompt(`${labels[action]} ${taskId}\n\nEnter comment (optional):`);
   if(comment === null) return; // cancelled
   try{
     const r = await postJ(API+'/review-action', {taskId, action, comment: comment||''});
-    if(r.ok){ toast(`✅ ${taskId} 已${labels[action]}`,'ok'); loadAll(); document.getElementById('modal-bg').classList.remove('open'); }
-    else toast(r.error||'操作失败','err');
-  }catch(e){ toast('服务器连接失败','err'); }
+    if(r.ok){ toast(`✅ ${taskId} ${labels[action]}d`,'ok'); loadAll(); document.getElementById('modal-bg').classList.remove('open'); }
+    else toast(r.error||'Operation failed','err');
+  }catch(e){ toast('Server connection failed','err'); }
 }
 
-/* ══ ADVANCE STATE (手动推进到下一步) ══ */
-const _NEXT_LABELS = {Taizi:'中书省起草', Zhongshu:'门下省审议', Menxia:'尚书省派发', Assigned:'开始执行', Doing:'进入审查', Review:'完成'};
+/* ══ ADVANCE STATE (Manually advance to next step) ══ */
+const _NEXT_LABELS = {Taizi:'Zhongshu Draft', Zhongshu:'Menxia Review', Menxia:'Shangshu Dispatch', Assigned:'Start Execution', Doing:'Enter Review', Review:'Complete'};
 async function advanceState(taskId, curState){
-  const next = _NEXT_LABELS[curState] || '下一步';
-  const comment = prompt(`⏩ 手动推进 ${taskId}\n当前: ${curState} → 下一步: ${next}\n\n请输入说明（可留空）：`);
+  const next = _NEXT_LABELS[curState] || 'Next Step';
+  const comment = prompt(`⏩ Manually advance ${taskId}\nCurrent: ${curState} → Next: ${next}\n\nEnter notes (optional):`);
   if(comment === null) return;
   try{
     const r = await postJ(API+'/advance-state', {taskId, comment: comment||''});
     if(r.ok){ toast(`⏩ ${r.message}`,'ok'); loadAll(); document.getElementById('modal-bg').classList.remove('open'); }
-    else toast(r.error||'推进失败','err');
-  }catch(e){ toast('服务器连接失败','err'); }
+    else toast(r.error||'Advance failed','err');
+  }catch(e){ toast('Server connection failed','err'); }
 }
 
 /* ══ ARCHIVE ACTIONS ══ */
 async function archiveTask(taskId){
   try{
     const r = await postJ(API+'/archive-task', {taskId, archived: true});
-    if(r.ok){ toast(`📦 ${taskId} 已归档`,'ok'); loadAll(); }
-    else toast(r.error||'归档失败','err');
-  }catch(e){ toast('服务器连接失败','err'); }
+    if(r.ok){ toast(`�� ${taskId} archived`,'ok'); loadAll(); }
+    else toast(r.error||'Archive failed','err');
+  }catch(e){ toast('Server connection failed','err'); }
 }
 async function unarchiveTask(taskId){
   try{
     const r = await postJ(API+'/archive-task', {taskId, archived: false});
-    if(r.ok){ toast(`📤 ${taskId} 已取消归档`,'ok'); loadAll(); }
-    else toast(r.error||'取消归档失败','err');
-  }catch(e){ toast('服务器连接失败','err'); }
+    if(r.ok){ toast(`📤 ${taskId} unarchived`,'ok'); loadAll(); }
+    else toast(r.error||'Unarchive failed','err');
+  }catch(e){ toast('Server connection failed','err'); }
 }
 async function archiveAllDone(){
-  if(!confirm('将所有已完成/已取消的旨意移入归档？')) return;
+  if(!confirm('Archive all completed/cancelled edicts?')) return;
   try{
     const r = await postJ(API+'/archive-task', {archiveAllDone: true});
-    if(r.ok){ toast(`📦 ${r.count||0} 道旨意已归档`,'ok'); loadAll(); }
-    else toast(r.error||'批量归档失败','err');
-  }catch(e){ toast('服务器连接失败','err'); }
+    if(r.ok){ toast(`📦 ${r.count||0} edict(s) archived`,'ok'); loadAll(); }
+    else toast(r.error||'Bulk archive failed','err');
+  }catch(e){ toast('Server connection failed','err'); }
 }
 
 /* ══ GLOBAL TAIZI SCAN ══ */
@@ -2622,8 +2622,8 @@ async function runGlobalSchedulerScan(){
   if(!btn) return;
   const oldText = btn.textContent;
   btn.disabled = true;
-  btn.textContent = '⟳ 巡检中...';
-  if(st) st.textContent = '巡检中...';
+  btn.textContent = '⟳ Inspecting...';
+  if(st) st.textContent = 'Inspecting...';
   try{
     const r = await postJ(API + '/scheduler-scan', {thresholdSec: 180});
     if(r.ok){
@@ -2632,13 +2632,13 @@ async function runGlobalSchedulerScan(){
       globalScanActions = Array.isArray(r.actions) ? r.actions : [];
       globalScanCheckedAt = String(r.checkedAt || '');
       globalScanCount = Number(count || 0);
-      if(st) st.textContent = `最近巡检: ${count} 个动作${at ? ' · ' + at : ''}`;
+      if(st) st.textContent = `Last Inspection: ${count} action(s)${at ? ' · ' + at : ''}`;
       if(detailBtn){
         detailBtn.style.display = globalScanActions.length ? 'inline-block' : 'none';
         if(!globalScanActions.length){
           globalScanDetailOpen = false;
           detailBtn.classList.remove('active');
-          detailBtn.textContent = '查看巡检详情';
+          detailBtn.textContent = 'View Inspection Details';
         }
       }
       if(copyBtn){
@@ -2646,15 +2646,15 @@ async function runGlobalSchedulerScan(){
       }
       persistGlobalScanState({checkedAt: r.checkedAt || '', count});
       renderGlobalScanDetails();
-      toast(`🧭 太子巡检完成：${count} 个动作`,'ok');
+      toast(`🧭 Taizi Inspection complete: ${count} action(s)`,'ok');
       loadAll();
     }else{
-      if(st) st.textContent = '巡检失败';
-      toast(r.error || '巡检失败','err');
+      if(st) st.textContent = 'Inspection failed';
+      toast(r.error || 'Inspection failed','err');
     }
   }catch(e){
-    if(st) st.textContent = '巡检失败';
-    toast('服务器连接失败','err');
+    if(st) st.textContent = 'Inspection failed';
+    toast('Server connection failed','err');
   }finally{
     btn.disabled = false;
     btn.textContent = oldText;
@@ -2667,7 +2667,7 @@ function toggleGlobalScanDetails(){
   const btn = document.getElementById('btn-global-scan-detail');
   if(btn){
     btn.classList.toggle('active', globalScanDetailOpen);
-    btn.textContent = globalScanDetailOpen ? '收起巡检详情' : '查看巡检详情';
+    btn.textContent = globalScanDetailOpen ? 'Collapse Inspection' : 'View Inspection Details';
   }
   persistGlobalScanState();
   renderGlobalScanDetails();
@@ -2683,39 +2683,39 @@ function renderGlobalScanDetails(){
   }
   const list = globalScanActions.slice(0, 12).map(a=>{
     const action = String(a.action||'').toLowerCase();
-    const actionLabel = action==='retry' ? '重试' : action==='escalate' ? '升级' : action==='rollback' ? '回滚' : '动作';
+    const actionLabel = action==='retry' ? 'Retry' : action==='escalate' ? 'Escalate' : action==='rollback' ? 'Rollback' : 'Action';
     const target = a.to || a.toState || '';
-    const stalled = Number.isFinite(a.stalledSec) ? `停滞 ${a.stalledSec}s` : '';
-    const meta = [target ? `目标: ${target}` : '', stalled].filter(Boolean).join(' · ');
+    const stalled = Number.isFinite(a.stalledSec) ? `Stalled ${a.stalledSec}s` : '';
+    const meta = [target ? `Target: ${target}` : '', stalled].filter(Boolean).join(' · ');
     return `<div class="gs-item">
       <span class="gs-tag ${esc(action)}">${esc(actionLabel)}</span>
       <span class="gs-task">${esc(a.taskId||'-')}</span>
-      <span class="gs-meta">${esc(meta || '无附加信息')}</span>
+      <span class="gs-meta">${esc(meta || 'No details')}</span>
     </div>`;
   }).join('');
   const hiddenCount = Math.max(0, globalScanActions.length - 12);
-  wrap.innerHTML = `<div class="gs-list">${list}</div>${hiddenCount ? `<div class="gs-hint">另有 ${hiddenCount} 条动作未展示</div>` : ''}`;
+  wrap.innerHTML = `<div class="gs-list">${list}</div>${hiddenCount ? `<div class="gs-hint">Plus ${hiddenCount} actions not shown</div>` : ''}`;
 }
 
 function buildGlobalScanReport(){
-  const checked = globalScanCheckedAt ? globalScanCheckedAt.replace('T',' ').replace('Z','') : '未知时间';
+  const checked = globalScanCheckedAt ? globalScanCheckedAt.replace('T',' ').replace('Z','') : 'Unknown time';
   const count = Number(globalScanCount || globalScanActions.length || 0);
   const lines = [
-    '【太子巡检报告】',
-    `时间: ${checked}`,
-    `动作数: ${count}`,
+    '[Taizi Inspection Report]',
+    `Time: ${checked}`,
+    `Actions: ${count}`,
     '',
   ];
   if(!globalScanActions.length){
-    lines.push('本次巡检无动作。');
+    lines.push('No actions in this inspection.');
     return lines.join('\n');
   }
   globalScanActions.forEach((a, idx)=>{
     const action = String(a.action||'').toLowerCase();
-    const label = action==='retry' ? '重试' : action==='escalate' ? '升级' : action==='rollback' ? '回滚' : '动作';
+    const label = action==='retry' ? 'Retry' : action==='escalate' ? 'Escalate' : action==='rollback' ? 'Rollback' : 'Action';
     const to = a.to || a.toState || '-';
     const stalled = Number.isFinite(a.stalledSec) ? `${a.stalledSec}s` : '-';
-    lines.push(`${idx+1}. ${a.taskId||'-'} | ${label} | 目标:${to} | 停滞:${stalled}`);
+    lines.push(`${idx+1}. ${a.taskId||'-'} | ${label} | Target:${to} | Stalled:${stalled}`);
   });
   return lines.join('\n');
 }
@@ -2724,7 +2724,7 @@ async function copyGlobalScanReport(){
   const report = buildGlobalScanReport();
   try{
     await navigator.clipboard.writeText(report);
-    toast('📋 巡检报告已复制','ok');
+    toast('📋 Inspection report copied','ok');
   }catch(_){
     const ta = document.createElement('textarea');
     ta.value = report;
@@ -2732,8 +2732,8 @@ async function copyGlobalScanReport(){
     ta.style.left = '-9999px';
     document.body.appendChild(ta);
     ta.select();
-    try{ document.execCommand('copy'); toast('📋 巡检报告已复制','ok'); }
-    catch(__){ toast('复制失败，请手动复制','err'); }
+    try{ document.execCommand('copy'); toast('📋 Inspection report copied','ok'); }
+    catch(__){ toast('Copy failed, please copy manually','err'); }
     ta.remove();
   }
 }
@@ -2766,7 +2766,7 @@ function startCd(){
 /* ══ KEY ══ */
 document.addEventListener('keydown',e=>{if(e.key==='Escape')document.getElementById('modal-bg').classList.remove('open')});
 
-/* ══ COURT CEREMONY (上朝仪式感) ══ */
+/* ══ COURT CEREMONY (Morning Court ritual) ══ */
 function showCeremony(){
   const lastOpen = localStorage.getItem('openclaw_court_date');
   const today = new Date().toISOString().substring(0,10);
@@ -2781,10 +2781,10 @@ function showCeremony(){
   const pending = jjc.filter(t=>!['Done','Cancelled'].includes(t.state)).length;
   const done = jjc.filter(t=>t.state==='Done').length;
   const overdue = jjc.filter(t=>t.state!=='Done'&&t.state!=='Cancelled'&&t.eta&&new Date(t.eta.replace(' ','T'))<new Date()).length;
-  document.getElementById('crm-l3').textContent = `待办 ${pending} 件 · 已完成 ${done} 件` + (overdue?` · ⚠ 超期 ${overdue} 件`:'');
+  document.getElementById('crm-l3').textContent = `Pending: ${pending} · Done: ${done}` + (overdue?` · ⚠ Overdue ${overdue} task(s)`:'');
   // Date line
   const d = new Date();
-  const dateStr = d.getFullYear()+'年'+(d.getMonth()+1)+'月'+d.getDate()+'日 · '+['日','一','二','三','四','五','六'][d.getDay()]+'曜日';
+  const dateStr = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][d.getDay()]+', '+d.toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
   document.getElementById('crm-date').textContent = dateStr;
   // Trigger animations
   document.getElementById('crm-l1').classList.add('in');
@@ -2801,7 +2801,7 @@ function skipCeremony(){
   setTimeout(()=>{el.style.display='none'}, 500);
 }
 
-/* ══ MEMORIALS (奏折系统) ══ */
+/* ══ MEMORIALS (Memorial system) ══ */
 function renderMemorials(){
   const tasks = liveStatus ? (liveStatus.tasks||[]) : [];
   const filter = (document.getElementById('mem-filter')||{}).value || 'all';
@@ -2811,11 +2811,11 @@ function renderMemorials(){
   document.getElementById('tb-mem').textContent = mems.length;
 
   const el = document.getElementById('mem-list');
-  if(!mems.length){ el.innerHTML='<div class="mem-empty">暂无奏折 — 任务完成后自动生成</div>'; return; }
+  if(!mems.length){ el.innerHTML='<div class="mem-empty">No memorials — auto-generated upon task completion</div>'; return; }
 
   el.innerHTML = mems.map(t=>{
     const fl = t.flow_log||[];
-    const depts = [...new Set(fl.map(f=>f.from).concat(fl.map(f=>f.to)).filter(x=>x&&x!=='皇上'))];
+    const depts = [...new Set(fl.map(f=>f.from).concat(fl.map(f=>f.to)).filter(x=>x&&x!=='Emperor'))];
     const firstAt = fl.length ? (fl[0].at||'').substring(0,16).replace('T',' ') : '';
     const lastAt = fl.length ? (fl[fl.length-1].at||'').substring(0,16).replace('T',' ') : '';
     const stIcon = t.state==='Done'?'✅':'🚫';
@@ -2823,7 +2823,7 @@ function renderMemorials(){
       <div class="mem-icon">📜</div>
       <div class="mem-info">
         <div class="mem-title">${stIcon} ${esc(t.title||t.id)}</div>
-        <div class="mem-sub">${esc(t.id)} · ${esc(t.org||'')} · 流转 ${fl.length} 步</div>
+        <div class="mem-sub">${esc(t.id)} · ${esc(t.org||'')} · Flow: ${fl.length} steps</div>
         <div class="mem-tags">${depts.slice(0,5).map(d=>`<span class="mem-tag">${esc(d)}</span>`).join('')}</div>
       </div>
       <div class="mem-right">
@@ -2839,15 +2839,15 @@ function openMemorial(jsonStr){
   const fl = t.flow_log||[];
   const st = t.state||'Unknown';
   const stIcon = st==='Done'?'✅':st==='Cancelled'?'🚫':'🔄';
-  const depts = [...new Set(fl.map(f=>f.from).concat(fl.map(f=>f.to)).filter(x=>x&&x!=='皇上'))];
+  const depts = [...new Set(fl.map(f=>f.from).concat(fl.map(f=>f.to)).filter(x=>x&&x!=='Emperor'))];
 
   // Reconstruct phases from flow_log
   let originLog=[], planLog=[], reviewLog=[], execLog=[], resultLog=[];
   for(const f of fl){
-    if(f.from==='皇上') originLog.push(f);
-    else if(f.to==='中书省'||f.from==='中书省') planLog.push(f);
-    else if(f.to==='门下省'||f.from==='门下省') reviewLog.push(f);
-    else if(f.remark&&(f.remark.includes('完成')||f.remark.includes('回奏'))) resultLog.push(f);
+    if(f.from==='Emperor') originLog.push(f);
+    else if(f.to==='Zhongshu'||f.from==='Zhongshu') planLog.push(f);
+    else if(f.to==='Menxia'||f.from==='Menxia') reviewLog.push(f);
+    else if(f.remark&&(f.remark.includes('Done')||f.remark.includes('Reply'))) resultLog.push(f);
     else execLog.push(f);
   }
 
@@ -2856,7 +2856,7 @@ function openMemorial(jsonStr){
     return `<div style="margin-bottom:18px">
       <div style="font-size:13px;font-weight:700;margin-bottom:10px">${icon} ${title}</div>
       <div class="md-timeline">${items.map(f=>{
-        const dotCls = f.remark&&f.remark.includes('✅')?'green':f.remark&&f.remark.includes('驳')?'red':'';
+        const dotCls = f.remark&&f.remark.includes('✅')?'green':f.remark&&f.remark.includes('Rejected')?'red':'';
         return `<div class="md-tl-item">
           <div class="md-tl-dot ${dotCls}"></div>
           <div style="display:flex;gap:6px;align-items:baseline">
@@ -2876,25 +2876,25 @@ function openMemorial(jsonStr){
     <div style="display:flex;align-items:center;gap:8px;margin-bottom:18px;flex-wrap:wrap">
       <span class="tag st-${st}">${STATE_LABEL[st]||st}</span>
       <span style="font-size:11px;color:var(--muted)">${esc(t.org||'')}</span>
-      <span style="font-size:11px;color:var(--muted)">流转 ${fl.length} 步</span>
+      <span style="font-size:11px;color:var(--muted)">Flow: ${fl.length} step(s)</span>
       ${depts.map(d=>`<span class="mem-tag">${esc(d)}</span>`).join('')}
     </div>
 
     ${t.now?`<div style="background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:10px 14px;margin-bottom:18px;font-size:12px;color:var(--muted)">${esc(t.now)}</div>`:''}
 
-    ${renderPhase('圣旨原文', '👑', originLog)}
-    ${renderPhase('中书规划', '📋', planLog)}
-    ${renderPhase('门下审议', '🔍', reviewLog)}
-    ${renderPhase('六部执行', '⚔️', execLog)}
-    ${renderPhase('汇总回奏', '📨', resultLog)}
+    ${renderPhase('Original Edict', '👑', originLog)}
+    ${renderPhase('Zhongshu Planning', '📋', planLog)}
+    ${renderPhase('Menxia Review', '🔍', reviewLog)}
+    ${renderPhase('Six Ministries Execution', '⚔️', execLog)}
+    ${renderPhase('Summary Report', '📨', resultLog)}
 
     ${t.output&&t.output!=='-'?`<div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--line)">
-      <div style="font-size:11px;font-weight:600;margin-bottom:4px">📦 产出物</div>
+      <div style="font-size:11px;font-weight:600;margin-bottom:4px">📦 Outputs</div>
       <code style="font-size:11px;word-break:break-all">${esc(t.output)}</code>
     </div>`:''}
 
     <div style="display:flex;gap:8px;margin-top:16px;justify-content:flex-end">
-      <button class="btn btn-g" onclick="exportMemorial(${JSON.stringify(JSON.stringify(t.id))})" style="font-size:12px;padding:6px 16px">📋 复制奏折</button>
+      <button class="btn btn-g" onclick="exportMemorial(${JSON.stringify(JSON.stringify(t.id))})" style="font-size:12px;padding:6px 16px">📋 Copy Memorial</button>
     </div>
   `;
   document.getElementById('modal-bg').classList.add('open');
@@ -2904,127 +2904,127 @@ function exportMemorial(taskIdJson){
   const taskId = JSON.parse(taskIdJson);
   const tasks = liveStatus ? (liveStatus.tasks||[]) : [];
   const t = tasks.find(x=>x.id===taskId);
-  if(!t){ toast('找不到任务','err'); return; }
+  if(!t){ toast('Task not found','err'); return; }
   const fl = t.flow_log||[];
-  let md = `# 📜 奏折 · ${t.title}\n\n`;
-  md += `- **任务编号**: ${t.id}\n`;
-  md += `- **状态**: ${t.state}\n`;
-  md += `- **负责部门**: ${t.org}\n`;
-  // 时间信息
+  let md = `# 📜 Memorial · ${t.title}\n\n`;
+  md += `- **Task ID**: ${t.id}\n`;
+  md += `- **Status**: ${t.state}\n`;
+  md += `- **Department**: ${t.org}\n`;
+  // Time info
   if(fl.length){
-    const startAt = fl[0].at ? fl[0].at.substring(0,19).replace('T',' ') : '未知';
-    const endAt = fl[fl.length-1].at ? fl[fl.length-1].at.substring(0,19).replace('T',' ') : '未知';
-    md += `- **开始时间**: ${startAt}\n`;
-    md += `- **完成时间**: ${endAt}\n`;
-    // 计算耗时
+    const startAt = fl[0].at ? fl[0].at.substring(0,19).replace('T',' ') : 'Unknown';
+    const endAt = fl[fl.length-1].at ? fl[fl.length-1].at.substring(0,19).replace('T',' ') : 'Unknown';
+    md += `- **Start Time**: ${startAt}\n`;
+    md += `- **End Time**: ${endAt}\n`;
+    // Calculate elapsed time
     try{
       const s = new Date(fl[0].at), e = new Date(fl[fl.length-1].at);
       const diffMin = Math.round((e-s)/60000);
-      if(diffMin>0) md += `- **总耗时**: ${diffMin >= 60 ? Math.floor(diffMin/60)+'小时'+diffMin%60+'分钟' : diffMin+'分钟'}\n`;
+      if(diffMin>0) md += `- **Total Duration**: ${diffMin >= 60 ? Math.floor(diffMin/60)+'h '+diffMin%60+'m' : diffMin+'m'}\n`;
     }catch(e){}
   }
-  if(t.updatedAt) md += `- **最后更新**: ${t.updatedAt.substring(0,19).replace('T',' ')}\n`;
-  if(t.review_round) md += `- **磋商轮次**: 第 ${t.review_round} 轮\n`;
+  if(t.updatedAt) md += `- **Last Updated**: ${t.updatedAt.substring(0,19).replace('T',' ')}\n`;
+  if(t.review_round) md += `- **Negotiation Rounds**: ${t.review_round}\n`;
   md += `\n`;
-  md += `## 流转记录\n\n`;
+  md += `## Flow Records\n\n`;
   for(const f of fl){
     md += `- **${f.from}** → **${f.to}**  \n  ${f.remark}  \n  _${(f.at||'').substring(0,19)}_\n\n`;
   }
-  if(t.output && t.output!=='-') md += `## 产出物\n\n\`${t.output}\`\n`;
-  navigator.clipboard.writeText(md).then(()=>toast('✅ 奏折已复制为 Markdown','ok')).catch(()=>toast('复制失败','err'));
+  if(t.output && t.output!=='-') md += `## Output\n\n\`${t.output}\`\n`;
+  navigator.clipboard.writeText(md).then(()=>toast('✅ Memorial copied as Markdown','ok')).catch(()=>toast('Copy failed','err'));
 }
 
-/* ══ TEMPLATES (圣旨模板库) ══ */
+/* ══ TEMPLATES (Edict Template Library) ══ */
 const TEMPLATES = [
-  {id:'tpl-weekly-report', cat:'日常办公', icon:'📝', name:'周报生成',
-   desc:'基于本周看板数据和各部产出，自动生成结构化周报',
-   depts:['户部','礼部'], est:'~10分钟', cost:'¥0.5',
+  {id:'tpl-weekly-report', cat:'Daily Office', icon:'📝', name:'Weekly Report',
+   desc:'Auto-generate structured weekly report from dashboard data and dept output',
+   depts:['Hubu','Libu'], est:'~10 min', cost:'¥0.5',
    params:[
-     {key:'date_range', label:'报告周期', type:'text', default:'本周', required:true},
-     {key:'focus', label:'重点关注（逗号分隔）', type:'text', default:'项目进展,下周计划'},
-     {key:'format', label:'输出格式', type:'select', options:['Markdown','飞书文档'], default:'Markdown'}
+     {key:'date_range', label:'Report Period', type:'text', default:'This Week', required:true},
+     {key:'focus', label:'Key Focus (comma-separated)', type:'text', default:'Project Progress,Next Week Plan'},
+     {key:'format', label:'Output Format', type:'select', options:['Markdown','Feishu Doc'], default:'Markdown'}
    ],
-   command:'生成{date_range}的周报，重点覆盖{focus}，输出为{format}格式'},
-  {id:'tpl-code-review', cat:'工程开发', icon:'🔍', name:'代码审查',
-   desc:'对指定代码仓库/文件进行质量审查，输出问题清单和改进建议',
-   depts:['兵部','刑部'], est:'~20分钟', cost:'¥2',
+   command:'Generate weekly report for {date_range}, covering {focus}, in {format} format'},
+  {id:'tpl-code-review', cat:'Engineering', icon:'🔍', name:'Code Review',
+   desc:'Quality review of specified repo/files, output issue list and improvement suggestions',
+   depts:['Bingbu','Xingbu'], est:'~20 min', cost:'¥2',
    params:[
-     {key:'repo', label:'仓库/文件路径', type:'text', required:true},
-     {key:'scope', label:'审查范围', type:'select', options:['全量','增量(最近commit)','指定文件'], default:'增量(最近commit)'},
-     {key:'focus', label:'重点关注（可选）', type:'text', default:'安全漏洞,错误处理,性能'}
+     {key:'repo', label:'Repo/File Path', type:'text', required:true},
+     {key:'scope', label:'Review Scope', type:'select', options:['Full','Incremental (recent commit)','Specific file'], default:'Incremental (recent commit)'},
+     {key:'focus', label:'Key Focus (optional)', type:'text', default:'Security flaws,Error handling,Performance'}
    ],
-   command:'对 {repo} 进行代码审查，范围：{scope}，重点关注：{focus}'},
-  {id:'tpl-api-design', cat:'工程开发', icon:'⚡', name:'API 设计与实现',
-   desc:'从需求描述到 RESTful API 设计、实现、测试一条龙',
-   depts:['中书省','兵部'], est:'~45分钟', cost:'¥3',
+   command:'Code review {repo}, scope: {scope}, focus: {focus}'},
+  {id:'tpl-api-design', cat:'Engineering', icon:'⚡', name:'API Design & Implementation',
+   desc:'End-to-end: requirement → RESTful API design, implementation, testing',
+   depts:['Zhongshu','Bingbu'], est:'~45 min', cost:'¥3',
    params:[
-     {key:'requirement', label:'需求描述', type:'textarea', required:true},
-     {key:'tech', label:'技术栈', type:'select', options:['Python/FastAPI','Node/Express','Go/Gin'], default:'Python/FastAPI'},
-     {key:'auth', label:'鉴权方式', type:'select', options:['JWT','API Key','无'], default:'JWT'}
+     {key:'requirement', label:'Requirement Description', type:'textarea', required:true},
+     {key:'tech', label:'Tech Stack', type:'select', options:['Python/FastAPI','Node/Express','Go/Gin'], default:'Python/FastAPI'},
+     {key:'auth', label:'Auth Method', type:'select', options:['JWT','API Key','None'], default:'JWT'}
    ],
-   command:'设计并实现一个 {tech} 的 RESTful API：{requirement}。鉴权方式：{auth}'},
-  {id:'tpl-competitor', cat:'数据分析', icon:'📊', name:'竞品分析',
-   desc:'爬取竞品网站数据，分析对比，生成结构化报告',
-   depts:['兵部','户部','礼部'], est:'~60分钟', cost:'¥5',
+   command:'Design and implement a {tech} RESTful API: {requirement}. Auth: {auth}'},
+  {id:'tpl-competitor', cat:'Data Analysis', icon:'📊', name:'Competitor Analysis',
+   desc:'Scrape competitor website data, analyze and compare, generate structured report',
+   depts:['Bingbu','Hubu','Libu'], est:'~60 min', cost:'¥5',
    params:[
-     {key:'targets', label:'竞品名称/URL（每行一个）', type:'textarea', required:true},
-     {key:'dimensions', label:'分析维度', type:'text', default:'产品功能,定价策略,用户评价'},
-     {key:'format', label:'输出格式', type:'select', options:['Markdown报告','表格对比'], default:'Markdown报告'}
+     {key:'targets', label:'Competitor Name/URL (one per line)', type:'textarea', required:true},
+     {key:'dimensions', label:'Analysis Dimensions', type:'text', default:'Product Features,Pricing Strategy,User Reviews'},
+     {key:'format', label:'Output Format', type:'select', options:['Markdown Report','Table Comparison'], default:'Markdown Report'}
    ],
-   command:'对以下竞品进行分析：\n{targets}\n\n分析维度：{dimensions}，输出格式：{format}'},
-  {id:'tpl-data-report', cat:'数据分析', icon:'📈', name:'数据报告',
-   desc:'对给定数据集进行清洗、分析、可视化，输出分析报告',
-   depts:['户部','礼部'], est:'~30分钟', cost:'¥2',
+   command:'Analyze the following competitors:\n{targets}\n\nDimensions: {dimensions}, format: {format}'},
+  {id:'tpl-data-report', cat:'Data Analysis', icon:'📈', name:'Data Report',
+   desc:'Clean, analyze, and visualize given dataset, output analysis report',
+   depts:['Hubu','Libu'], est:'~30 min', cost:'¥2',
    params:[
-     {key:'data_source', label:'数据源描述/路径', type:'text', required:true},
-     {key:'questions', label:'分析问题（每行一个）', type:'textarea'},
-     {key:'viz', label:'是否需要可视化图表', type:'select', options:['是','否'], default:'是'}
+     {key:'data_source', label:'Data Source Description/Path', type:'text', required:true},
+     {key:'questions', label:'Analysis Questions (one per line)', type:'textarea'},
+     {key:'viz', label:'Needs visualization charts', type:'select', options:['Yes','No'], default:'Yes'}
    ],
-   command:'对数据 {data_source} 进行分析。{questions}\n需要可视化：{viz}'},
-  {id:'tpl-blog', cat:'内容创作', icon:'✍️', name:'博客文章',
-   desc:'给定主题和要求，生成高质量博客文章',
-   depts:['礼部'], est:'~15分钟', cost:'¥1',
+   command:'Analyze data {data_source}. {questions}\nNeed visualization: {viz}'},
+  {id:'tpl-blog', cat:'Content Creation', icon:'✍️', name:'Blog Post',
+   desc:'Generate high-quality blog post given topic and requirements',
+   depts:['Libu'], est:'~15 min', cost:'¥1',
    params:[
-     {key:'topic', label:'文章主题', type:'text', required:true},
-     {key:'audience', label:'目标读者', type:'text', default:'技术人员'},
-     {key:'length', label:'期望字数', type:'select', options:['~1000字','~2000字','~3000字'], default:'~2000字'},
-     {key:'style', label:'风格', type:'select', options:['技术教程','观点评论','案例分析'], default:'技术教程'}
+     {key:'topic', label:'Article Topic', type:'text', required:true},
+     {key:'audience', label:'Target Audience', type:'text', default:'Technical staff'},
+     {key:'length', label:'Target Word Count', type:'select', options:['~1000 words','~2000 words','~3000 words'], default:'~2000 words'},
+     {key:'style', label:'Style', type:'select', options:['Technical Tutorial','Opinion / Commentary','Case Study'], default:'Technical Tutorial'}
    ],
-   command:'写一篇关于「{topic}」的博客文章，面向{audience}，{length}，风格：{style}'},
-  {id:'tpl-deploy', cat:'工程开发', icon:'🚀', name:'部署方案',
-   desc:'生成完整的部署检查单、Docker配置、CI/CD流程',
-   depts:['兵部','工部'], est:'~25分钟', cost:'¥2',
+   command:'Write a blog post about "{topic}" for {audience}, {length}, style: {style}'},
+  {id:'tpl-deploy', cat:'Engineering', icon:'🚀', name:'Deployment Plan',
+   desc:'Generate complete deployment checklist, Docker config, CI/CD pipeline',
+   depts:['Bingbu','Gongbu'], est:'~25 min', cost:'¥2',
    params:[
-     {key:'project', label:'项目名称/描述', type:'text', required:true},
-     {key:'env', label:'部署环境', type:'select', options:['Docker','K8s','VPS','Serverless'], default:'Docker'},
-     {key:'ci', label:'CI/CD 工具', type:'select', options:['GitHub Actions','GitLab CI','无'], default:'GitHub Actions'}
+     {key:'project', label:'Project Name/Description', type:'text', required:true},
+     {key:'env', label:'Deployment Environment', type:'select', options:['Docker','K8s','VPS','Serverless'], default:'Docker'},
+     {key:'ci', label:'CI/CD Tool', type:'select', options:['GitHub Actions','GitLab CI','None'], default:'GitHub Actions'}
    ],
-   command:'为项目「{project}」生成{env}部署方案，CI/CD使用{ci}'},
-  {id:'tpl-email', cat:'内容创作', icon:'📧', name:'邮件/通知文案',
-   desc:'根据场景和目的，生成专业邮件或通知文案',
-   depts:['礼部'], est:'~5分钟', cost:'¥0.3',
+   command:'Generate {env} deployment plan for project "{project}", CI/CD: {ci}'},
+  {id:'tpl-email', cat:'Content Creation', icon:'📧', name:'Email / Notification Copy',
+   desc:'Generate professional email or notification copy based on scenario and purpose',
+   depts:['Libu'], est:'~5 min', cost:'¥0.3',
    params:[
-     {key:'scenario', label:'使用场景', type:'select', options:['商务邮件','产品发布','客户通知','内部公告'], default:'商务邮件'},
-     {key:'purpose', label:'目的/内容', type:'textarea', required:true},
-     {key:'tone', label:'语调', type:'select', options:['正式','友好','简洁'], default:'正式'}
+     {key:'scenario', label:'Use Case', type:'select', options:['Business Email','Product Launch','Customer Notice','Internal Announcement'], default:'Business Email'},
+     {key:'purpose', label:'Purpose / Content', type:'textarea', required:true},
+     {key:'tone', label:'Tone', type:'select', options:['Formal','Friendly','Concise'], default:'Formal'}
    ],
-   command:'撰写一封{scenario}，{tone}语调。内容：{purpose}'},
-  {id:'tpl-standup', cat:'日常办公', icon:'🗓️', name:'每日站会摘要',
-   desc:'汇总各部今日进展和明日计划，生成站会摘要',
-   depts:['尚书省'], est:'~5分钟', cost:'¥0.3',
+   command:'Write a {scenario} in {tone} tone. Content: {purpose}'},
+  {id:'tpl-standup', cat:'Daily Office', icon:'🗓️', name:'Daily Standup Summary',
+   desc:'Summarize all dept progress today and plans for tomorrow, generate standup summary',
+   depts:['Shangshu'], est:'~5 min', cost:'¥0.3',
    params:[
-     {key:'range', label:'汇总范围', type:'select', options:['今天','最近24小时','昨天+今天'], default:'今天'}
+     {key:'range', label:'Summary Scope', type:'select', options:['Today','Last 24 hours','Yesterday + Today'], default:'Today'}
    ],
-   command:'汇总{range}各部工作进展和待办，生成站会摘要'}
+   command:'Summarize {range} work progress and TODOs across all depts, generate standup summary'}
 ];
 const TPL_CATS = [
-  {name:'全部', icon:'📋'},
-  {name:'日常办公', icon:'💼'},
-  {name:'数据分析', icon:'📊'},
-  {name:'工程开发', icon:'⚙️'},
-  {name:'内容创作', icon:'✍️'}
+  {name:'All', icon:'📋'},
+  {name:'Daily Office', icon:'💼'},
+  {name:'Data Analysis', icon:'📊'},
+  {name:'Engineering', icon:'⚙️'},
+  {name:'Content Creation', icon:'✍️'}
 ];
-let tplCatFilter = '全部';
+let tplCatFilter = 'All';
 
 function renderTemplates(){
   // categories
@@ -3033,7 +3033,7 @@ function renderTemplates(){
   ).join('');
 
   let tpls = TEMPLATES;
-  if(tplCatFilter!=='全部') tpls = tpls.filter(t=>t.cat===tplCatFilter);
+  if(tplCatFilter!=='All') tpls = tpls.filter(t=>t.cat===tplCatFilter);
 
   document.getElementById('tpl-grid').innerHTML = tpls.map(t=>`
     <div class="tpl-card">
@@ -3045,7 +3045,7 @@ function renderTemplates(){
       <div class="tpl-footer">
         ${t.depts.map(d=>`<span class="tpl-dept">${esc(d)}</span>`).join('')}
         <span class="tpl-est">${esc(t.est)} · ${esc(t.cost)}</span>
-        <button class="tpl-go" onclick="openTemplateForm('${t.id}')">下旨</button>
+        <button class="tpl-go" onclick="openTemplateForm('${t.id}')">Issue Edict</button>
       </div>
     </div>
   `).join('');
@@ -3055,7 +3055,7 @@ function openTemplateForm(tplId){
   const t = TEMPLATES.find(x=>x.id===tplId);
   if(!t) return;
   document.getElementById('modal-body').innerHTML=`
-    <div style="font-size:11px;color:var(--acc);font-weight:700;letter-spacing:.04em;margin-bottom:4px">圣旨模板</div>
+    <div style="font-size:11px;color:var(--acc);font-weight:700;letter-spacing:.04em;margin-bottom:4px">Edict Template</div>
     <div style="font-size:20px;font-weight:800;margin-bottom:6px">${t.icon} ${esc(t.name)}</div>
     <div style="font-size:12px;color:var(--muted);margin-bottom:18px">${esc(t.desc)}</div>
     <div style="display:flex;gap:6px;margin-bottom:18px;flex-wrap:wrap">${t.depts.map(d=>`<span class="tpl-dept">${esc(d)}</span>`).join('')}<span style="font-size:11px;color:var(--muted);margin-left:auto">${esc(t.est)} · ${esc(t.cost)}</span></div>
@@ -3071,8 +3071,8 @@ function openTemplateForm(tplId){
       </div>`).join('')}
       <div id="tpl-preview" style="background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:12px;margin-bottom:14px;font-size:12px;color:var(--muted);display:none"></div>
       <div style="display:flex;gap:10px;justify-content:flex-end">
-        <button type="button" class="btn btn-g" onclick="previewTemplate('${t.id}')" style="padding:8px 16px;font-size:12px">👁 预览旨意</button>
-        <button type="submit" class="tpl-go" style="padding:8px 20px;font-size:13px">📜 下旨</button>
+        <button type="button" class="btn btn-g" onclick="previewTemplate('${t.id}')" style="padding:8px 16px;font-size:12px">👁 Preview Edict</button>
+        <button type="submit" class="tpl-go" style="padding:8px 20px;font-size:13px">📜 Issue Edict</button>
       </div>
     </form>
   `;
@@ -3095,27 +3095,27 @@ function previewTemplate(tplId){
   const cmd = buildCommand(tplId);
   const el = document.getElementById('tpl-preview');
   el.style.display='block';
-  el.innerHTML = `<div style="font-size:11px;font-weight:600;color:var(--text);margin-bottom:6px">📜 将发送给中书省的旨意：</div><div style="white-space:pre-wrap;line-height:1.6">${esc(cmd)}</div>`;
+  el.innerHTML = `<div style="font-size:11px;font-weight:600;color:var(--text);margin-bottom:6px">Edict to be sent to Zhongshu:</div><div style="white-space:pre-wrap;line-height:1.6">${esc(cmd)}</div>`;
 }
 
 async function executeTemplate(e, tplId){
   e.preventDefault();
   const cmd = buildCommand(tplId);
-  if(!cmd.trim()){ toast('请填写必填参数','err'); return; }
+  if(!cmd.trim()){ toast('Please fill in required fields','err'); return; }
   const t = TEMPLATES.find(x=>x.id===tplId);
 
-  // 前置校验：检测 Gateway 和关键 Agent 是否在线
+  // Pre-check: verify Gateway and key Agents are online
   try{
     const st = await fetchJ(API+'/agents-status');
     if(st.ok && st.gateway && !st.gateway.alive){
-      toast('⚠️ Gateway 未启动，任务将无法派发！请先运行 openclaw gateway start','err',6000);
-      if(!confirm('Gateway 未启动，任务创建后将无法自动派发。是否仍然继续？')) return;
+      toast('⚠️ Gateway not started, task cannot be dispatched! Please run: openclaw gateway start','err',6000);
+      if(!confirm('Gateway not started. Task will not auto-dispatch after creation. Continue anyway?')) return;
     }
-  }catch(ex){/* 检测失败不阻塞创建 */}
+  }catch(ex){/* detection failure does not block creation */}
 
   // Show the generated command in a confirmation
-  if(!confirm(`确认下旨？\n\n${cmd.substring(0,200)}${cmd.length>200?'…':''}`)) return;
-  // 通过 API 创建真实任务
+  if(!confirm(`Confirm issuing edict?\n\n${cmd.substring(0,200)}${cmd.length>200?'…':''}`)) return;
+  // Create real task via API
   try{
     const params = {};
     for(const p of t.params){
@@ -3124,22 +3124,22 @@ async function executeTemplate(e, tplId){
     }
     const r = await postJ(API+'/create-task', {
       title: cmd.substring(0, 120),
-      org: '中书省',
+      org: 'Zhongshu',
       targetDept: t.depts[0] || '',
       priority: 'normal',
       templateId: tplId,
       params: params,
     });
     if(r.ok){
-      toast(`📜 ${r.taskId} 旨意已下达`, 'ok', 5000);
+      toast(`📜 ${r.taskId} edict issued`, 'ok', 5000);
       closeModal();
       loadAll();
     } else {
-      toast(r.error||'下旨失败','err');
+      toast(r.error||'Failed to issue edict','err');
     }
   }catch(err){
-    // 降级：复制到剪贴板
-    toast('⚠️ 服务器连接失败，已复制到剪贴板', 'err', 4000);
+    // Fallback: copy to clipboard
+    toast('⚠️ Server connection failed, copied to clipboard', 'err', 4000);
     navigator.clipboard.writeText(cmd).catch(()=>{});
     closeModal();
   }

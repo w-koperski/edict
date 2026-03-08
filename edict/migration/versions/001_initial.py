@@ -17,14 +17,14 @@ depends_on: Union[str, Sequence[str], None] = None
 
 
 def upgrade() -> None:
-    # ── tasks 表 ──
+    # ── tasks table ──
     op.create_table(
         "tasks",
         sa.Column("task_id", sa.Uuid(), nullable=False, server_default=sa.text("gen_random_uuid()")),
         sa.Column("trace_id", sa.String(64), nullable=False),
         sa.Column("title", sa.String(200), nullable=False),
         sa.Column("description", sa.Text(), server_default=""),
-        sa.Column("priority", sa.String(10), server_default="中"),
+        sa.Column("priority", sa.String(10), server_default="normal"),
         sa.Column("state", sa.String(20), nullable=False, server_default="taizi"),
         sa.Column("assignee_org", sa.String(50), nullable=True),
         sa.Column("creator", sa.String(50), server_default="emperor"),
@@ -44,7 +44,7 @@ def upgrade() -> None:
     op.create_index("ix_tasks_created_at", "tasks", ["created_at"])
     op.create_index("ix_tasks_tags", "tasks", ["tags"], postgresql_using="gin")
 
-    # ── events 表 ──
+    # ── events table ──
     op.create_table(
         "events",
         sa.Column("event_id", sa.Uuid(), nullable=False, server_default=sa.text("gen_random_uuid()")),
@@ -61,7 +61,7 @@ def upgrade() -> None:
     op.create_index("ix_events_topic", "events", ["topic"])
     op.create_index("ix_events_timestamp", "events", ["timestamp"])
 
-    # ── thoughts 表 ──
+    # ── thoughts table ──
     op.create_table(
         "thoughts",
         sa.Column("thought_id", sa.Uuid(), nullable=False, server_default=sa.text("gen_random_uuid()")),
@@ -79,7 +79,7 @@ def upgrade() -> None:
     op.create_index("ix_thoughts_trace_id", "thoughts", ["trace_id"])
     op.create_index("ix_thoughts_agent", "thoughts", ["agent"])
 
-    # ── todos 表 ──
+    # ── todos table ──
     op.create_table(
         "todos",
         sa.Column("todo_id", sa.Uuid(), nullable=False, server_default=sa.text("gen_random_uuid()")),

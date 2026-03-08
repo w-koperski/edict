@@ -52,14 +52,14 @@ export default function TemplatePanel() {
     try {
       const st = await api.agentsStatus();
       if (st.ok && st.gateway && !st.gateway.alive) {
-        toast('⚠️ Gateway 未启动，任务将无法派发！', 'err');
-        if (!confirm('Gateway 未启动，继续？')) return;
+        toast('⚠️ Gateway is not running, tasks cannot be dispatched!', 'err');
+        if (!confirm('Gateway is not running, continue?')) return;
       }
     } catch {
       /* ignore */
     }
 
-    if (!confirm(`确认下旨？\n\n${cmd.substring(0, 200)}${cmd.length > 200 ? '…' : ''}`)) return;
+    if (!confirm(`Confirm issue edict?\n\n${cmd.substring(0, 200)}${cmd.length > 200 ? '…' : ''}`)) return;
 
     try {
       const params: Record<string, string> = {};
@@ -118,7 +118,7 @@ export default function TemplatePanel() {
                 {t.est} · {t.cost}
               </span>
               <button className="tpl-go" onClick={() => openForm(t)}>
-                下旨
+              Issue Edict
               </button>
             </div>
           </div>

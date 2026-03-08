@@ -28,7 +28,7 @@ def main():
         print('📋 01 kanban...')
         page.screenshot(path=os.path.join(SHOTS, '01-kanban-main.png'), full_page=False)
 
-        # 2. Monitor (省部调度)
+        # 2. Monitor (Department Dispatch)
         print('🔭 02 monitor...')
         page.click('[data-tab="monitor"]')
         page.wait_for_timeout(800)

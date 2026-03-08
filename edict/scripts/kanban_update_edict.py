@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
 """
-看板任务更新工具 - Edict 兼容层
+Kanban task update tool - Edict compatibility layer
 
-保持与旧版完全相同的 CLI 接口，内部改为调用 Edict REST API。
-如果 API 不可用，降级回写 JSON 文件（过渡期保障）。
+Maintains the same CLI interface as the legacy version, internally calls the Edict REST API.
+Falls back to writing JSON files if the API is unavailable (transition period safeguard).
 
-用法（与旧版 100% 兼容）:
-  python3 kanban_update.py create JJC-20260223-012 "任务标题" Zhongshu 中书省 中书令
-  python3 kanban_update.py state JJC-20260223-012 Menxia "规划方案已提交门下省"
-  python3 kanban_update.py flow JJC-20260223-012 "中书省" "门下省" "规划方案提交审核"
-  python3 kanban_update.py done JJC-20260223-012 "/path/to/output" "任务完成摘要"
-  python3 kanban_update.py todo JJC-20260223-012 1 "实现API接口" in-progress
-  python3 kanban_update.py progress JJC-20260223-012 "正在分析需求" "1.调研✅|2.文档🔄|3.原型"
+Usage (100% compatible with legacy version):
+  python3 kanban_update.py create JJC-20260223-012 "Task title" Zhongshu Zhongshu Chancellor
+  python3 kanban_update.py state JJC-20260223-012 Menxia "Planning proposal submitted to Menxia"
+  python3 kanban_update.py flow JJC-20260223-012 "Zhongshu" "Menxia" "Planning proposal submitted for review"
+  python3 kanban_update.py done JJC-20260223-012 "/path/to/output" "Task completion summary"
+  python3 kanban_update.py todo JJC-20260223-012 1 "Implement API interface" in-progress
+  python3 kanban_update.py progress JJC-20260223-012 "Analyzing requirements" "1.Research✅|2.Docs🔄|3.Prototype"
 """
 
 import json
@@ -24,27 +24,25 @@ import pathlib
 log = logging.getLogger('kanban')
 logging.basicConfig(level=logging.INFO, format='%(asctime)s [%(name)s] %(message)s', datefmt='%H:%M:%S')
 
-# Edict API 地址 — 环境变量 > 默认 localhost:8000
+# Edict API address — environment variable > default localhost:8000
 EDICT_API_URL = os.environ.get('EDICT_API_URL', 'http://localhost:8000')
 
-# 是否启用 API 模式（EDICT_MODE=api | json | auto）
+# Whether to enable API mode (EDICT_MODE=api | json | auto)
 EDICT_MODE = os.environ.get('EDICT_MODE', 'auto').lower()
 
-# ── 文本清洗逻辑（与旧版完全一致） ──
+# ── Text sanitization logic (identical to legacy version) ──
 
 _MIN_TITLE_LEN = 6
 _JUNK_TITLES = {
-    '?', '？', '好', '好的', '是', '否', '不', '不是', '对', '了解', '收到',
-    '嗯', '哦', '知道了', '开启了么', '可以', '不行', '行', 'ok', 'yes', 'no',
-    '你去开启', '测试', '试试', '看看',
+    '?', '？', 'ok', 'yes', 'no',
 }
 
 STATE_ORG_MAP = {
-    'Taizi': '太子', 'Zhongshu': '中书省', 'Menxia': '门下省', 'Assigned': '尚书省',
-    'Doing': '执行中', 'Review': '尚书省', 'Done': '完成', 'Blocked': '阻塞',
+    'Taizi': 'Taizi', 'Zhongshu': 'Zhongshu', 'Menxia': 'Menxia', 'Assigned': 'Shangshu',
+    'Doing': 'In Progress', 'Review': 'Shangshu', 'Done': 'Completed', 'Blocked': 'Blocked',
 }
 
-# State → Edict TaskState value 映射
+# State → Edict TaskState value mapping
 _STATE_TO_EDICT = {
     'Taizi': 'taizi', 'Zhongshu': 'zhongshu', 'Menxia': 'menxia',
     'Assigned': 'assigned', 'Next': 'next', 'Doing': 'doing',
@@ -59,7 +57,7 @@ def _sanitize_text(raw, max_len=80):
     t = re.split(r'\n*```', t, maxsplit=1)[0].strip()
     t = re.sub(r'[/\\.~][A-Za-z0-9_\-./]+(?:\.(?:py|js|ts|json|md|sh|yaml|yml|txt|csv|html|css|log))?', '', t)
     t = re.sub(r'https?://\S+', '', t)
-    t = re.sub(r'^(传旨|下旨)([（(][^)）]*[)）])?[：:\uff1a]\s*', '', t)
+    t = re.sub(r'^(edict|decree)[：:\uff1a]\s*', '', t, flags=re.IGNORECASE)
     t = re.sub(r'(message_id|session_id|chat_id|open_id|user_id|tenant_key)\s*[:=]\s*\S+', '', t)
     t = re.sub(r'\s+', ' ', t).strip()
     if len(t) > max_len:
@@ -78,15 +76,15 @@ def _sanitize_remark(raw):
 def _is_valid_task_title(title):
     t = (title or '').strip()
     if len(t) < _MIN_TITLE_LEN:
-        return False, f'标题过短（{len(t)}<{_MIN_TITLE_LEN}字），疑似非旨意'
+        return False, f'Title too short ({len(t)}<{_MIN_TITLE_LEN} chars), likely not an edict'
     if t.lower() in _JUNK_TITLES:
-        return False, f'标题 "{t}" 不是有效旨意'
+        return False, f'Title "{t}" is not a valid edict'
     if re.fullmatch(r'[\s?？!！.。,，…·\-—~]+', t):
-        return False, '标题只有标点符号'
+        return False, 'Title contains only punctuation'
     if re.match(r'^[/\\~.]', t) or re.search(r'/[a-zA-Z0-9_-]+/[a-zA-Z0-9_-]+', t):
-        return False, f'标题看起来像文件路径，请用中文概括任务'
+        return False, f'Title looks like a file path, please summarize the task in plain text'
     if re.fullmatch(r'[\s\W]*', t):
-        return False, '标题清洗后为空'
+        return False, 'Title is empty after sanitization'
     return True, ''
 
 
@@ -102,15 +100,15 @@ def _infer_agent_id():
     return 'system'
 
 
-# ── API 客户端 ──
+# ── API client ──
 
 def _api_available() -> bool:
-    """检查 Edict API 是否可用。"""
+    """Check if the Edict API is available."""
     if EDICT_MODE == 'json':
         return False
     if EDICT_MODE == 'api':
         return True
-    # auto mode: 探测
+    # auto mode: probe
     try:
         import urllib.request
         req = urllib.request.Request(f"{EDICT_API_URL}/health", method='GET')
@@ -122,7 +120,7 @@ def _api_available() -> bool:
 
 
 def _api_post(path: str, data: dict) -> dict | None:
-    """向 Edict API 发送 POST 请求。"""
+    """Send a POST request to the Edict API."""
     try:
         import urllib.request
         body = json.dumps(data, ensure_ascii=False).encode('utf-8')
@@ -135,12 +133,12 @@ def _api_post(path: str, data: dict) -> dict | None:
         with urllib.request.urlopen(req, timeout=10) as resp:
             return json.loads(resp.read())
     except Exception as e:
-        log.warning(f'API 调用失败 ({path}): {e}')
+        log.warning(f'API call failed ({path}): {e}')
         return None
 
 
 def _api_put(path: str, data: dict) -> dict | None:
-    """向 Edict API 发送 PUT 请求。"""
+    """Send a PUT request to the Edict API."""
     try:
         import urllib.request
         body = json.dumps(data, ensure_ascii=False).encode('utf-8')
@@ -153,13 +151,13 @@ def _api_put(path: str, data: dict) -> dict | None:
         with urllib.request.urlopen(req, timeout=10) as resp:
             return json.loads(resp.read())
     except Exception as e:
-        log.warning(f'API 调用失败 ({path}): {e}')
+        log.warning(f'API call failed ({path}): {e}')
         return None
 
 
-# ── 命令 → API 调用 ──
+# ── Command → API call ──
 
-# 缓存 API 可用性
+# Cache API availability
 _api_ok = None
 
 
@@ -168,15 +166,15 @@ def _check_api():
     if _api_ok is None:
         _api_ok = _api_available()
         if _api_ok:
-            log.debug('Edict API 可用，使用 API 模式')
+            log.debug('Edict API available, using API mode')
         else:
-            log.debug('Edict API 不可用，降级到 JSON 模式')
+            log.debug('Edict API unavailable, falling back to JSON mode')
     return _api_ok
 
 
 def _fallback_json():
-    """降级：导入旧版 kanban_update 逻辑。"""
-    # 回退到同目录下的旧版实现
+    """Fallback: import legacy kanban_update logic."""
+    # Fall back to the legacy implementation in the same directory
     old_path = pathlib.Path(__file__).parent / 'kanban_update_legacy.py'
     if old_path.exists():
         import importlib.util
@@ -191,53 +189,53 @@ def cmd_create(task_id, title, state, org, official, remark=None):
     title = _sanitize_title(title)
     valid, reason = _is_valid_task_title(title)
     if not valid:
-        log.warning(f'⚠️ 拒绝创建 {task_id}：{reason}')
-        print(f'[看板] 拒绝创建：{reason}', flush=True)
+        log.warning(f'⚠️ Rejected creation of {task_id}: {reason}')
+        print(f'[kanban] Creation rejected: {reason}', flush=True)
         return
 
     if _check_api():
         edict_state = _STATE_TO_EDICT.get(state, state.lower())
         result = _api_post('/api/tasks', {
             'title': title,
-            'description': remark or f'下旨：{title}',
-            'priority': '中',
+            'description': remark or f'Edict issued: {title}',
+            'priority': 'normal',
             'assignee_org': org,
             'creator': official,
             'tags': [task_id],
             'meta': {'legacy_id': task_id, 'legacy_state': state},
         })
         if result:
-            log.info(f'✅ 创建 {task_id} → Edict {result.get("task_id", "?")} | {title[:30]}')
+            log.info(f'✅ Created {task_id} → Edict {result.get("task_id", "?")} | {title[:30]}')
             return
 
-    # 降级
+    # Fallback
     legacy = _fallback_json()
     if legacy:
         legacy.cmd_create(task_id, title, state, org, official, remark)
     else:
-        log.error(f'无法创建任务：API 不可用且无降级模块')
+        log.error(f'Cannot create task: API unavailable and no fallback module')
 
 
 def cmd_state(task_id, new_state, now_text=None):
     if _check_api():
         edict_state = _STATE_TO_EDICT.get(new_state, new_state.lower())
         agent = _infer_agent_id()
-        # 需要先通过 legacy_id 查找 edict task_id
-        # 暂用 legacy_id tag 搜索
+        # Need to find edict task_id via legacy_id first
+        # Using legacy_id tag search for now
         result = _api_post(f'/api/tasks/by-legacy/{task_id}/transition', {
             'new_state': edict_state,
             'agent': agent,
-            'reason': now_text or f'状态更新为 {new_state}',
+            'reason': now_text or f'State updated to {new_state}',
         })
         if result:
-            log.info(f'✅ {task_id} 状态更新 → {new_state}')
+            log.info(f'✅ {task_id} state updated → {new_state}')
             return
 
     legacy = _fallback_json()
     if legacy:
         legacy.cmd_state(task_id, new_state, now_text)
     else:
-        log.error(f'无法更新状态：API 不可用且无降级模块')
+        log.error(f'Cannot update state: API unavailable and no fallback module')
 
 
 def cmd_flow(task_id, from_dept, to_dept, remark):
@@ -246,10 +244,10 @@ def cmd_flow(task_id, from_dept, to_dept, remark):
         agent = _infer_agent_id()
         result = _api_post(f'/api/tasks/by-legacy/{task_id}/progress', {
             'agent': agent,
-            'content': f'流转: {from_dept} → {to_dept} | {clean_remark}',
+            'content': f'Flow: {from_dept} → {to_dept} | {clean_remark}',
         })
         if result:
-            log.info(f'✅ {task_id} 流转记录: {from_dept} → {to_dept}')
+            log.info(f'✅ {task_id} flow record: {from_dept} → {to_dept}')
             return
 
     legacy = _fallback_json()
@@ -263,10 +261,10 @@ def cmd_done(task_id, output_path='', summary=''):
         result = _api_post(f'/api/tasks/by-legacy/{task_id}/transition', {
             'new_state': 'done',
             'agent': agent,
-            'reason': summary or '任务已完成',
+            'reason': summary or 'Task completed',
         })
         if result:
-            log.info(f'✅ {task_id} 已完成')
+            log.info(f'✅ {task_id} completed')
             return
 
     legacy = _fallback_json()
@@ -283,7 +281,7 @@ def cmd_block(task_id, reason):
             'reason': reason,
         })
         if result:
-            log.warning(f'⚠️ {task_id} 已阻塞: {reason}')
+            log.warning(f'⚠️ {task_id} blocked: {reason}')
             return
 
     legacy = _fallback_json()
@@ -294,7 +292,7 @@ def cmd_block(task_id, reason):
 def cmd_progress(task_id, now_text, todos_pipe='', tokens=0, cost=0.0, elapsed=0):
     clean = _sanitize_remark(now_text)
 
-    # 解析 todos
+    # Parse todos
     parsed_todos = None
     if todos_pipe:
         new_todos = []
@@ -317,17 +315,17 @@ def cmd_progress(task_id, now_text, todos_pipe='', tokens=0, cost=0.0, elapsed=0
 
     if _check_api():
         agent = _infer_agent_id()
-        # 更新进度
+        # Update progress
         _api_post(f'/api/tasks/by-legacy/{task_id}/progress', {
             'agent': agent,
             'content': clean,
         })
-        # 更新 todos
+        # Update todos
         if parsed_todos:
             _api_put(f'/api/tasks/by-legacy/{task_id}/todos', {
                 'todos': parsed_todos,
             })
-        log.info(f'📡 {task_id} 进展: {clean[:40]}...')
+        log.info(f'📡 {task_id} progress: {clean[:40]}...')
         return
 
     legacy = _fallback_json()
@@ -340,8 +338,7 @@ def cmd_todo(task_id, todo_id, title, status='not-started', detail=''):
         status = 'not-started'
 
     if _check_api():
-        # 读取现有 todos，更新后写回
-        # 这里简化处理，直接发进度更新
+        # Read existing todos and update — simplified to direct progress update here
         agent = _infer_agent_id()
         _api_post(f'/api/tasks/by-legacy/{task_id}/progress', {
             'agent': agent,
@@ -355,7 +352,7 @@ def cmd_todo(task_id, todo_id, title, status='not-started', detail=''):
         legacy.cmd_todo(task_id, todo_id, title, status, detail)
 
 
-# ── CLI 分发 ──
+# ── CLI dispatch ──
 
 _CMD_MIN_ARGS = {
     'create': 6, 'state': 3, 'flow': 5, 'done': 2, 'block': 3, 'todo': 4, 'progress': 3,
@@ -369,7 +366,7 @@ if __name__ == '__main__':
 
     cmd = args[0]
     if cmd in _CMD_MIN_ARGS and len(args) < _CMD_MIN_ARGS[cmd]:
-        print(f'错误："{cmd}" 命令至少需要 {_CMD_MIN_ARGS[cmd]} 个参数，实际 {len(args)} 个')
+        print(f'Error: "{cmd}" command requires at least {_CMD_MIN_ARGS[cmd]} arguments, got {len(args)}')
         print(__doc__)
         sys.exit(1)
 
