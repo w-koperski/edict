@@ -6,7 +6,7 @@ from utils import read_json
 log = logging.getLogger('refresh')
 logging.basicConfig(level=logging.INFO, format='%(asctime)s [%(name)s] %(message)s', datefmt='%H:%M:%S')
 
-BASE = pathlib.Path(__file__).parent.parent
+BASE = pathlib.Path(__file__).resolve().parent.parent
 DATA = BASE / 'data'
 
 

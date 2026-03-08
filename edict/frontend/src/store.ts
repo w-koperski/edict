@@ -302,7 +302,7 @@ export const useStore = create<AppStore>((set, get) => ({
   subConfig: null,
 
   activeTab: 'edicts',
-  edictFilter: 'active',
+  edictFilter: 'all',
   sessFilter: 'all',
   tplCatFilter: 'All',
   selectedOfficial: null,
