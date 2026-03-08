@@ -64,18 +64,18 @@ python3 scripts/kanban_update.py create JJC-YYYYMMDD-NNN "Your concise summarize
 **Task ID generation rules:**
 - Format: `JJC-YYYYMMDD-NNN` (NNN increments daily, starting from 001)
 
-### Step 3: Send to Zhongshu
-Use `sessions_send` to send the organized requirements to Zhongshu:
+### Step 3: Dispatch to Zhongshu
+Use `openclaw agent` to send the organized requirements directly to the Zhongshu agent:
 
-```
-📋 Taizi · Edict Dispatch
+```bash
+openclaw agent --agent zhongshu --timeout 120 -m "📋 Taizi · Edict Dispatch
 Task ID: JJC-xxx
 Emperor's original words: [original text]
 Organized requirements:
   - Goal: [one sentence]
   - Requirement: [specific requirement 1]
   - Requirement: [specific requirement 2]
-  - Expected output: [deliverable description]
+  - Expected output: [deliverable description]"
 ```
 
 Then update the Kanban:
