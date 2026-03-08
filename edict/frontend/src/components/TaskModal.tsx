@@ -464,10 +464,6 @@ function LiveActivitySection({
   const phaseDurations = data.phaseDurations || [];
   const maxDur = Math.max(...phaseDurations.map((p) => p.durationSec || 1), 1);
   const phaseColors: Record<string, string> = {
-    '皇上': '#eab308', '太子': '#f97316', '中书省': '#3b82f6', '门下省': '#8b5cf6',
-    '尚书省': '#10b981', '六部': '#06b6d4', '礼部': '#ec4899', '户部': '#f59e0b',
-    '兵部': '#ef4444', '刑部': '#6366f1', '工部': '#14b8a6', '吏部': '#d946ef',
-    // English equivalents
     'Emperor': '#eab308', 'Taizi': '#f97316', 'Zhongshu': '#3b82f6', 'Menxia': '#8b5cf6',
     'Shangshu': '#10b981', 'Six Ministries': '#06b6d4', 'Libu': '#ec4899', 'Hubu': '#f59e0b',
     'Bingbu': '#ef4444', 'Xingbu': '#6366f1', 'Gongbu': '#14b8a6', 'Libu_hr': '#d946ef',

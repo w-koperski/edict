@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-同步 openclaw.json 中的 agent 配置 → data/agent_config.json
-支持自动发现 agent workspace 下的 Skills 目录
+Sync agent configuration from openclaw.json → data/agent_config.json
+Supports auto-discovery of agent workspace Skills directories
 """
 import json, pathlib, datetime, logging
 from file_lock import atomic_json_write
@@ -15,18 +15,18 @@ DATA = BASE / 'data'
 OPENCLAW_CFG = pathlib.Path.home() / '.openclaw' / 'openclaw.json'
 
 ID_LABEL = {
-    'taizi':    {'label': '太子',   'role': '太子',     'duty': '飞书消息分拣与回奏',  'emoji': '🤴'},
-    'main':     {'label': '太子',   'role': '太子',     'duty': '飞书消息分拣与回奏',  'emoji': '🤴'},  # 兼容旧配置
-    'zhongshu': {'label': '中书省', 'role': '中书令',   'duty': '起草任务令与优先级',  'emoji': '📜'},
-    'menxia':   {'label': '门下省', 'role': '侍中',     'duty': '审议与退回机制',      'emoji': '🔍'},
-    'shangshu': {'label': '尚书省', 'role': '尚书令',   'duty': '派单与升级裁决',      'emoji': '📮'},
-    'libu':     {'label': '礼部',   'role': '礼部尚书', 'duty': '文档/汇报/规范',      'emoji': '📝'},
-    'hubu':     {'label': '户部',   'role': '户部尚书', 'duty': '资源/预算/成本',      'emoji': '💰'},
-    'bingbu':   {'label': '兵部',   'role': '兵部尚书', 'duty': '应急与巡检',          'emoji': '⚔️'},
-    'xingbu':   {'label': '刑部',   'role': '刑部尚书', 'duty': '合规/审计/红线',      'emoji': '⚖️'},
-    'gongbu':   {'label': '工部',   'role': '工部尚书', 'duty': '工程交付与自动化',    'emoji': '🔧'},
-    'libu_hr':  {'label': '吏部',   'role': '吏部尚书', 'duty': '人事/培训/Agent管理',  'emoji': '👔'},
-    'zaochao':  {'label': '钦天监', 'role': '朝报官',   'duty': '每日新闻采集与简报',  'emoji': '📰'},
+    'taizi':    {'label': 'Taizi',    'role': 'Crown Prince',      'duty': 'Message triage and routing',         'emoji': '🤴'},
+    'main':     {'label': 'Taizi',    'role': 'Crown Prince',      'duty': 'Message triage and routing',         'emoji': '🤴'},  # legacy config compat
+    'zhongshu': {'label': 'Zhongshu', 'role': 'Grand Chancellor',  'duty': 'Draft edicts and set priorities',    'emoji': '📜'},
+    'menxia':   {'label': 'Menxia',   'role': 'Chief Censor',      'duty': 'Review and veto mechanism',          'emoji': '🔍'},
+    'shangshu': {'label': 'Shangshu', 'role': 'Grand Secretary',   'duty': 'Dispatch and escalation decisions',  'emoji': '📮'},
+    'libu':     {'label': 'Libu',     'role': 'Minister of Rites', 'duty': 'Documentation/reporting/standards', 'emoji': '📝'},
+    'hubu':     {'label': 'Hubu',     'role': 'Minister of Revenue','duty': 'Resources/budget/costs',            'emoji': '💰'},
+    'bingbu':   {'label': 'Bingbu',   'role': 'Minister of War',   'duty': 'Emergency response and inspection', 'emoji': '⚔️'},
+    'xingbu':   {'label': 'Xingbu',   'role': 'Minister of Justice','duty': 'Compliance/audit/red lines',        'emoji': '⚖️'},
+    'gongbu':   {'label': 'Gongbu',   'role': 'Minister of Works', 'duty': 'Engineering delivery and automation','emoji': '🔧'},
+    'libu_hr':  {'label': 'Libu_hr',  'role': 'Minister of Personnel','duty': 'HR/training/agent management',   'emoji': '👔'},
+    'zaochao':  {'label': 'Zaochao',  'role': 'Morning Official',  'duty': 'Daily news collection and briefing','emoji': '📰'},
 }
 
 KNOWN_MODELS = [
@@ -72,10 +72,10 @@ def get_skills(workspace: str):
                                     desc = line[:100]
                                     break
                         except Exception:
-                            desc = '(读取失败)'
+                            desc = '(read failed)'
                     skills.append({'name': d.name, 'path': str(md), 'exists': md.exists(), 'description': desc})
     except PermissionError as e:
-        log.warning(f'Skills 目录访问受限: {e}')
+        log.warning(f'Skills directory access restricted: {e}')
     return skills
 
 
@@ -110,7 +110,7 @@ def main():
         })
         seen_ids.add(ag_id)
 
-    # 补充不在 openclaw.json agents list 中的 agent（兼容旧版 main）
+    # Supplement agents not in openclaw.json agents list (legacy 'main' compat)
     EXTRA_AGENTS = {
         'taizi':   {'model': default_model, 'workspace': str(pathlib.Path.home() / '.openclaw/workspace-taizi'),
                     'allowAgents': ['zhongshu']},
@@ -146,9 +146,9 @@ def main():
     atomic_json_write(DATA / 'agent_config.json', payload)
     log.info(f'{len(result)} agents synced')
 
-    # 自动部署 SOUL.md 到 workspace（如果项目里有更新）
+    # Auto-deploy SOUL.md to workspace (if project has updates)
     deploy_soul_files()
-    # 同步 scripts/ 到各 workspace（保持 kanban_update.py 等最新）
+    # Sync scripts/ to workspaces (keep kanban_update.py etc. up to date)
     sync_scripts_to_workspaces()
 
 
@@ -168,7 +168,7 @@ _SOUL_DEPLOY_MAP = {
 }
 
 def sync_scripts_to_workspaces():
-    """将项目 scripts/ 目录同步到各 agent workspace（保持 kanban_update.py 等最新）"""
+    """Sync project scripts/ directory to each agent workspace (keep kanban_update.py etc. current)"""
     scripts_src = BASE / 'scripts'
     if not scripts_src.is_dir():
         return
@@ -211,7 +211,7 @@ def sync_scripts_to_workspaces():
 
 
 def deploy_soul_files():
-    """将项目 agents/xxx/SOUL.md 部署到 ~/.openclaw/workspace-xxx/soul.md"""
+    """Deploy project agents/xxx/SOUL.md to ~/.openclaw/workspace-xxx/soul.md"""
     agents_dir = BASE / 'agents'
     deployed = 0
     for proj_name, runtime_id in _SOUL_DEPLOY_MAP.items():
@@ -220,7 +220,7 @@ def deploy_soul_files():
             continue
         ws_dst = pathlib.Path.home() / f'.openclaw/workspace-{runtime_id}' / 'soul.md'
         ws_dst.parent.mkdir(parents=True, exist_ok=True)
-        # 只在内容不同时更新（避免不必要的写入）
+        # Only update when content differs (avoid unnecessary writes)
         src_text = src.read_text(encoding='utf-8', errors='ignore')
         try:
             dst_text = ws_dst.read_text(encoding='utf-8', errors='ignore')
@@ -229,7 +229,7 @@ def deploy_soul_files():
         if src_text != dst_text:
             ws_dst.write_text(src_text, encoding='utf-8')
             deployed += 1
-        # 太子兼容：同步一份到 legacy main agent 目录
+        # Taizi compatibility: sync a copy to legacy main agent directory
         if runtime_id == 'taizi':
             ag_dst = pathlib.Path.home() / '.openclaw/agents/main/SOUL.md'
             ag_dst.parent.mkdir(parents=True, exist_ok=True)
@@ -239,7 +239,7 @@ def deploy_soul_files():
                 ag_text = ''
             if src_text != ag_text:
                 ag_dst.write_text(src_text, encoding='utf-8')
-        # 确保 sessions 目录存在
+        # Ensure sessions directory exists
         sess_dir = pathlib.Path.home() / f'.openclaw/agents/{runtime_id}/sessions'
         sess_dir.mkdir(parents=True, exist_ok=True)
     if deployed:

@@ -1,37 +1,37 @@
 #!/usr/bin/env python3
 """
-早朝简报采集脚本
-每日 06:00 自动运行，抓取全球新闻 RSS → data/morning_brief_YYYYMMDD.json
-覆盖: 政治 | 军事 | 经济 | AI大模型
+Morning brief collection script
+Runs automatically daily at 06:00, fetches global news RSS → data/morning_brief_YYYYMMDD.json
+Coverage: Politics | Military | Economy | AI/LLM
 """
 import json, pathlib, datetime, subprocess, re, sys, os, logging
 from xml.etree import ElementTree as ET
 from file_lock import atomic_json_write
 from utils import validate_url
 
-log = logging.getLogger('朝报')
+log = logging.getLogger('morning_brief')
 logging.basicConfig(level=logging.INFO, format='%(asctime)s [%(name)s] %(message)s', datefmt='%H:%M:%S')
 
 DATA = pathlib.Path(__file__).resolve().parent.parent / 'data'
 
-# ── RSS 源配置 ──────────────────────────────────────────────────────────
+# ── RSS feed configuration ──────────────────────────────────────────────────────────
 FEEDS = {
-    '政治': [
+    'Politics': [
         ('BBC World', 'https://feeds.bbci.co.uk/news/world/rss.xml'),
         ('Reuters World', 'https://feeds.reuters.com/reuters/worldNews'),
         ('AP Top News', 'https://rsshub.app/apnews/topics/ap-top-news'),
     ],
-    '军事': [
+    'Military': [
         ('Defense News', 'https://www.defensenews.com/rss/'),
         ('BBC World', 'https://feeds.bbci.co.uk/news/world/rss.xml'),
         ('Reuters', 'https://feeds.reuters.com/reuters/worldNews'),
     ],
-    '经济': [
+    'Economy': [
         ('Reuters Business', 'https://feeds.reuters.com/reuters/businessNews'),
         ('BBC Business', 'https://feeds.bbci.co.uk/news/business/rss.xml'),
         ('CNBC', 'https://search.cnbc.com/rs/search/combinedcms/view.xml?partnerId=wrss01&id=100003114'),
     ],
-    'AI大模型': [
+    'AI/LLM': [
         ('Hacker News', 'https://hnrss.org/newest?q=AI+LLM+model&points=50'),
         ('VentureBeat AI', 'https://venturebeat.com/category/ai/feed/'),
         ('MIT Tech Review', 'https://www.technologyreview.com/feed/'),
@@ -39,14 +39,14 @@ FEEDS = {
 }
 
 CATEGORY_KEYWORDS = {
-    '军事': ['war', 'military', 'troops', 'attack', 'missile', 'army', 'navy', 'weapons',
-              '战', '军', '导弹', '士兵', 'ukraine', 'russia', 'china sea', 'nato'],
-    'AI大模型': ['ai', 'llm', 'gpt', 'claude', 'gemini', 'openai', 'anthropic', 'deepseek',
-                'machine learning', 'neural', 'model', '大模型', '人工智能', 'chatgpt'],
+    'Military': ['war', 'military', 'troops', 'attack', 'missile', 'army', 'navy', 'weapons',
+              'ukraine', 'russia', 'china sea', 'nato'],
+    'AI/LLM': ['ai', 'llm', 'gpt', 'claude', 'gemini', 'openai', 'anthropic', 'deepseek',
+                'machine learning', 'neural', 'model', 'chatgpt'],
 }
 
 def curl_rss(url, timeout=10):
-    """用 curl 抓取 RSS"""
+    """Fetch RSS feed using curl"""
     try:
         r = subprocess.run(
             ['curl', '-s', '--max-time', str(timeout), '-L',
@@ -59,11 +59,11 @@ def curl_rss(url, timeout=10):
         return ''
 
 def _safe_parse_xml(xml_text, max_size=5*1024*1024):
-    """安全解析 XML：限制大小，禁用外部实体（防 XXE）。"""
+    """Safely parse XML: limit size, disable external entities (prevent XXE)."""
     if len(xml_text) > max_size:
-        log.warning(f'XML 内容过大 ({len(xml_text)} bytes)，跳过')
+        log.warning(f'XML content too large ({len(xml_text)} bytes), skipping')
         return None
-    # 剥离 DOCTYPE / ENTITY 声明以防 XXE
+    # Strip DOCTYPE / ENTITY declarations to prevent XXE
     cleaned = re.sub(r'<!DOCTYPE[^>]*>', '', xml_text, flags=re.IGNORECASE)
     cleaned = re.sub(r'<!ENTITY[^>]*>', '', cleaned, flags=re.IGNORECASE)
     try:
@@ -73,7 +73,7 @@ def _safe_parse_xml(xml_text, max_size=5*1024*1024):
 
 
 def parse_rss(xml_text):
-    """解析 RSS XML → list of {title, desc, link, pub_date, image}"""
+    """Parse RSS XML → list of {title, desc, link, pub_date, image}"""
     items = []
     try:
         root = _safe_parse_xml(xml_text)
@@ -104,7 +104,7 @@ def parse_rss(xml_text):
     return items
 
 def match_category(item, category):
-    """判断新闻是否属于该分类（用于军事/AI过滤）"""
+    """Check if a news item belongs to a category (used for Military/AI filtering)"""
     kws = CATEGORY_KEYWORDS.get(category, [])
     if not kws:
         return True
@@ -112,7 +112,7 @@ def match_category(item, category):
     return any(k in text for k in kws)
 
 def fetch_category(category, feeds, max_items=5):
-    """抓取一个分类的新闻"""
+    """Fetch news for a category"""
     seen_urls = set()
     results = []
     for source_name, url in feeds:
@@ -127,7 +127,7 @@ def fetch_category(category, feeds, max_items=5):
                 continue
             if item['link'] in seen_urls:
                 continue
-            # 军事和AI分类需要关键词过滤
+            # Military and AI categories require keyword filtering
             if category in CATEGORY_KEYWORDS and not match_category(item, category):
                 continue
             seen_urls.add(item['link'])
@@ -146,20 +146,20 @@ def fetch_category(category, feeds, max_items=5):
 def main():
     import argparse
     parser = argparse.ArgumentParser()
-    parser.add_argument('--force', action='store_true', help='强制采集，忽略幂等锁')
+    parser.add_argument('--force', action='store_true', help='Force collection, ignore idempotency lock')
     args = parser.parse_args()
 
-    # 幂等锁：防重复执行
+    # Idempotency lock: prevent duplicate execution
     today = datetime.date.today().strftime('%Y%m%d')
     lock_file = DATA / f'morning_brief_{today}.lock'
     if lock_file.exists() and not args.force:
         age = datetime.datetime.now().timestamp() - lock_file.stat().st_mtime
-        if age < 3600:  # 1小时内不重复
-            log.info(f'今日已采集（{today}），跳过（使用 --force 强制采集）')
+        if age < 3600:  # don't repeat within 1 hour
+            log.info(f'Already collected today ({today}), skipping (use --force to override)')
             return
-    # 注意：lock 放到采集成功后再 touch，防止失败也锁定
+    # Note: write lock after successful collection to prevent locking on failure
 
-    # 读取用户配置
+    # Read user configuration
     config_file = DATA / 'morning_brief_config.json'
     config = {}
     try:
@@ -167,7 +167,7 @@ def main():
     except Exception:
         pass
 
-    # 已启用的分类
+    # Enabled categories
     enabled_cats = set()
     if config.get('categories'):
         for c in config['categories']:
@@ -176,10 +176,10 @@ def main():
     else:
         enabled_cats = set(FEEDS.keys())
 
-    # 用户自定义关键词（全局加权）
+    # User-defined keywords (globally weighted)
     user_keywords = [kw.lower() for kw in config.get('keywords', [])]
 
-    # 合并自定义 RSS 源
+    # Merge custom RSS feeds
     custom_feeds = config.get('custom_feeds', [])
     merged_feeds = {}
     for cat, feeds in FEEDS.items():
@@ -191,16 +191,16 @@ def main():
         if cat in enabled_cats and feed_url:
             # 校验自定义源 URL（SSRF 防护）
             if validate_url(feed_url):
-                merged_feeds.setdefault(cat, []).append((cf.get('name', '自定义'), feed_url))
+                merged_feeds.setdefault(cat, []).append((cf.get('name', 'Custom'), feed_url))
             else:
-                log.warning(f'自定义源 URL 不合法，跳过: {feed_url}')
+                log.warning(f'Custom feed URL invalid, skipping: {feed_url}')
 
-    log.info(f'开始采集 {today}...')
-    log.info(f'  启用分类: {", ".join(enabled_cats)}')
+    log.info(f'Starting collection for {today}...')
+    log.info(f'  Enabled categories: {", ".join(enabled_cats)}')
     if user_keywords:
-        log.info(f'  关注词: {", ".join(user_keywords)}')
+        log.info(f'  Keywords: {", ".join(user_keywords)}')
     if custom_feeds:
-        log.info(f'  自定义源: {len(custom_feeds)} 个')
+        log.info(f'  Custom feeds: {len(custom_feeds)}')
 
     result = {
         'date': today,
@@ -209,7 +209,7 @@ def main():
     }
 
     for category, feeds in merged_feeds.items():
-        log.info(f'  采集 {category}...')
+        log.info(f'  Collecting {category}...')
         items = fetch_category(category, feeds)
         # Boost items matching user keywords
         if user_keywords:
@@ -220,20 +220,20 @@ def main():
             for item in items:
                 item.pop('_kw_hits', None)
         result['categories'][category] = items
-        log.info(f'    {category}: {len(items)} 条')
+        log.info(f'    {category}: {len(items)} items')
 
-    # 写入今日文件
+    # Write today's file
     today_file = DATA / f'morning_brief_{today}.json'
     atomic_json_write(today_file, result)
 
-    # 覆写 latest（看板读这个）
+    # Overwrite latest (dashboard reads this)
     latest_file = DATA / 'morning_brief.json'
     atomic_json_write(latest_file, result)
 
     total = sum(len(v) for v in result['categories'].values())
-    log.info(f'✅ 完成：共 {total} 条新闻 → {today_file.name}')
+    log.info(f'✅ Done: {total} news items → {today_file.name}')
 
-    # 采集成功后才写入幂等锁
+    # Write idempotency lock only after successful collection
     lock_file.touch()
 
 if __name__ == '__main__':

@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """
-三省六部 · Skill 管理工具
-支持从本地或远程 URL 添加、更新、查看和移除 skills
+Three Departments & Six Ministries · Skill Management Tool
+Supports adding, updating, viewing, and removing skills from local or remote URLs
 
 Usage:
   python3 scripts/skill_manager.py add-remote --agent zhongshu --name code_review \\
     --source https://raw.githubusercontent.com/org/skills/main/code_review/SKILL.md \\
-    --description "代码审查"
+    --description "code review"
   
   python3 scripts/skill_manager.py list-remote
   
@@ -31,73 +31,73 @@ OCLAW_HOME = Path.home() / '.openclaw'
 
 
 def _download_file(url: str, timeout: int = 30, retries: int = 3) -> str:
-    """从 URL 下载文件内容（文本格式），支持重试"""
+    """Download file content from URL (text format), supports retries"""
     last_error = None
     for attempt in range(1, retries + 1):
         try:
             req = urllib.request.Request(url, headers={'User-Agent': 'OpenClaw-SkillManager/1.0'})
             with urllib.request.urlopen(req, timeout=timeout) as resp:
-                content = resp.read(10 * 1024 * 1024)  # 最多 10MB
+                content = resp.read(10 * 1024 * 1024)  # max 10MB
                 return content.decode('utf-8')
         except urllib.error.HTTPError as e:
             last_error = f'HTTP {e.code}: {e.reason}'
             if e.code in (404, 403):
                 break  # 不重试 4xx
         except urllib.error.URLError as e:
-            last_error = f'网络错误: {e.reason}'
+            last_error = f'Network error: {e.reason}'
         except Exception as e:
             last_error = f'{type(e).__name__}: {e}'
         
         if attempt < retries:
             import time
             wait = attempt * 3  # 3s, 6s
-            print(f'   ⚠️ 第 {attempt} 次下载失败({last_error})，{wait}秒后重试...')
+            print(f'   ⚠️ Attempt {attempt} failed ({last_error}), retrying in {wait}s...')
             time.sleep(wait)
     
-    # 所有重试失败
+    # All retries failed
     hint = ''
-    if 'timed out' in str(last_error).lower() or '超时' in str(last_error):
-        hint = '\n   💡 提示: 如果在中国大陆，请设置代理 export https_proxy=http://proxy:port'
+    if 'timed out' in str(last_error).lower():
+        hint = '\n   💡 Hint: If in China, try setting a proxy: export https_proxy=http://proxy:port'
     elif '404' in str(last_error):
-        hint = '\n   💡 提示: 官方 Skills Hub 可能尚未发布该 skill，请检查 URL 是否正确'
-    raise Exception(f'{last_error} (已重试 {retries} 次){hint}')
+        hint = '\n   💡 Hint: The official Skills Hub may not have published this skill yet, check the URL'
+    raise Exception(f'{last_error} (retried {retries} times){hint}')
 
 
 def _compute_checksum(content: str) -> str:
-    """计算内容的简单校验和"""
+    """Compute a simple checksum of the content"""
     import hashlib
     return hashlib.sha256(content.encode()).hexdigest()[:16]
 
 
 def add_remote(agent_id: str, name: str, source_url: str, description: str = '') -> bool:
-    """从远程 URL 为 Agent 添加 skill"""
+    """Add a skill to an Agent from a remote URL"""
     if not safe_name(agent_id) or not safe_name(name):
-        print(f'❌ 错误：agent_id 或 skill 名称含非法字符')
+        print(f'❌ Error: agent_id or skill name contains invalid characters')
         return False
     
-    # 设置 workspace
+    # Set up workspace
     workspace = OCLAW_HOME / f'workspace-{agent_id}' / 'skills' / name
     workspace.mkdir(parents=True, exist_ok=True)
     skill_md = workspace / 'SKILL.md'
     
-    # 下载文件
-    print(f'⏳ 正在从 {source_url} 下载...')
+    # Download file
+    print(f'⏳ Downloading from {source_url}...')
     try:
         content = _download_file(source_url)
     except Exception as e:
-        print(f'❌ 下载失败：{e}')
+        print(f'❌ Download failed: {e}')
         print(f'   URL: {source_url}')
         return False
     
-    # 基础验证（放宽检查：有些 skill 不以 --- 开头）
+    # Basic validation (relaxed: some skills don't start with ---)
     if len(content.strip()) < 10:
-        print(f'❌ 文件内容过短或为空')
+        print(f'❌ File content too short or empty')
         return False
     
-    # 保存 SKILL.md
+    # Save SKILL.md
     skill_md.write_text(content)
     
-    # 保存源信息
+    # Save source info
     source_info = {
         'skillName': name,
         'sourceUrl': source_url,
@@ -110,16 +110,16 @@ def add_remote(agent_id: str, name: str, source_url: str, description: str = '')
     source_json = workspace / '.source.json'
     source_json.write_text(json.dumps(source_info, ensure_ascii=False, indent=2))
     
-    print(f'✅ 技能 {name} 已添加到 {agent_id}')
-    print(f'   路径: {skill_md}')
-    print(f'   大小: {len(content)} 字节')
+    print(f'✅ Skill {name} added to {agent_id}')
+    print(f'   Path: {skill_md}')
+    print(f'   Size: {len(content)} bytes')
     return True
 
 
 def list_remote() -> bool:
-    """列出所有已添加的远程 skills"""
+    """List all added remote skills"""
     if not OCLAW_HOME.exists():
-        print('❌ OCLAW_HOME 不存在')
+        print('❌ OCLAW_HOME does not exist')
         return False
     
     remote_skills = []
@@ -152,11 +152,11 @@ def list_remote() -> bool:
                 pass
     
     if not remote_skills:
-        print('📭 暂无远程 skills')
+        print('📭 No remote skills found')
         return True
     
-    print(f'📋 共 {len(remote_skills)} 个远程 skills：\n')
-    print(f'{"Agent":<12} | {"Skill 名称":<20} | {"描述":<30} | 添加时间')
+    print(f'📋 {len(remote_skills)} remote skill(s):\n')
+    print(f'{"Agent":<12} | {"Skill Name":<20} | {"Description":<30} | Added')
     print('-' * 100)
     
     for sk in remote_skills:
@@ -168,52 +168,52 @@ def list_remote() -> bool:
 
 
 def update_remote(agent_id: str, name: str) -> bool:
-    """更新远程 skill 为最新版本"""
+    """Update a remote skill to the latest version"""
     if not safe_name(agent_id) or not safe_name(name):
-        print(f'❌ 错误：agent_id 或 skill 名称含非法字符')
+        print(f'❌ Error: agent_id or skill name contains invalid characters')
         return False
     
     workspace = OCLAW_HOME / f'workspace-{agent_id}' / 'skills' / name
     source_json = workspace / '.source.json'
     
     if not source_json.exists():
-        print(f'❌ 技能不存在或不是远程 skill: {name}')
+        print(f'❌ Skill not found or not a remote skill: {name}')
         return False
     
     try:
         source_info = json.loads(source_json.read_text())
         source_url = source_info.get('sourceUrl')
         if not source_url:
-            print(f'❌ 无效的源 URL')
+            print(f'❌ Invalid source URL')
             return False
         
-        # 重新下载
+        # Re-download
         return add_remote(agent_id, name, source_url, source_info.get('description', ''))
     except Exception as e:
-        print(f'❌ 更新失败：{e}')
+        print(f'❌ Update failed: {e}')
         return False
 
 
 def remove_remote(agent_id: str, name: str) -> bool:
-    """移除远程 skill"""
+    """Remove a remote skill"""
     if not safe_name(agent_id) or not safe_name(name):
-        print(f'❌ 错误：agent_id 或 skill 名称含非法字符')
+        print(f'❌ Error: agent_id or skill name contains invalid characters')
         return False
     
     workspace = OCLAW_HOME / f'workspace-{agent_id}' / 'skills' / name
     source_json = workspace / '.source.json'
     
     if not source_json.exists():
-        print(f'❌ 技能不存在或不是远程 skill: {name}')
+        print(f'❌ Skill not found or not a remote skill: {name}')
         return False
     
     try:
         import shutil
         shutil.rmtree(workspace)
-        print(f'✅ 技能 {name} 已从 {agent_id} 移除')
+        print(f'✅ Skill {name} removed from {agent_id}')
         return True
     except Exception as e:
-        print(f'❌ 移除失败：{e}')
+        print(f'❌ Remove failed: {e}')
         return False
 
 
@@ -237,11 +237,11 @@ SKILL_AGENT_MAPPING = {
 
 
 def import_official_hub(agent_ids: list) -> bool:
-    """从官方 Skills Hub 导入指定的 skills 到指定 agents。
-    如果未指定 agents，使用该 skill 的推荐 agents。
+    """Import skills from the official Skills Hub to specified agents.
+    If no agents specified, uses recommended agents for each skill.
     """
     if not agent_ids:
-        print('❌ 未指定 agent，使用推荐配置...\n')
+        print('❌ No agents specified, using recommended configuration...\n')
         for skill_name, recommended_agents in SKILL_AGENT_MAPPING.items():
             agent_ids.extend(recommended_agents)
         agent_ids = list(set(agent_ids))
@@ -256,61 +256,61 @@ def import_official_hub(agent_ids: list) -> bool:
         if not agent_ids:
             target_agents = SKILL_AGENT_MAPPING.get(skill_name, ['menxia'])
         
-        print(f'\n📥 正在导入 skill: {skill_name}')
-        print(f'   目标 agents: {", ".join(target_agents)}')
+        print(f'\n📥 Importing skill: {skill_name}')
+        print(f'   Target agents: {", ".join(target_agents)}')
         
         for agent_id in target_agents:
             total += 1
-            if add_remote(agent_id, skill_name, url, f'官方 skill：{skill_name}'):
+            if add_remote(agent_id, skill_name, url, f'Official skill: {skill_name}'):
                 success += 1
             else:
                 failed.append(f'{agent_id}/{skill_name}')
     
-    print(f'\n📊 导入完成：{success}/{total} 个 skills 成功')
+    print(f'\n📊 Import complete: {success}/{total} skills succeeded')
     if failed:
-        print(f'\n❌ 失败列表:')
+        print(f'\n❌ Failed list:')
         for f in failed:
             print(f'   - {f}')
-        print(f'\n💡 排查建议:')
-        print(f'   1. 检查网络: curl -I https://raw.githubusercontent.com/openclaw-ai/skills-hub/main/code_review/SKILL.md')
-        print(f'   2. 设置代理: export https_proxy=http://your-proxy:port')
-        print(f'   3. 单独重试: python3 scripts/skill_manager.py add-remote --agent <agent> --name <skill> --source <url>')
+        print(f'\n💡 Troubleshooting:')
+        print(f'   1. Check network: curl -I https://raw.githubusercontent.com/openclaw-ai/skills-hub/main/code_review/SKILL.md')
+        print(f'   2. Set proxy: export https_proxy=http://your-proxy:port')
+        print(f'   3. Retry individually: python3 scripts/skill_manager.py add-remote --agent <agent> --name <skill> --source <url>')
     return success == total
 
 
 def main():
-    parser = argparse.ArgumentParser(description='三省六部 Skill 管理工具', 
+    parser = argparse.ArgumentParser(description='Three Departments & Six Ministries Skill Management Tool', 
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
-    subparsers = parser.add_subparsers(dest='cmd', help='命令')
+    subparsers = parser.add_subparsers(dest='cmd', help='Command')
     
     # add-remote
-    add_parser = subparsers.add_parser('add-remote', help='从远程 URL 添加 skill')
-    add_parser.add_argument('--agent', required=True, help='目标 Agent ID')
-    add_parser.add_argument('--name', required=True, help='Skill 内部名称')
-    add_parser.add_argument('--source', required=True, help='远程 URL 或本地路径')
-    add_parser.add_argument('--description', default='', help='Skill 描述')
+    add_parser = subparsers.add_parser('add-remote', help='Add skill from remote URL')
+    add_parser.add_argument('--agent', required=True, help='Target Agent ID')
+    add_parser.add_argument('--name', required=True, help='Skill internal name')
+    add_parser.add_argument('--source', required=True, help='Remote URL or local path')
+    add_parser.add_argument('--description', default='', help='Skill description')
     
     # list-remote
-    subparsers.add_parser('list-remote', help='列出所有远程 skills')
+    subparsers.add_parser('list-remote', help='List all remote skills')
     
     # update-remote
-    update_parser = subparsers.add_parser('update-remote', help='更新远程 skill')
+    update_parser = subparsers.add_parser('update-remote', help='Update remote skill')
     update_parser.add_argument('--agent', required=True, help='Agent ID')
-    update_parser.add_argument('--name', required=True, help='Skill 名称')
+    update_parser.add_argument('--name', required=True, help='Skill name')
     
     # remove-remote
-    remove_parser = subparsers.add_parser('remove-remote', help='移除远程 skill')
+    remove_parser = subparsers.add_parser('remove-remote', help='Remove remote skill')
     remove_parser.add_argument('--agent', required=True, help='Agent ID')
-    remove_parser.add_argument('--name', required=True, help='Skill 名称')
+    remove_parser.add_argument('--name', required=True, help='Skill name')
     
     # import-official-hub
-    import_parser = subparsers.add_parser('import-official-hub', help='从官方库导入 skills')
-    import_parser.add_argument('--agents', default='', help='逗号分隔的 Agent IDs（可选）')
+    import_parser = subparsers.add_parser('import-official-hub', help='Import skills from official hub')
+    import_parser.add_argument('--agents', default='', help='Comma-separated Agent IDs (optional)')
     
     # check-updates
-    check_parser = subparsers.add_parser('check-updates', help='检查更新（未来功能）')
+    check_parser = subparsers.add_parser('check-updates', help='Check for updates (future feature)')
     check_parser.add_argument('--interval', default='weekly', 
-                             help='检查间隔 (weekly/daily/monthly)')
+                             help='Check interval (weekly/daily/monthly)')
     
     args = parser.parse_args()
     
@@ -340,8 +340,8 @@ def main():
         sys.exit(0 if success else 1)
     
     elif args.cmd == 'check-updates':
-        print(f'⏳ 检查更新功能（间隔: {args.interval}）尚未实现')
-        print(f'   敬请期待...')
+        print(f'⏳ Check updates feature (interval: {args.interval}) not yet implemented')
+        print(f'   Coming soon...')
 
 
 if __name__ == '__main__':

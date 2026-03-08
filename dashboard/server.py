@@ -526,9 +526,7 @@ def push_to_feishu():
 # Minimum requirements for edict titles
 _MIN_TITLE_LEN = 10
 _JUNK_TITLES = {
-    '?', '？', '好', '好的', '是', '否', '不', '不是', '对', '了解', '收到',
-    '嗯', '哦', '知道了', '开启了么', '可以', '不行', '行', 'ok', 'yes', 'no',
-    '你去开启', '测试', '试试', '看看',
+    '?', '？', 'ok', 'yes', 'no',
 }
 
 
@@ -540,8 +538,8 @@ def handle_create_task(title, org='Zhongshu', official='Zhongshu Chancellor', pr
     # Strip Conversation info metadata
     title = re.split(r'\n*Conversation info\s*\(', title, maxsplit=1)[0].strip()
     title = re.split(r'\n*```', title, maxsplit=1)[0].strip()
-    # Strip common prefixes like "传旨:" "下旨:"
-    title = re.sub(r'^(传旨|下旨)[：:\uff1a]\s*', '', title)
+    # Strip common edict prefixes like "edict:" "decree:"
+    title = re.sub(r'^(edict|decree)[：:\uff1a]\s*', '', title, flags=re.IGNORECASE)
     if len(title) > 100:
         title = title[:100] + '...'
     # Title quality check: prevent casual chat from being mistaken as an edict

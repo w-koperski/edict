@@ -4,7 +4,7 @@ export default {
   theme: {
     extend: {
       colors: {
-        // 三省六部主题色
+        // Three Departments & Six Ministries theme colors
         imperial: {
           50: '#fef7ed',
           100: '#fdecd4',

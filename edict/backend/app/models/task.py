@@ -65,7 +65,6 @@ STATE_AGENT_MAP = {
 }
 
 # Organization → Agent mapping (Six Ministries)
-# Supports both English names and Chinese legacy names for backward compatibility
 ORG_AGENT_MAP = {
     "Hubu": "hubu",
     "Libu": "libu",
@@ -73,13 +72,6 @@ ORG_AGENT_MAP = {
     "Xingbu": "xingbu",
     "Gongbu": "gongbu",
     "Libu_hr": "libu_hr",
-    # Legacy Chinese names for backward compatibility
-    "户部": "hubu",
-    "礼部": "libu",
-    "兵部": "bingbu",
-    "刑部": "xingbu",
-    "工部": "gongbu",
-    "吏部": "libu_hr",
 }
 
 

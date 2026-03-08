@@ -34,9 +34,7 @@ EDICT_MODE = os.environ.get('EDICT_MODE', 'auto').lower()
 
 _MIN_TITLE_LEN = 6
 _JUNK_TITLES = {
-    '?', '？', '好', '好的', '是', '否', '不', '不是', '对', '了解', '收到',
-    '嗯', '哦', '知道了', '开启了么', '可以', '不行', '行', 'ok', 'yes', 'no',
-    '你去开启', '测试', '试试', '看看',
+    '?', '？', 'ok', 'yes', 'no',
 }
 
 STATE_ORG_MAP = {
@@ -59,7 +57,7 @@ def _sanitize_text(raw, max_len=80):
     t = re.split(r'\n*```', t, maxsplit=1)[0].strip()
     t = re.sub(r'[/\\.~][A-Za-z0-9_\-./]+(?:\.(?:py|js|ts|json|md|sh|yaml|yml|txt|csv|html|css|log))?', '', t)
     t = re.sub(r'https?://\S+', '', t)
-    t = re.sub(r'^(传旨|下旨)([（(][^)）]*[)）])?[：:\uff1a]\s*', '', t)
+    t = re.sub(r'^(edict|decree)[：:\uff1a]\s*', '', t, flags=re.IGNORECASE)
     t = re.sub(r'(message_id|session_id|chat_id|open_id|user_id|tenant_key)\s*[:=]\s*\S+', '', t)
     t = re.sub(r'\s+', ' ', t).strip()
     if len(t) > max_len:
@@ -102,7 +100,7 @@ def _infer_agent_id():
     return 'system'
 
 
-# ── API 客户端 ──
+# ── API client ──
 
 def _api_available() -> bool:
     """Check if the Edict API is available."""
