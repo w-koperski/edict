@@ -1217,14 +1217,14 @@ def handle_repair_flow_order():
         if first.get('from') != '皇上' or first.get('to') != '中书省':
             continue
 
-        first['to'] = '太子'
+        first['to'] = 'Taizi'
         remark = first.get('remark', '')
         if isinstance(remark, str) and remark.startswith('下旨：'):
             first['remark'] = remark
 
         if task.get('state') == 'Zhongshu' and task.get('org') == '中书省' and len(flow_log) == 1:
             task['state'] = 'Taizi'
-            task['org'] = '太子'
+            task['org'] = 'Taizi'
             task['now'] = 'Waiting for Taizi to receive and triage edict'
 
         task['updatedAt'] = now_iso()

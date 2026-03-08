@@ -520,7 +520,7 @@ export default function SkillsConfig() {
                   <input
                     type="text"
                     required
-                    placeholder="如 data-analysis, code-review"
+                    placeholder="e.g. data-analysis, code-review"
                     value={formData.name}
                     onChange={(e) =>
                       setFormData((p) => ({ ...p, name: e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, '') }))

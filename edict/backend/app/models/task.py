@@ -65,7 +65,15 @@ STATE_AGENT_MAP = {
 }
 
 # Organization → Agent mapping (Six Ministries)
+# Supports both English names and Chinese legacy names for backward compatibility
 ORG_AGENT_MAP = {
+    "Hubu": "hubu",
+    "Libu": "libu",
+    "Bingbu": "bingbu",
+    "Xingbu": "xingbu",
+    "Gongbu": "gongbu",
+    "Libu_hr": "libu_hr",
+    # Legacy Chinese names for backward compatibility
     "户部": "hubu",
     "礼部": "libu",
     "兵部": "bingbu",
@@ -82,7 +90,7 @@ class Task(Base):
     id = Column(String(32), primary_key=True, comment="Task ID, e.g. JJC-20260301-001")
     title = Column(Text, nullable=False, comment="Task title")
     state = Column(Enum(TaskState, name="task_state"), nullable=False, default=TaskState.Taizi, index=True)
-    org = Column(String(32), nullable=False, default="太子", comment="Current executing department")
+    org = Column(String(32), nullable=False, default="Taizi", comment="Current executing department")
     official = Column(String(32), default="", comment="Responsible official")
     now = Column(Text, default="", comment="Current progress description")
     eta = Column(String(64), default="-", comment="Estimated completion time")

@@ -467,6 +467,10 @@ function LiveActivitySection({
     '皇上': '#eab308', '太子': '#f97316', '中书省': '#3b82f6', '门下省': '#8b5cf6',
     '尚书省': '#10b981', '六部': '#06b6d4', '礼部': '#ec4899', '户部': '#f59e0b',
     '兵部': '#ef4444', '刑部': '#6366f1', '工部': '#14b8a6', '吏部': '#d946ef',
+    // English equivalents
+    'Emperor': '#eab308', 'Taizi': '#f97316', 'Zhongshu': '#3b82f6', 'Menxia': '#8b5cf6',
+    'Shangshu': '#10b981', 'Six Ministries': '#06b6d4', 'Libu': '#ec4899', 'Hubu': '#f59e0b',
+    'Bingbu': '#ef4444', 'Xingbu': '#6366f1', 'Gongbu': '#14b8a6', 'Libu_hr': '#d946ef',
   };
 
   // Todos summary
@@ -527,7 +531,7 @@ function LiveActivitySection({
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
             <span style={{ fontSize: 11, fontWeight: 600 }}>📊 Progress</span>
             <span style={{ fontSize: 20, fontWeight: 700, color: ts.percent >= 100 ? '#22c55e' : ts.percent >= 50 ? '#60a5fa' : 'var(--text)' }}>{ts.percent}%</span>
-            <span style={{ fontSize: 10, color: 'var(--muted)' }}>✅{ts.completed} 🔄{ts.inProgress} ⬜{ts.notStarted} / 共{ts.total}项</span>
+            <span style={{ fontSize: 10, color: 'var(--muted)' }}>✅{ts.completed} 🔄{ts.inProgress} ⬜{ts.notStarted} / Total: {ts.total}</span>
           </div>
           <div style={{ height: 8, background: 'var(--panel)', borderRadius: 4, overflow: 'hidden', display: 'flex' }}>
             <div style={{ width: `${ts.total ? (ts.completed / ts.total) * 100 : 0}%`, background: '#22c55e', transition: 'width .3s' }} />
@@ -544,7 +548,7 @@ function LiveActivitySection({
           {rs.totalCost != null && <span style={{ fontSize: 11, color: 'var(--muted)' }}>💰 ${rs.totalCost.toFixed(4)}</span>}
           {rs.totalElapsedSec != null && (
             <span style={{ fontSize: 11, color: 'var(--muted)' }}>
-              ⏳ {rs.totalElapsedSec >= 60 ? `${Math.floor(rs.totalElapsedSec / 60)}分` : ''}{rs.totalElapsedSec % 60}秒
+              ⏳ {rs.totalElapsedSec >= 60 ? `${Math.floor(rs.totalElapsedSec / 60)}m ` : ''}{rs.totalElapsedSec % 60}s
             </span>
           )}
         </div>

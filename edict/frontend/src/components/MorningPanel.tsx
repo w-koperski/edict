@@ -41,7 +41,7 @@ export default function MorningPanel() {
 
   const refreshNews = async () => {
     setRefreshing(true);
-    setRefreshLabel('⟳ 采集中…');
+    setRefreshLabel('⟳ Collecting...');
     let lastDate: string | null = null;
     try {
       lastDate = morningBrief?.generated_at || null;

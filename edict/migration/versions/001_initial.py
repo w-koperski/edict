@@ -24,7 +24,7 @@ def upgrade() -> None:
         sa.Column("trace_id", sa.String(64), nullable=False),
         sa.Column("title", sa.String(200), nullable=False),
         sa.Column("description", sa.Text(), server_default=""),
-        sa.Column("priority", sa.String(10), server_default="中"),
+        sa.Column("priority", sa.String(10), server_default="normal"),
         sa.Column("state", sa.String(20), nullable=False, server_default="taizi"),
         sa.Column("assignee_org", sa.String(50), nullable=True),
         sa.Column("creator", sa.String(50), server_default="emperor"),
