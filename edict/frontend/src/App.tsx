@@ -32,10 +32,11 @@ export default function App() {
   const activeEdicts = edicts.filter((t) => !isArchived(t));
   const sync = liveStatus?.syncStatus;
   const syncOk = sync?.ok;
+  const dataLoaded = liveStatus !== null;
 
   // Tab badge counts
   const tabBadge = (key: string): string => {
-    if (key === 'edicts') return String(activeEdicts.length);
+    if (key === 'edicts') return String(edicts.length);
     if (key === 'sessions') return String(tasks.filter((t) => !isEdict(t)).length);
     if (key === 'memorials') return String(edicts.filter((t) => ['Done', 'Cancelled'].includes(t.state)).length);
     if (key === 'monitor') {
@@ -54,10 +55,14 @@ export default function App() {
           <div className="sub-text">OpenClaw Sansheng-Liubu Dashboard</div>
         </div>
         <div className="hdr-r">
-          <span className={`chip ${syncOk ? 'ok' : syncOk === false ? 'err' : ''}`}>
-            {syncOk ? '✅ Sync OK' : syncOk === false ? '❌ Server not started' : '⏳ Connecting…'}
-          </span>
-          <span className="chip">{activeEdicts.length} edicts</span>
+          {dataLoaded ? (
+            <span className={`chip ${syncOk ? 'ok' : syncOk === false ? 'err' : 'ok'}`}>
+              {syncOk ? '✅ Sync OK' : syncOk === false ? '⚠️ Sync unavailable' : '✅ Data loaded'}
+            </span>
+          ) : (
+            <span className="chip">⏳ Connecting…</span>
+          )}
+          <span className="chip">{edicts.length} edicts{activeEdicts.length !== edicts.length ? ` (${activeEdicts.length} active)` : ''}</span>
           <button className="btn-refresh" onClick={() => loadAll()}>
             ⟳ Refresh
           </button>

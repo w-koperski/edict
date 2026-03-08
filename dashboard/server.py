@@ -2120,7 +2120,11 @@ class Handler(BaseHTTPRequestHandler):
         except (BrokenPipeError, ConnectionResetError):
             pass
 
-    def send_file(self, path: pathlib.Path, mime='text/html; charset=utf-8'):
+    def send_file(self, path: pathlib.Path, mime='text/html; charset=utf-8', no_cache=False):
+        """Serve a file with appropriate headers.
+        Set no_cache=True for HTML entry points to prevent browsers from caching
+        stale asset references after a dashboard rebuild.
+        """
         if not path.exists():
             self.send_error(404)
             return
@@ -2129,6 +2133,8 @@ class Handler(BaseHTTPRequestHandler):
             self.send_response(200)
             self.send_header('Content-Type', mime)
             self.send_header('Content-Length', str(len(body)))
+            if no_cache:
+                self.send_header('Cache-Control', 'no-store')
             cors_headers(self)
             self.end_headers()
             self.wfile.write(body)
@@ -2151,7 +2157,7 @@ class Handler(BaseHTTPRequestHandler):
     def do_GET(self):
         p = urlparse(self.path).path.rstrip('/')
         if p in ('', '/dashboard', '/dashboard.html'):
-            self.send_file(DIST / 'index.html')
+            self.send_file(DIST / 'index.html', no_cache=True)
         elif p == '/healthz':
             checks = {'dataDir': DATA.is_dir(), 'tasksReadable': (DATA / 'tasks_source.json').exists()}
             checks['dataWritable'] = os.access(str(DATA), os.W_OK)
@@ -2226,7 +2232,7 @@ class Handler(BaseHTTPRequestHandler):
             if not p.startswith('/api/'):
                 idx = DIST / 'index.html'
                 if idx.exists():
-                    self.send_file(idx)
+                    self.send_file(idx, no_cache=True)
                     return
             self.send_error(404)
 

@@ -27,7 +27,10 @@ def main():
     if not tasks:
         tasks = read_json(DATA / 'tasks.json', [])
 
-    sync_status = read_json(DATA / 'sync_status.json', {})
+    sync_status = read_json(DATA / 'sync_status.json', None)
+    if not sync_status or 'ok' not in sync_status:
+        # sync_status.json not yet created or has no sync result (no external sync configured)
+        sync_status = {'ok': True, 'source': 'local'}
 
     org_map = {}
     for o in officials:

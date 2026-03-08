@@ -161,6 +161,7 @@ export default function EdictBoard() {
 
   const tasks = liveStatus?.tasks || [];
   const allEdicts = tasks.filter(isEdict);
+  const allSessions = tasks.filter((t) => !isEdict(t));
   const activeEdicts = allEdicts.filter((t) => !isArchived(t));
   const archivedEdicts = allEdicts.filter((t) => isArchived(t));
 
@@ -233,10 +234,19 @@ export default function EdictBoard() {
               </>
             ) : (
               <>
-                No edicts yet<br />
-                <small style={{ fontSize: 11, marginTop: 6, display: 'block', color: 'var(--muted)' }}>
-                  Send tasks to Taizi via Feishu; Taizi will triage and forward to Zhongshu for processing
-                </small>
+                No edicts yet
+                {liveStatus === null ? (
+                  <br />
+                ) : (
+                  <>
+                    <br />
+                    <small style={{ fontSize: 11, marginTop: 6, display: 'block', color: 'var(--muted)' }}>
+                      {allSessions.length > 0
+                        ? `${allSessions.length} agent session${allSessions.length !== 1 ? 's' : ''} found in the Sessions tab — edict tasks must have IDs starting with JJC- (e.g. JJC-20260301-001)`
+                        : 'Send tasks to Taizi via Feishu; Taizi will triage and forward to Zhongshu for processing'}
+                    </small>
+                  </>
+                )}
               </>
             )}
           </div>
