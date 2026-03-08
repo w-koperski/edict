@@ -11,7 +11,7 @@ Endpoints:
   GET  /api/model-change-log   → data/model_change_log.json
   GET  /api/last-result        → data/last_model_change_result.json
 """
-import json, pathlib, subprocess, sys, threading, argparse, datetime, logging, re, os
+import json, pathlib, subprocess, sys, threading, argparse, datetime, logging, re, os, shutil
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from urllib.parse import urlparse
 from urllib.request import Request, urlopen
@@ -730,6 +730,21 @@ def _check_agent_workspace(agent_id):
     return ws.is_dir()
 
 
+def _get_openclaw_bin():
+    """Return the openclaw binary path, respecting OPENCLAW_BIN env var override.
+
+    Returns the resolved path string if found, or None if the binary cannot be located.
+    """
+    bin_name = os.environ.get('OPENCLAW_BIN', 'openclaw')
+    resolved = shutil.which(bin_name)
+    if resolved:
+        return resolved
+    # If an absolute path was given, check it exists directly
+    if os.path.isabs(bin_name) and os.path.isfile(bin_name):
+        return bin_name
+    return None
+
+
 def get_agents_status():
     """Get online status for all Agents.
     Returns for each Agent:
@@ -831,7 +846,11 @@ def wake_agent(agent_id, message=''):
 
     def do_wake():
         try:
-            cmd = ['openclaw', 'agent', '--agent', runtime_id, '-m', msg, '--timeout', '120']
+            oclaw_bin = _get_openclaw_bin()
+            if not oclaw_bin:
+                log.error(f'❌ {agent_id} wake failed: openclaw binary not found — set OPENCLAW_BIN or add it to PATH')
+                return
+            cmd = [oclaw_bin, 'agent', '--agent', runtime_id, '-m', msg, '--timeout', '120']
             log.info(f'🔔 Waking {agent_id}...')
             # with retry (up to 2 attempts)
             for attempt in range(1, 3):
@@ -1951,7 +1970,18 @@ def dispatch_for_state(task_id, task, new_state, trigger='state-transition'):
                     'lastDispatchTrigger': trigger,
                 }))
                 return
-            cmd = ['openclaw', 'agent', '--agent', agent_id, '-m', msg,
+            oclaw_bin = _get_openclaw_bin()
+            if not oclaw_bin:
+                log.error(f'❌ {task_id} auto-dispatch failed: openclaw binary not found — set OPENCLAW_BIN or add it to PATH')
+                _update_task_scheduler(task_id, lambda t, s: s.update({
+                    'lastDispatchAt': now_iso(),
+                    'lastDispatchStatus': 'error',
+                    'lastDispatchAgent': agent_id,
+                    'lastDispatchTrigger': trigger,
+                    'lastDispatchError': 'openclaw binary not found',
+                }))
+                return
+            cmd = [oclaw_bin, 'agent', '--agent', agent_id, '-m', msg,
                    '--deliver', '--channel', 'feishu', '--timeout', '300']
             max_retries = 2
             err = ''

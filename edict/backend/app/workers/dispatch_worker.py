@@ -151,7 +151,7 @@ class DispatchWorker:
         """Asynchronously call the OpenClaw CLI — executed in a thread pool."""
         settings = get_settings()
         cmd = [
-            "openclaw", "agent",
+            settings.openclaw_bin, "agent",
             "--agent", agent,
             "-m", message,
         ]
@@ -181,7 +181,7 @@ class DispatchWorker:
             except subprocess.TimeoutExpired:
                 return {"returncode": -1, "stdout": "", "stderr": "TIMEOUT after 300s"}
             except FileNotFoundError:
-                return {"returncode": -1, "stdout": "", "stderr": "openclaw command not found"}
+                return {"returncode": -1, "stdout": "", "stderr": f"{settings.openclaw_bin!r} command not found — check openclaw_bin config or PATH"}
 
         loop = asyncio.get_event_loop()
         return await loop.run_in_executor(None, _run)
