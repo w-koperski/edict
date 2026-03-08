@@ -152,7 +152,7 @@ def main():
     sync_scripts_to_workspaces()
 
 
-# 项目 agents/ 目录名 → 运行时 agent_id 映射
+# Project agents/ directory name → runtime agent_id mapping
 _SOUL_DEPLOY_MAP = {
     'taizi': 'taizi',
     'zhongshu': 'zhongshu',

@@ -112,6 +112,6 @@ def test_done_not_overwritable():
     assert t['state'] == 'Done', f"Should still be Done: {t['state']}"
 
 
-# ── 支持直接运行 python3 tests/test_e2e_kanban.py
+# ── Supports running directly: python3 tests/test_e2e_kanban.py
 if __name__ == '__main__':
     sys.exit(pytest.main([__file__, '-v']))

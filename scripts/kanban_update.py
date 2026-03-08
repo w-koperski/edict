@@ -276,7 +276,7 @@ def cmd_block(task_id, reason):
         return tasks
     atomic_json_update(TASKS_FILE, modifier, [])
     save(load())  # trigger refresh
-    log.warning(f'⚠️ {task_id} 已阻塞: {reason}')
+    log.warning(f'⚠️ {task_id} blocked: {reason}')
 
 
 def cmd_progress(task_id, now_text, todos_pipe='', tokens=0, cost=0.0, elapsed=0):
@@ -348,7 +348,7 @@ def cmd_progress(task_id, now_text, todos_pipe='', tokens=0, cost=0.0, elapsed=0
             'text': clean, 'todos': log_todos,
             'state': t.get('state', ''), 'org': t.get('org', ''),
         }
-        # 资源消耗（可选字段，有值才写入）
+        # Resource usage (optional fields, only write if present)
         if tokens > 0:
             log_entry['tokens'] = tokens
         if cost > 0:

@@ -89,7 +89,7 @@ def parse_rss(xml_text):
             desc  = re.sub(r'<[^>]+>', '', get('description'))[:200]
             link  = get('link')
             pub   = get('pubDate')
-            # 图片
+            # Image
             img = ''
             enc = item.find('enclosure')
             if enc is not None and 'image' in (enc.get('type') or ''):
@@ -189,7 +189,7 @@ def main():
         cat = cf.get('category', '')
         feed_url = cf.get('url', '')
         if cat in enabled_cats and feed_url:
-            # 校验自定义源 URL（SSRF 防护）
+            # Validate custom feed URL (SSRF protection)
             if validate_url(feed_url):
                 merged_feeds.setdefault(cat, []).append((cf.get('name', 'Custom'), feed_url))
             else:

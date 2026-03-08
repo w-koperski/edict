@@ -868,10 +868,6 @@ _STATE_AGENT_MAP = {
     'Pending': 'zhongshu', # Pending, default to Zhongshu
 }
 _ORG_AGENT_MAP = {
-    '礼部': 'libu', '户部': 'hubu', '兵部': 'bingbu',
-    '刑部': 'xingbu', '工部': 'gongbu', '吏部': 'libu_hr',
-    '中书省': 'zhongshu', '门下省': 'menxia', '尚书省': 'shangshu',
-    # English equivalents for forward compatibility
     'Libu': 'libu', 'Hubu': 'hubu', 'Bingbu': 'bingbu',
     'Xingbu': 'xingbu', 'Gongbu': 'gongbu', 'Libu_hr': 'libu_hr',
     'Zhongshu': 'zhongshu', 'Menxia': 'menxia', 'Shangshu': 'shangshu',
@@ -1212,15 +1208,15 @@ def handle_repair_flow_order():
             continue
 
         first = flow_log[0]
-        if first.get('from') != '皇上' or first.get('to') != '中书省':
+        if first.get('from') != 'Emperor' or first.get('to') != 'Zhongshu':
             continue
 
         first['to'] = 'Taizi'
         remark = first.get('remark', '')
-        if isinstance(remark, str) and remark.startswith('下旨：'):
+        if isinstance(remark, str) and remark.startswith('Edict issued:'):
             first['remark'] = remark
 
-        if task.get('state') == 'Zhongshu' and task.get('org') == '中书省' and len(flow_log) == 1:
+        if task.get('state') == 'Zhongshu' and task.get('org') == 'Zhongshu' and len(flow_log) == 1:
             task['state'] = 'Taizi'
             task['org'] = 'Taizi'
             task['now'] = 'Waiting for Taizi to receive and triage edict'
@@ -1383,15 +1379,12 @@ def get_agent_activity(agent_id, limit=30, task_id=None):
 
 def _extract_keywords(title):
     """Extract meaningful keywords from a task title (for session content matching)."""
-    stop = {'的', '了', '在', '是', '有', '和', '与', '或', '一个', '一篇', '关于', '进行',
-            '写', '做', '请', '把', '给', '用', '要', '需要', '面向', '风格', '包含',
-            '出', '个', '不', '可以', '应该', '如何', '怎么', '什么', '这个', '那个'}
+    stop = {'a', 'an', 'the', 'in', 'on', 'at', 'to', 'for', 'of', 'and', 'or',
+            'is', 'are', 'was', 'be', 'do', 'make', 'use', 'with', 'from', 'by'}
     # Extract English words
     en_words = re.findall(r'[a-zA-Z][\w.-]{1,}', title)
-    # Extract 2-4 character Chinese word groups (finer granularity)
-    cn_words = re.findall(r'[\u4e00-\u9fff]{2,4}', title)
-    all_words = en_words + cn_words
-    kws = [w for w in all_words if w not in stop and len(w) >= 2]
+    all_words = en_words
+    kws = [w for w in all_words if w.lower() not in stop and len(w) >= 2]
     # Deduplicate, preserve order
     seen = set()
     unique = []

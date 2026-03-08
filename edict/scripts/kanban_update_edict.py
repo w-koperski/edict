@@ -205,10 +205,10 @@ def cmd_create(task_id, title, state, org, official, remark=None):
             'meta': {'legacy_id': task_id, 'legacy_state': state},
         })
         if result:
-            log.info(f'✅ 创建 {task_id} → Edict {result.get("task_id", "?")} | {title[:30]}')
+            log.info(f'✅ Created {task_id} → Edict {result.get("task_id", "?")} | {title[:30]}')
             return
 
-    # 降级
+    # Fallback
     legacy = _fallback_json()
     if legacy:
         legacy.cmd_create(task_id, title, state, org, official, remark)
@@ -228,7 +228,7 @@ def cmd_state(task_id, new_state, now_text=None):
             'reason': now_text or f'State updated to {new_state}',
         })
         if result:
-            log.info(f'✅ {task_id} 状态更新 → {new_state}')
+            log.info(f'✅ {task_id} state updated → {new_state}')
             return
 
     legacy = _fallback_json()
@@ -244,10 +244,10 @@ def cmd_flow(task_id, from_dept, to_dept, remark):
         agent = _infer_agent_id()
         result = _api_post(f'/api/tasks/by-legacy/{task_id}/progress', {
             'agent': agent,
-            'content': f'流转: {from_dept} → {to_dept} | {clean_remark}',
+            'content': f'Flow: {from_dept} → {to_dept} | {clean_remark}',
         })
         if result:
-            log.info(f'✅ {task_id} 流转记录: {from_dept} → {to_dept}')
+            log.info(f'✅ {task_id} flow record: {from_dept} → {to_dept}')
             return
 
     legacy = _fallback_json()
@@ -264,7 +264,7 @@ def cmd_done(task_id, output_path='', summary=''):
             'reason': summary or 'Task completed',
         })
         if result:
-            log.info(f'✅ {task_id} 已完成')
+            log.info(f'✅ {task_id} completed')
             return
 
     legacy = _fallback_json()
@@ -281,7 +281,7 @@ def cmd_block(task_id, reason):
             'reason': reason,
         })
         if result:
-            log.warning(f'⚠️ {task_id} 已阻塞: {reason}')
+            log.warning(f'⚠️ {task_id} blocked: {reason}')
             return
 
     legacy = _fallback_json()
@@ -352,7 +352,7 @@ def cmd_todo(task_id, todo_id, title, status='not-started', detail=''):
         legacy.cmd_todo(task_id, todo_id, title, status, detail)
 
 
-# ── CLI 分发 ──
+# ── CLI dispatch ──
 
 _CMD_MIN_ARGS = {
     'create': 6, 'state': 3, 'flow': 5, 'done': 2, 'block': 3, 'todo': 4, 'progress': 3,

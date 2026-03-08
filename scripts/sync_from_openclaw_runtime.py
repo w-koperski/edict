@@ -277,7 +277,7 @@ def main():
                 filtered_tasks.append(t)
                 continue
             
-            # OC 任务过滤
+            # OC task filtering
             updated = t.get('sourceMeta', {}).get('updatedAt', 0)
             title = t.get('title', '')
             
@@ -287,7 +287,7 @@ def main():
             
             # 2. Exclude pure background cron / subagent tasks, unless erroring
             if 'Scheduled Task' in title or 'Subtask' in title:
-                # 只有当它 block 或者 error 时才显示，否则视为噪音
+                # Only show when blocked or erroring, otherwise treat as noise
                 if t.get('state') != 'Blocked':
                     continue
 
@@ -296,8 +296,8 @@ def main():
             state = t.get('state')
             # state_from_session: < 2min = Doing, < 60min = Review, else = Next
             if state not in ('Doing', 'Blocked'):
-                # 如果不是正在进行或报错，就隐藏掉
-                # 特例: 如果是 mission control (mc-) 的心跳，可能也没必要显示，除非 Doing
+                # If not in-progress or erroring, hide it
+                # Exception: mission control (mc-) heartbeats may also be unnecessary, unless Doing
                 continue
 
             filtered_tasks.append(t)
@@ -313,7 +313,7 @@ def main():
                 existing = json.loads(existing_tasks_file.read_text())
                 jjc_existing = [t for t in existing if str(t.get('id', '')).startswith('JJC')]
                 
-                # 去掉 tasks 里已有的 JJC（以防重复），再把旨意放到最前面
+                # Remove already-existing JJC tasks from tasks (to avoid duplicates), then put edicts at the front
                 tasks = [t for t in tasks if not str(t.get('id', '')).startswith('JJC')]
                 tasks = jjc_existing + tasks
             except Exception as e:

@@ -42,7 +42,7 @@ def _download_file(url: str, timeout: int = 30, retries: int = 3) -> str:
         except urllib.error.HTTPError as e:
             last_error = f'HTTP {e.code}: {e.reason}'
             if e.code in (404, 403):
-                break  # 不重试 4xx
+                break  # don't retry 4xx
         except urllib.error.URLError as e:
             last_error = f'Network error: {e.reason}'
         except Exception as e:
@@ -251,7 +251,7 @@ def import_official_hub(agent_ids: list) -> bool:
     failed = []
     
     for skill_name, url in OFFICIAL_SKILLS_HUB.items():
-        # 确定目标 agents
+        # Determine target agents
         target_agents = agent_ids
         if not agent_ids:
             target_agents = SKILL_AGENT_MAPPING.get(skill_name, ['menxia'])
